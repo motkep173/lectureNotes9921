@@ -1,0 +1,832 @@
+% =====================================================================
+%  סיכומי הרצאות — קורס 9921
+%  קומפילציה: xelatex lecture_notes.tex  (פעמיים, לצורך תוכן עניינים והפניות)
+% =====================================================================
+\documentclass[11pt,a4paper]{report}
+
+% ---------------------------------------------------------------------
+%  מתגים: הצגה / הסתרה של הצעות ושל הערות "דורש התייחסות"
+%  (להדפסה סופית — לשנות ל-false)
+% ---------------------------------------------------------------------
+\newif\ifshowsuggestions \showsuggestionstrue
+\newif\ifshowtodos       \showtodostrue
+
+% ---------------------------------------------------------------------
+%  חבילות (tikz, hyperref ו-tcolorbox לפני polyglossia/bidi)
+% ---------------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[a4paper,margin=2.5cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{array,booktabs}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{polyglossia}
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+
+\setmainfont{Latin Modern Roman}
+\newfontfamily\hebrewfont[Script=Hebrew]{David CLM}
+\newfontfamily\hebrewfontsf[Script=Hebrew]{Simple CLM}
+\newfontfamily\hebrewfonttt[Script=Hebrew]{Miriam Mono CLM}
+
+% ---------------------------------------------------------------------
+%  צבעים
+% ---------------------------------------------------------------------
+\definecolor{defc}{RGB}{31,78,121}      % הגדרות
+\definecolor{thmc}{RGB}{20,110,100}     % טענות ומשפטים
+\definecolor{exc}{RGB}{110,110,110}     % דוגמאות
+\definecolor{keyc}{RGB}{150,40,40}      % נוסחאות חשובות
+\definecolor{sugc}{RGB}{214,51,132}     % הצעות (ורוד)
+\definecolor{todoc}{RGB}{200,110,0}     % דורש התייחסות (כתום)
+
+% ---------------------------------------------------------------------
+%  כותרות ועימוד
+% ---------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\color{defc}}
+  {\Large\ifnum\value{chapter}=0 פרק מקדים\else פרק \thechapter\fi}
+  {6pt}
+  {\Huge}
+  [\vspace{2pt}{\color{defc}\titlerule[1pt]}]
+\titlespacing*{\chapter}{0pt}{-10pt}{24pt}
+\titleformat{\section}{\sffamily\Large\bfseries\color{defc}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\sffamily\large\bfseries\color{defc!85!black}}{\thesubsection}{0.8em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\sffamily\leftmark}
+\fancyhead[L]{\small\sffamily קורס 9921}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\ifnum\value{chapter}=0 פרק מקדים\else פרק \thechapter\fi: #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\setlist{itemsep=2pt,topsep=4pt}
+\setlist[itemize]{label=\small$\bullet$}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+% ---------------------------------------------------------------------
+%  סביבות מתמטיות (מספור משותף בתוך כל פרק)
+% ---------------------------------------------------------------------
+\tcbset{
+  base/.style={enhanced, breakable, sharp corners=south, arc=2pt,
+    fonttitle=\sffamily\bfseries, before skip=10pt, after skip=10pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    separator sign={:}, description delimiters none},
+}
+
+\newtcbtheorem[number within=chapter]{definition}{הגדרה}{base,
+  colback=defc!4, colframe=defc, coltitle=white}{def}
+
+\newtcbtheorem[use counter from=definition]{claim}{טענה}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{clm}
+
+\newtcbtheorem[use counter from=definition]{principle}{עקרון}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{prn}
+
+\newtcbtheorem[use counter from=definition]{theorem}{משפט}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{thm}
+
+\newtcbtheorem[use counter from=definition]{corollary}{מסקנה}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{cor}
+
+\newtcbtheorem[use counter from=definition]{example}{דוגמה}{base,
+  colback=white, colframe=exc!60, coltitle=exc!20!black, colbacktitle=exc!12,
+  boxrule=0.5pt}{ex}
+
+% תיבת נוסחה / סיכום חשוב
+\newtcolorbox{keybox}[1][]{enhanced, breakable, colback=keyc!5, colframe=keyc!80,
+  boxrule=0.8pt, arc=2pt, left=8pt, right=8pt, before skip=8pt, after skip=8pt,
+  fonttitle=\sffamily\bfseries, coltitle=white, #1}
+
+% הערה קצרה (ללא מסגרת)
+\newenvironment{remark}{\par\smallskip\noindent\textsf{\textbf{הערה.}}\ }{\par\smallskip}
+\newenvironment{notation}{\par\smallskip\noindent\textsf{\textbf{סימון.}}\ }{\par\smallskip}
+
+% הוכחה
+\renewcommand{\proofname}{הוכחה}
+
+% ---------------------------------------------------------------------
+%  הצעות לתוספות (ורוד)
+%  שימוש: \begin{suggestion}{דוגמה נוספת} ... \end{suggestion}
+% ---------------------------------------------------------------------
+\newtcolorbox{suggestion}[1]{enhanced, breakable, colback=sugc!6, colframe=sugc,
+  boxrule=0.6pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=10pt, after skip=10pt,
+  attach boxed title to top right={xshift=-8pt, yshift=-7pt},
+  boxed title style={colback=sugc, colframe=sugc, arc=2pt},
+  fonttitle=\sffamily\bfseries\small, coltitle=white,
+  title={הצעה: #1}}
+
+% ---------------------------------------------------------------------
+%  "דורש התייחסות" (כתום) — נאסף אוטומטית לרשימה בתחילת המסמך
+%  \needcheck{טקסט}           — הערה קצרה בתוך השורה
+%  \begin{attention}{תקציר} ... \end{attention} — תיבה
+% ---------------------------------------------------------------------
+% דגל קטן (הגופנים העבריים אינם כוללים את התו)
+\newcommand{\flag}{\tikz[baseline=-0.1ex,x=0.9ex,y=0.9ex]{\draw[line width=0.5pt] (0,-0.3)--(0,1.6); \fill (0,1.6)--(1.2,1.2)--(0,0.8)--cycle;}}
+\newcounter{todo}
+\makeatletter
+\newcommand*\l@todo{\@dottedtocline{1}{0em}{2.2em}}
+\newcommand{\listoftodos}{\@starttoc{tdo}}
+\makeatother
+\newcommand{\addtodo}[1]{\refstepcounter{todo}%
+  \addcontentsline{tdo}{todo}{\protect\numberline{\thetodo}#1}}
+
+\newcommand{\needcheck}[1]{\addtodo{#1}%
+  {\color{todoc}\sffamily\small\,[\textbf{\flag{}\,\thetodo\ לבדיקה:} #1]\,}}
+
+\tcbset{attstyle/.style={enhanced, breakable, colback=todoc!7, colframe=todoc,
+  boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, before skip=10pt, after skip=10pt,
+  borderline={0.6pt}{2pt}{todoc, dashed},
+  fonttitle=\sffamily\bfseries\small, coltitle=white}}
+\newtcolorbox{attention}[1]{attstyle, before upper={\addtodo{#1}},
+  title={דורש התייחסות: #1}}
+\newtcolorbox{attentiondemo}[1]{attstyle, title={דורש התייחסות: #1}}
+
+\ifshowsuggestions\else\excludecomment{suggestion}\fi
+\ifshowtodos\else
+  \excludecomment{attention}
+  \excludecomment{attentiondemo}
+  \renewcommand{\needcheck}[1]{}
+\fi
+
+% ---------------------------------------------------------------------
+%  פקודות מתמטיות
+% ---------------------------------------------------------------------
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\setof}[2]{\left\{\,#1 \;\middle|\; #2\,\right\}}
+\newcommand{\symdiff}{\mathbin{\triangle}}
+\newcommand{\comp}[1]{\overline{#1}}
+\newcommand{\Pow}{\mathcal{P}}
+\newcommand{\heb}[1]{\text{\RL{#1}}}
+\renewcommand{\emptyset}{\varnothing}
+
+% קו מפריד בכותרות (לגופן Simple CLM אין קו מפריד ארוך)
+\newcommand{\dash}{{\rmfamily —}}
+
+% סימון תחילת הרצאה
+\newcommand{\lecture}[1]{\par\medskip
+  \begin{center}\color{exc}\sffamily\small
+  \rule[0.5ex]{0.25\linewidth}{0.4pt}\quad הרצאה #1\quad\rule[0.5ex]{0.25\linewidth}{0.4pt}
+  \end{center}\par}
+
+% =====================================================================
+\begin{document}
+% =====================================================================
+
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\sffamily\color{defc}\rule{\linewidth}{1pt}\par\vspace{10pt}
+   {\Huge\bfseries סיכומי הרצאות\par}\vspace{8pt}
+   {\LARGE קורס 9921\par}\vspace{10pt}
+   \rule{\linewidth}{1pt}\par}
+  \vspace{1.5cm}
+  {\Large מרצה: שובל\par}
+  \vspace{0.5cm}
+  \ifshowtodos
+  \begin{minipage}{0.8\linewidth}\centering
+  \needcheck{להשלים את שם הקורס, שם המרצה המלא והסמסטר}
+  \end{minipage}
+  \fi
+  \vfill
+  {\large נכתב על בסיס רשימות שנכתבו בהרצאות\par}
+  \vspace{1cm}
+\end{titlepage}
+
+% ---------------------------------------------------------------------
+\chapter*{על המסמך}
+\addcontentsline{toc}{chapter}{על המסמך}
+
+המסמך נבנה מתוך רשימות בכתב יד שנכתבו במהלך ההרצאות. התוכן נשמר כמעט כפי שהוא, עם סידור, ניסוח מחדש ותיקון של שגיאות כתיבה ברורות. לאורך המסמך מופיעים כמה סוגי תיבות:
+
+\begin{definition*}{דוגמה לתיבה}
+הגדרות (ובצבע טורקיז: טענות, עקרונות ומשפטים) — התוכן המרכזי של הקורס.
+\end{definition*}
+
+\begin{suggestion}{סוג ההצעה}
+תיבה ורודה היא \textbf{הצעה} לתוספת שאינה מופיעה ברשימות המקוריות: דוגמה נוספת, הסבר נוסף, איור וכדומה. אפשר לאמץ, לערוך או למחוק.
+\end{suggestion}
+
+\begin{attentiondemo}{דוגמה לתיבה כתומה}
+תיבה כתומה, או סימון כתום בתוך השורה \textcolor{todoc}{\sffamily\small[\flag{} לבדיקה: ...]}, מסמנת מקום שבו היה ספק בפענוח הרשימות, או מקום שבו תיקנתי משהו ויש לוודא שהתיקון נכון. כל המקומות האלה מרוכזים ברשימה שבהמשך העמוד.
+\end{attentiondemo}
+
+את שני סוגי התוספות אפשר להסתיר בבת אחת באמצעות המתגים \texttt{showsuggestions} ו-\texttt{showtodos} שבראש קובץ המקור.
+
+\ifshowtodos
+\section*{רשימת המקומות הדורשים התייחסות}
+\listoftodos
+\fi
+
+\tableofcontents
+
+% =====================================================================
+\setcounter{chapter}{-1}
+\chapter{תורת הקבוצות}
+% =====================================================================
+
+\lecture{1}
+
+\section{מהי קבוצה?}
+
+\begin{definition}{קבוצה~\dash{} לא פורמלית}{set}
+\textbf{קבוצה} היא אוסף של \textbf{איברים}, כאשר:
+\begin{itemize}
+  \item אין חשיבות לסדר האיברים;
+  \item אין משמעות לחזרה על איברים.
+\end{itemize}
+\end{definition}
+
+\begin{example}{}{}
+\[
+  \set{1,2,3} \;=\; \set{3,2,1} \;=\; \set{1,1,2,3,1}.
+\]
+\end{example}
+
+\begin{notation}
+אם $x$ שייך לקבוצה $A$, נסמן $x\in A$, כלומר $x$ \emph{איבר} ב-$A$.
+בדומה, $x\notin A$ פירושו ש-$x$ אינו איבר ב-$A$.
+\end{notation}
+
+\section{קבוצות של מספרים}
+
+נסמן כמה קבוצות מספרים מוכרות:
+\begin{align*}
+  \N &= \set{1,2,3,\dots} && \heb{המספרים הטבעיים}\\
+  \Z &= \set{\dots,-2,-1,0,1,2,\dots} && \heb{המספרים השלמים}\\
+  \Q &= \setof{\tfrac{m}{n}}{m,n\in\Z,\ n\neq 0} && \heb{המספרים הרציונליים}\\
+  \R & && \heb{המספרים הממשיים}
+\end{align*}
+\needcheck{בהגדרת $\Q$ ברשימות נכתב $m\neq 0$; תיקנתי ל-$n\neq 0$ (המכנה הוא שאסור שיתאפס)}
+
+למשל, $\frac13\in\Q$ ו-$-\frac{10}{4}\in\Q$.
+
+\section{תיאור קבוצה על ידי תנאי}
+
+באופן כללי, קבוצה נכתבת בצורה
+\[
+  \Big\{\ \underbrace{\square}_{\heb{מי שבקבוצה}}\ \ \underbrace{\Big|}_{\heb{"כך ש..."}}\ \ \underbrace{\triangle}_{\heb{התנאי}}\ \Big\}
+\]
+
+\begin{example}{}{}
+\[
+  A=\setof{2n}{n\in\N}.
+\]
+במילים: $A$ מכילה את כל הכפולות ב-$2$ של המספרים הטבעיים, כלומר $A=\set{2,4,6,\dots}$.
+\end{example}
+
+\begin{example}{}{}
+\[
+  B=\setof{x}{1<x<7,\ x\in\N}=\set{2,3,4,5,6}.
+\]
+הפסיק בתוך התנאי פירושו \emph{"וגם"}: $x$ מקיים $1<x<7$ \emph{וגם} $x\in\N$.
+\end{example}
+
+\section{יחס ההכלה}
+
+\begin{definition}{הכלה}{subset}
+יהיו $A,B$ קבוצות. נאמר כי $A$ \textbf{מוכלת} ב-$B$, או ש-$A$ היא \textbf{תת-קבוצה} של $B$, ונסמן $A\subseteq B$, אם כל איבר ב-$A$ נמצא גם ב-$B$.
+\end{definition}
+
+\begin{example}{}{}
+$\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
+
+\smallskip
+לעומת זאת, $\Z\nsubseteq\N$, כי קיים איבר ב-$\Z$ שאינו ב-$\N$. למשל $-1$, או $0$.
+\end{example}
+
+\begin{definition}{הקבוצה הריקה}{empty}
+\textbf{הקבוצה הריקה} היא הקבוצה שאין בה אף איבר. נסמן אותה $\emptyset$, ומתקיים: לכל $x$, $x\notin\emptyset$.
+באופן שקול: לא קיים $x$ שעבורו $x\in\emptyset$.
+\end{definition}
+
+\section{פעולות על קבוצות}
+
+\begin{definition}{פעולות על קבוצות}{ops}
+יהיו $A,B$ קבוצות.
+\begin{enumerate}
+  \item \textbf{חיתוך:}\quad $A\cap B=\setof{x}{x\in A,\ x\in B}$.
+  \item \textbf{איחוד:}\quad $A\cup B=\setof{x}{x\in A \ \heb{או}\ x\in B}$.
+  \item \textbf{חיסור / הפרש} ("$A$ פחות $B$", כלומר "מי שב-$A$ ולא ב-$B$"):\quad $A\setminus B=\setof{x}{x\in A,\ x\notin B}$.
+  \item \textbf{הפרש סימטרי} (מי שנמצא \emph{בדיוק} באחת מהקבוצות):\quad $A\symdiff B=(A\setminus B)\cup(B\setminus A)$.
+\end{enumerate}
+\end{definition}
+
+\begin{example}{}{}
+יהיו $A=\set{1,2,3}$ ו-$B=\set{2,3,4}$. אז
+\[
+\begin{aligned}
+  A\setminus B &= \set{1}, & B\setminus A &= \set{4},\\
+  A\cap B &= \set{2,3}, & A\cup B &= \set{1,2,3,4},\\
+  A\symdiff B &= \set{1,4}.
+\end{aligned}
+\]
+\end{example}
+
+\begin{suggestion}{איור~\dash{} דיאגרמות ון}
+דיאגרמות ון עוזרות לזכור את ההגדרות (האזור הצבוע הוא תוצאת הפעולה):
+
+\medskip
+\begin{center}
+\newcommand{\venn}[2]{%
+\begin{tikzpicture}[scale=0.55]
+  \def\A{(0,0) circle (1.2)}\def\B{(1.4,0) circle (1.2)}
+  #1
+  \draw[thick] \A; \draw[thick] \B;
+  \node at (-0.55,0) {$A$}; \node at (1.95,0) {$B$};
+  \node[below] at (0.7,-1.35) {#2};
+\end{tikzpicture}}
+\venn{\begin{scope}[even odd rule]\fill[sugc!35]\A \B;\end{scope}}{$A\symdiff B$}\hfill
+\venn{\begin{scope}\begin{scope}[even odd rule]\clip\B (-2,-2) rectangle (4,2);\fill[sugc!35]\A;\end{scope}\end{scope}}{$A\setminus B$}\hfill
+\venn{\fill[sugc!35]\A;\fill[sugc!35]\B;}{$A\cup B$}\hfill
+\venn{\begin{scope}\clip\A;\fill[sugc!35]\B;\end{scope}}{$A\cap B$}
+\end{center}
+\end{suggestion}
+
+\begin{claim}{}{basic}
+לכל שתי קבוצות $A,B$ מתקיים:
+\[
+\renewcommand{\arraystretch}{1.3}
+\begin{array}{lll}
+  (1)\ \ A\cap B\subseteq A & (4)\ \ A\subseteq A\cup B & (7)\ \ A\setminus B\subseteq A\\
+  (2)\ \ A\cap B\subseteq B & (5)\ \ B\subseteq A\cup B & (8)\ \ A\setminus B\subseteq A\symdiff B\\
+  (3)\ \ A\cap B= B\cap A & (6)\ \ A\cup B= B\cup A & (9)\ \ A\symdiff B= B\symdiff A
+\end{array}
+\]
+\end{claim}
+
+\begin{suggestion}{דוגמה להוכחה}
+ברשימות הטענה מופיעה ללא הוכחה. כדאי להראות לפחות סעיף אחד, כדי להדגים את השיטה הסטנדרטית להוכחת הכלה: \emph{לוקחים איבר כלשהו בצד שמאל ומראים שהוא שייך לצד ימין.}
+
+\textbf{הוכחת (1).} יהי $x\in A\cap B$. לפי הגדרת החיתוך $x\in A$ וגם $x\in B$; בפרט $x\in A$. מכיוון ש-$x$ היה איבר כלשהו של $A\cap B$, קיבלנו $A\cap B\subseteq A$.
+
+\textbf{הוכחת (8).} יהי $x\in A\setminus B$. מאחר ש-$A\symdiff B=(A\setminus B)\cup(B\setminus A)$, ו-$x$ שייך לקבוצה הראשונה באיחוד, נקבל $x\in A\symdiff B$.
+
+\smallskip
+כדי להוכיח \emph{שוויון} $X=Y$ מראים שתי הכלות: $X\subseteq Y$ וגם $Y\subseteq X$.
+\end{suggestion}
+
+\subsection{המשלים}
+
+\begin{definition}{משלים}{complement}
+תהי $U$ קבוצה "אוניברסלית" (כל האיברים שבהם עוסקים), ותהי $A\subseteq U$. \textbf{המשלים} של $A$, שיסומן $\comp{A}$ (או $A^c$), הוא
+\[
+  \comp{A}=A^c=\setof{x\in U}{x\notin A}=U\setminus A.
+\]
+\end{definition}
+\needcheck{ברשימות ההגדרה נכתבה בלי קבוצה אוניברסלית, $\comp{A}=\setof{x}{x\notin A}$, ורק בדוגמה הופיע $U=\N$. הוספתי את $U$ להגדרה. יש לוודא שזה תואם את ההגדרה של המרצה}
+
+\begin{example}{$U=\N$}{}
+\begin{itemize}
+  \item $A=\set{1,2,3}$, ולכן $\comp{A}=\set{4,5,6,\dots}=\N\setminus A$.
+  \item $A=\N\setminus\set{2,4}$, ולכן $\comp{A}=\set{2,4}$.
+  \item $A=\N$, ולכן $\comp{A}=\emptyset$.
+\end{itemize}
+\end{example}
+
+\begin{suggestion}{תוספת תוכן~\dash{} כללי דה־מורגן}
+טבעי להוסיף כאן את כללי דה־מורגן, שמקשרים בין משלים, איחוד וחיתוך:
+\[
+  \comp{A\cup B}=\comp{A}\cap\comp{B},\qquad \comp{A\cap B}=\comp{A}\cup\comp{B}.
+\]
+\emph{בדיקה על דוגמה} ($U=\N$, $A=\set{1,2,3}$, $B=\set{2,3,4}$):
+$\comp{A\cup B}=\set{5,6,\dots}$, ומצד שני $\comp{A}\cap\comp{B}=\set{4,5,\dots}\cap\set{1,5,6,\dots}=\set{5,6,\dots}$.
+\end{suggestion}
+
+\section{קבוצת החזקה}
+
+\begin{definition}{קבוצת החזקה}{power}
+לכל קבוצה $A$ נסמן ב-$\Pow(A)$, או ב-$2^A$, את הקבוצה שאיבריה הם \emph{כל} תתי-הקבוצות של $A$:
+\[
+  \Pow(A)=\setof{B}{B\subseteq A}.
+\]
+\end{definition}
+
+\begin{example}{}{}
+עבור $A=\set{1,2}$, תתי-הקבוצות של $A$ הן $\emptyset,\ \set{1},\ \set{2},\ \set{1,2}$, ולכן
+\[
+  \Pow(A)=\big\{\emptyset,\ \set{1},\ \set{2},\ \set{1,2}\big\}.
+\]
+כאן יש ב-$\Pow(A)$ ארבעה איברים.
+\end{example}
+
+\begin{example}{}{powabc}
+עבור $A=\set{a,b,c}$, תתי-הקבוצות הן:
+\[
+  \emptyset,\quad \set{a},\ \set{b},\ \set{c},\quad \set{a,b},\ \set{a,c},\ \set{b,c},\quad \set{a,b,c}.
+\]
+סך הכול $8=2^3$ תתי-קבוצות, ול-$A$ יש $3$ איברים.
+\needcheck{ברשימות $\set{a,c}$ הופיעה פעמיים; תיקנתי את המופע השני ל-$\set{b,c}$}
+\end{example}
+
+\begin{remark}
+לכל קבוצה $A$ תמיד מתקיים $\emptyset\subseteq A$ וגם $A\subseteq A$ (כל קבוצה מוכלת בעצמה). לכן $\emptyset$ ו-$A$ הם תמיד איברים של $\Pow(A)$.
+בהמשך (מסקנה~\ref{cor:powsize}) נראה שאם ל-$A$ יש $n$ איברים, אז ל-$\Pow(A)$ יש $2^n$ איברים.
+\end{remark}
+
+\section{זוג סדור ומכפלה קרטזית}
+
+\begin{definition}{מכפלה קרטזית}{cartesian}
+יהיו $A,B$ קבוצות. \textbf{המכפלה הקרטזית} של $A$ ו-$B$ היא \emph{הקבוצה}
+\[
+  A\times B=\setof{(a,b)}{a\in A,\ b\in B},
+\]
+כאשר $(a,b)$ הוא \textbf{זוג סדור}.
+\end{definition}
+
+\begin{example}{}{}
+$A=\set{1,2}$, $B=\set{3,4}$. אז
+\[
+  A\times B=\set{(1,3),(1,4),(2,3),(2,4)}.
+\]
+מצד שני,
+\[
+  B\times A=\set{(3,1),(3,2),(4,1),(4,2)}.
+\]
+\textbf{שימו לב:} הזוגות הסדורים $(1,3)$ ו-$(3,1)$ \emph{שונים}! בזוג סדור הסדר חשוב, בניגוד לקבוצה.
+\end{example}
+
+\begin{example}{}{}
+מצאו את כל האיברים בקבוצה $\Pow(\set{1})\times\Pow(\emptyset)$.
+\[
+  \Pow(\set{1})\times\Pow(\emptyset)
+  =\underbrace{\set{\emptyset,\set{1}}}_{A}\times\underbrace{\set{\emptyset}}_{B}
+  =\big\{(\emptyset,\emptyset),\ (\set{1},\emptyset)\big\}.
+\]
+\end{example}
+
+\begin{suggestion}{הסבר נוסף}
+נקודה עדינה בדוגמה האחרונה: $\Pow(\emptyset)=\set{\emptyset}$ היא קבוצה עם \emph{איבר אחד} (הקבוצה הריקה), ולכן היא אינה ריקה. אילו היינו כופלים ב-$\emptyset$ עצמה, היינו מקבלים $A\times\emptyset=\emptyset$.
+כדאי לשים לב גם לגדלים: $|A\times B|=|A|\cdot|B|$ (כאן $2\cdot1=2$). זו הצצה ל\emph{עקרון הכפל} שבפרק הבא.
+\end{suggestion}
+
+% =====================================================================
+\chapter{קומבינטוריקה}
+% =====================================================================
+
+\section{מבוא: ספירה}
+
+קומבינטוריקה עוסקת במנייה ובספירה של דברים. נרצה לענות על שאלות מהצורה \emph{"בכמה דרכים ניתן...?"}, ולשם כך נכיר עקרונות כלליים ונוסחאות. נפתח בשלוש שאלות לדוגמה, ונשים לב למאפיינים של כל אחת:
+
+\begin{enumerate}[label=\textbf{(\arabic*)}]
+  \item \textbf{בכמה דרכים ניתן לבחור 3 סטודנטים מתוך 100?}
+  \begin{itemize}
+    \item הבחירה היא \emph{ללא חזרות}: לא בוחרים את אותו סטודנט פעמיים.
+    \item \emph{אין חשיבות לסדר} הבחירה.
+  \end{itemize}
+
+  \item \textbf{לאורך הסמסטר יש 3 מטלות, ולכל מטלה יש בודק (אחד מתוך 100 הסטודנטים). כמה הרכבים של בודקים יש?}
+  \begin{itemize}
+    \item \emph{יש אפשרות לחזרות}: למשל, יוסי יבדוק את כל המטלות.
+    \item \emph{יש חשיבות לסדר}: יש הבדל בין מי שבודק את מטלה 1 לבין מי שבודק את מטלה 2.
+  \end{itemize}
+
+  \item \textbf{מנעול עם קוד בן 3 ספרות (כל ספרה בין 0 ל-9). כמה קודים אפשריים יש?}
+  \begin{itemize}
+    \item \emph{יש חשיבות לסדר.}
+    \item \emph{יש חזרות.}
+  \end{itemize}
+\end{enumerate}
+
+\begin{suggestion}{לסגור את המעגל}
+כדאי לחזור לשלוש השאלות אחרי סעיף~\ref{sec:choose} ולתת להן תשובות:
+\[
+  (1)\ \binom{100}{3}=\frac{100\cdot 99\cdot 98}{3!}=161{,}700,\qquad
+  (2)\ 100^3=1{,}000{,}000,\qquad
+  (3)\ 10^3=1{,}000.
+\]
+\end{suggestion}
+
+\lecture{2}
+
+\section{עקרון הכפל}
+
+\begin{principle}{עקרון הכפל}{mult}
+אם נרצה לבצע משימה שמורכבת מ-$k$ שלבים, ובשלב ה-$i$ ניתן לבחור אחת מתוך $n_i$ אפשרויות, אז מספר הדרכים השונות לבצע את המשימה הוא
+\[
+  n_1\cdot n_2\cdot n_3\cdots n_k.
+\]
+\textbf{דגש:} מספר האפשרויות בכל שלב אינו תלוי במה שנבחר בשלב אחר.
+\end{principle}
+\needcheck{ברשימות נכתב "אחת מתוך $n_k$", ותיקנתי ל-$n_i$. כמו כן, יש לוודא את פענוח פריטי הארוחה בדוגמה הבאה (מיצים / סלטים / ביצים / לחמים)}
+
+\begin{example}{ארוחת בוקר}{}
+אני מרכיב ארוחת בוקר, כאשר ניתן לבחור:
+\begin{itemize}
+  \item אחד מתוך 3 מיצים \hfill ($n_1=3$)
+  \item אחד מתוך 4 סלטים \hfill ($n_2=4$)
+  \item אחד מתוך 3 סוגי ביצים \hfill ($n_3=3$)
+  \item אחד מתוך 2 סוגי לחמים \hfill ($n_4=2$)
+\end{itemize}
+יש כאן $k=4$ שלבים, ולכן מספר ארוחות הבוקר השונות שניתן להרכיב הוא
+$3\cdot4\cdot3\cdot2=72$.
+\end{example}
+
+\begin{example}{הושבה בשורה}{seating}
+מושיבים 10 אנשים בשורה של 10 כיסאות. בכמה דרכים שונות אפשר להושיב אותם?
+\begin{itemize}
+  \item המשימה הראשונה היא להושיב מישהו בכיסא 1: \quad $n_1=10$.
+  \item המשימה השנייה היא להושיב מישהו בכיסא 2: \quad $n_2=9$.
+  \item[] \hfill$\vdots$\hfill\null
+  \item המשימה העשירית היא להושיב מישהו בכיסא 10: \quad $n_{10}=1$.
+\end{itemize}
+לכן מספר הדרכים הוא
+\[
+  10\cdot9\cdot8\cdot7\cdots1=10!.
+\]
+\end{example}
+
+\begin{suggestion}{הסבר נוסף~\dash{} עצרת, ומה בדיוק אומר ה"דגש"}
+\textbf{עצרת.} לכל $n\in\N$ מגדירים $n!=1\cdot2\cdots n$, ובנוסף $0!=1$ (נשתמש בזה בהמשך). הסימון מופיע בדוגמה בלי הגדרה, אז כדאי להגדיר אותו במפורש.
+
+\textbf{הדגש בעקרון הכפל.} בדוגמת ההושבה, \emph{מי} יכול לשבת בכיסא 2 תלוי במי שהושב בכיסא 1, אבל \emph{מספר} האפשרויות הוא תמיד 9. זה כל מה שעקרון הכפל דורש: שמספר האפשרויות בכל שלב יהיה קבוע, גם אם האפשרויות עצמן משתנות.
+\end{suggestion}
+
+\section{עקרון החיבור}
+
+\begin{notation}
+לקבוצה $A$ נסמן ב-$|A|$ את \textbf{גודל} הקבוצה, כלומר את מספר האיברים בקבוצה.
+\end{notation}
+
+\begin{definition}{קבוצות זרות}{disjoint}
+הקבוצות $A,B$ נקראות \textbf{זרות} אם $A\cap B=\emptyset$, כלומר אין להן אף איבר משותף.
+\end{definition}
+
+\begin{principle}{עקרון החיבור~\dash{} שתי קבוצות}{add2}
+אם $A,B$ קבוצות זרות, אז
+\[
+  |A\cup B|=|A|+|B|.
+\]
+\end{principle}
+
+\begin{example}{}{}
+יהיו $A=\set{1,2}$, $B=\set{3,4}$ ו-$C=\set{2,3,4}$.
+\begin{itemize}
+  \item $A,B$ זרות, ולכן $A\cup B=\set{1,2,3,4}$ ואכן $|A\cup B|=4=|A|+|B|=2+2$.
+  \item $A,C$ \emph{אינן} זרות (שתיהן מכילות את $2$). כאן $A\cup C=\set{1,2,3,4}$, ולכן
+  \[|A\cup C|=4\neq 5=|A|+|C|.\]
+\end{itemize}
+\end{example}
+
+\begin{definition}{חלוקה}{partition}
+תהי $A$ קבוצה. \textbf{חלוקה} של $A$ היא אוסף של קבוצות $A_1,\dots,A_n$ המוכלות ב-$A$, שמקיימות:
+\begin{itemize}
+  \item $A=A_1\cup A_2\cup\dots\cup A_n$, וגם
+  \item $A_i\cap A_j=\emptyset$ לכל $i\neq j$ ב-$\set{1,\dots,n}$.
+\end{itemize}
+\end{definition}
+
+\begin{example}{}{partex}
+ניקח $A=\set{1,2,3,4}$. האם הקבוצות הבאות מהוות חלוקה של $A$?
+\begin{enumerate}[label=(\alph*)]
+  \item $A_1=\set{1,2}$, $A_2=\set{3}$. \quad \textbf{לא}, כי $A_1\cup A_2\neq A$ (חסר $4$).
+  \item $A_1=\set{1}$, $A_2=\set{2,3}$, $A_3=\set{4}$. \quad \textbf{כן!} $A_1\cup A_2\cup A_3=A$ והקבוצות זרות בזוגות.
+  \item $A_1=\set{1,2,3}$, $A_2=\set{3,4}$. \quad \textbf{לא}, כי $A_1\cap A_2\neq\emptyset$.
+  \item $A_1=\emptyset$, $A_2=\set{1,2,3,4}$. \quad \textbf{כן!}
+  \item $A_1=\set{1,2,3}$, $A_2=\set{4,5}$. \quad \textbf{לא!} $A_2$ אינה מוכלת ב-$A$.
+\end{enumerate}
+\needcheck{בסעיפים (א) ו-(ב) נכתב ברשימות $A_1\cap A_2\neq A$ ו-$A_1\cap A_2\cap A_3=A$; תיקנתי ל-$\cup$ (איחוד)}\par
+\needcheck{בסעיף (ד) הקבוצה הריקה מתקבלת כחלק בחלוקה. בספרים רבים דורשים שכל $A_i$ יהיה לא ריק. לוודא מה המוסכמה בקורס}
+\end{example}
+
+\begin{remark}
+\textbf{הכלה מול שייכות.} $\emptyset\subseteq A$ נכון \emph{לכל} קבוצה $A$. לעומת זאת $\emptyset\in A$ \emph{לא} נכון לכל קבוצה. למשל $\emptyset\notin\set{1,2,3,4}$, אבל $\emptyset\in\Pow(A)$ לכל $A$.
+\end{remark}
+
+\begin{principle}{עקרון החיבור~\dash{} כללי}{add}
+אם $A_1,\dots,A_n$ היא חלוקה של $A$, אז
+\[
+  |A|=|A_1|+|A_2|+\dots+|A_n|.
+\]
+\end{principle}
+
+בדרך כלל, השימוש בעקרון הוא כך: מחלקים את הבעיה ל\emph{מקרים} זרים (כלומר מוצאים חלוקה), סופרים כל מקרה בנפרד ומחברים.
+
+\begin{example}{כתיבת מספר כסכום}{compositions}
+בכמה דרכים ניתן לכתוב את $3$ כסכום של מספרים טבעיים (לא כולל $0$), כאשר יש משמעות לסדר?
+\[
+  3=1+2,\qquad 3=2+1,\qquad 3=1+1+1,\qquad 3=3.
+\]
+התשובה היא $4$.
+
+\medskip
+\textbf{אותה שאלה עבור $4$.} תהי $A$ קבוצת כל הדרכים לכתוב את $4$ כסכום; אנו מחפשים את $|A|$.
+לכל $k=1,2,3,4$ נגדיר $A_k$ = קבוצת הדרכים לכתוב את $4$ כסכום \emph{שמתחיל} ב-$k$.
+אז $A_1,\dots,A_4$ היא חלוקה של $A$:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c|c|c|c}
+  $A_1$ & $A_2$ & $A_3$ & $A_4$\\ \hline
+  $1+1+1+1$ & $2+1+1$ & $3+1$ & $4$\\
+  $1+1+2$   & $2+2$   &       &    \\
+  $1+2+1$   &         &       &    \\
+  $1+3$     &         &       &
+\end{tabular}
+\end{center}
+ולכן
+\[
+  |A|=|A_1|+|A_2|+|A_3|+|A_4|=4+2+1+1=8.
+\]
+\textbf{באופן כללי:} את $n$ ניתן לכתוב כסכום (עם משמעות לסדר) ב-$2^{n-1}$ דרכים.
+\end{example}
+
+\begin{suggestion}{הסבר נוסף~\dash{} למה $2^{n-1}$?}
+ברשימות הנוסחה מופיעה בלי הסבר. הנה הוכחה קצרה בעזרת עקרון הכפל: נכתוב את $n$ כשורה של $n$ אחדות,
+\[
+  1\ \_\ 1\ \_\ 1\ \_\ \cdots\ \_\ 1 ,
+\]
+שביניהן $n-1$ רווחים. בכל רווח מחליטים אם לשים "$+$" (מפריד בין מחוברים) או להשאיר ריק (כלומר לאחד את האחדות). למשל עבור $n=4$, הבחירה $1+1\,1+1$ מתאימה לסכום $1+2+1$.
+לכל רווח יש $2$ אפשרויות, ולכן יש $2^{n-1}$ סכומים שונים. עבור $n=4$ מתקבל $2^3=8$, בהתאם לחישוב.
+\end{suggestion}
+
+\section{בחירה של \texorpdfstring{$k$}{k} מתוך \texorpdfstring{$n$}{n} עצמים}\label{sec:choose}
+
+בוחרים $k$ עצמים מתוך $n$. יש ארבעה מקרים, לפי שתי שאלות: האם יש \emph{משמעות לסדר}, והאם מותרות \emph{חזרות}.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{r|c|c}
+  & \textbf{עם חזרות} & \textbf{בלי חזרות}\\ \hline
+  \textbf{יש משמעות לסדר} & $n^k$ \ \small(מקרה 1) & $\dfrac{n!}{(n-k)!}$ \ \small(מקרה 2)\\ \hline
+  \textbf{אין משמעות לסדר} & {\color{todoc}?} \ \small(מקרה 4) & $\dbinom{n}{k}$ \ \small(מקרה 3)
+\end{tabular}
+\end{center}
+
+\subsection*{מקרה 1: עם משמעות לסדר ועם חזרות}
+
+\begin{example}{}{}
+כל שבוע ממנים סטודנט למחוק את הלוח (סטודנט יכול להתמנות כמה פעמים). כמה שיבוצים אפשריים יש לסמסטר של 13 שבועות, כשיש 100 סטודנטים?
+\[
+  \underbrace{100}_{\heb{שבוע 1}}\cdot\underbrace{100}_{\heb{שבוע 2}}\cdots\underbrace{100}_{\heb{שבוע 13}}=100^{13}.
+\]
+יש $100^{13}$ דרכים לשיבוץ.
+\end{example}
+
+\begin{keybox}[title={באופן כללי}]
+בחירה של $k$ מתוך $n$, \textbf{עם} משמעות לסדר ו\textbf{עם} חזרות: \qquad $n^k$.
+\end{keybox}
+
+\subsection*{מקרה 2: עם משמעות לסדר ובלי חזרות}
+
+\begin{example}{}{}
+כל שבוע בוחרים סטודנט למחוק את הלוח, אבל כל אחד ייבחר \emph{לכל היותר פעם אחת}. לפי עקרון הכפל:
+\[
+  \underbrace{100}_{\heb{שבוע 1}}\cdot\underbrace{99}_{\heb{שבוע 2}}\cdot 98\cdots\underbrace{88}_{\heb{שבוע 13}}.
+\]
+\end{example}
+
+\begin{keybox}[title={באופן כללי}]
+בחירה של $k$ מתוך $n$, \textbf{עם} משמעות לסדר ו\textbf{בלי} חזרות:
+\[
+  n(n-1)\cdots\underbrace{\big(n-(k-1)\big)}_{n-k+1}=\frac{n!}{(n-k)!}.
+\]
+\end{keybox}
+
+\subsection*{מקרה 3: בלי משמעות לסדר ובלי חזרות}
+
+\begin{example}{}{}
+בכמה דרכים ניתן לבחור 2 סטודנטים (מתוך 100) שימחקו את הלוח?
+
+נתחיל בדוגמה קטנה: בחירה של 2 מתוך 4, מתוך הקבוצה $\set{A,B,C,D}$:
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{c|c}
+  \textbf{אין חזרות, אין סדר} & \textbf{אין חזרות, יש סדר}\\ \hline
+  $\set{A,B}$ & $AB,\ BA$\\
+  $\set{A,C}$ & $AC,\ CA$\\
+  $\set{A,D}$ & $AD,\ DA$\\
+  $\set{B,C}$ & $BC,\ CB$\\
+  $\set{B,D}$ & $BD,\ DB$\\
+  $\set{C,D}$ & $CD,\ DC$\\ \hline
+  $6$ אפשרויות & $\dfrac{4!}{(4-2)!}=\dfrac{24}{2}=12$
+\end{tabular}
+\end{center}
+\needcheck{ברשימות הופיע בטבלה $BD,\ BD$; תיקנתי ל-$BD,\ DB$}
+
+ובחזרה לשאלה המקורית:
+\[
+  \binom{100}{2}=\frac{100!}{(100-2)!\cdot2!}=\frac{100!}{98!\cdot2}=\frac{100\cdot99}{2}=4950.
+\]
+\end{example}
+
+\begin{keybox}[title={נוסחה~\dash{} המקדם הבינומי}]
+בחירה של $k$ מתוך $n$, \textbf{בלי} משמעות לסדר ו\textbf{בלי} חזרות:
+\[
+  \binom{n}{k}=\frac{n!}{(n-k)!\,k!}.
+\]
+המספר $\binom{n}{k}$ נקרא \textbf{מקדם בינומי}, ונקרא "$n$ מעל $k$" (\LR{"$n$ choose $k$"}).
+\end{keybox}
+
+\begin{suggestion}{הסבר נוסף~\dash{} למה מחלקים ב-$k!$?}
+הטבלה מראה את הרעיון: כל בחירה \emph{לא סדורה} $\set{A,B}$ מתאימה בדיוק ל-$2=2!$ בחירות \emph{סדורות} ($AB$ ו-$BA$). באופן כללי, כל קבוצה של $k$ עצמים אפשר לסדר ב-$k!$ דרכים (בדיוק כמו בדוגמת ההושבה~\ref{ex:seating}). לכן
+\[
+  \underbrace{\frac{n!}{(n-k)!}}_{\heb{עם סדר}}=\underbrace{\binom{n}{k}}_{\heb{בלי סדר}}\cdot\, k!
+  \qquad\Longrightarrow\qquad
+  \binom{n}{k}=\frac{n!}{(n-k)!\,k!}.
+\]
+\end{suggestion}
+
+\subsection*{מקרה 4: בלי משמעות לסדר ועם חזרות}
+
+\begin{attention}{המקרה הרביעי חסר ברשימות}
+ברשימות מופיעים רק שלושת המקרים הראשונים. ייתכן שהמקרה הרביעי נלמד בהרצאה מאוחרת יותר, או שלא נלמד כלל. אם הוא נלמד, הנוסחה המקובלת היא $\binom{n+k-1}{k}$ (שיטת "כדורים ומחיצות").
+\end{attention}
+
+\section{תכונות פשוטות של \texorpdfstring{$\binom{n}{k}$}{(n choose k)}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{בכמה דרכים ניתן לבחור $n$ עצמים מתוך $n$ העצמים?} בדרך אחת בלבד, כלומר $\binom{n}{n}=1$. מצד שני, גם מהנוסחה:
+  $\binom{n}{n}=\frac{n!}{n!\cdot0!}=1$.
+
+  \item $\binom{n}{0}=1$. אפשר להגיע לזה מהנוסחה: $\binom{n}{0}=\frac{n!}{0!\cdot n!}=1$.
+
+  \item \textbf{בכמה דרכים אפשר לבחור סטודנט אחד מתוך $n$?} $\binom{n}{1}=n$, ואכן
+  $\binom{n}{1}=\frac{n!}{1!\cdot(n-1)!}=n$.\newline
+  \needcheck{ברשימות נכתב בסוף החישוב $=n!$; תיקנתי ל-$=n$}
+
+  \item \textbf{99 סטודנטים מתוך 100} (ובאופן כללי, $n-1$ מתוך $n$):
+  $\binom{n}{n-1}=\frac{n!}{\big(n-(n-1)\big)!\cdot(n-1)!}=n$.
+
+  \item \textbf{סימטריה:} $\displaystyle\binom{n}{k}=\binom{n}{n-k}$.
+
+  \item \textbf{בכמה דרכים ניתן לבחור 3 סטודנטים מתוך 5?}
+  $\binom{5}{3}=\frac{5!}{3!\cdot2!}=\frac{4\cdot5}{2}=10$.
+\end{enumerate}
+
+\begin{remark}
+$\binom{n}{k}$ מוגדר (ובעל משמעות) רק כאשר $n,k$ שלמים ו-$0\le k\le n$.
+\end{remark}
+
+\section{הבינום של ניוטון}
+
+נוסחאות מוכרות מהתיכון:
+\[
+  (a+b)^2=a^2+2ab+b^2,\qquad (a+b)^3=a^3+3a^2b+3ab^2+b^3.
+\]
+
+\begin{theorem}{הבינום של ניוטון}{binom}
+לכל $a,b\in\R$ ולכל $n\ge1$:
+\[
+  (a+b)^n=\sum_{k=0}^{n}\binom{n}{k}a^k\,b^{n-k}
+  = a^0b^n+\binom{n}{1}a^1b^{n-1}+\dots+\binom{n}{n-1}a^{n-1}b+\binom{n}{n}a^nb^0.
+\]
+\end{theorem}
+
+\subsection{שימושים של הבינום של ניוטון}
+
+\textbf{שימוש 1.} ניקח $a=b=1$:
+\[
+  (1+1)^n=2^n=\sum_{k=0}^{n}\binom{n}{k}\cdot1^k\cdot1^{n-k}=\sum_{k=0}^{n}\binom{n}{k}.
+\]
+
+\begin{example}{$n=10$}{}
+\[
+  2^{10}=\binom{10}{0}+\binom{10}{1}+\dots+\binom{10}{9}+\binom{10}{10}.
+\]
+כל מחובר סופר תתי-קבוצות של $\set{1,\dots,10}$ בגודל מסוים. למשל, $\binom{10}{0}=1$ סופר את תת-הקבוצה היחידה בגודל $0$, כלומר $\emptyset$. $\binom{10}{1}=10$ סופר את $\set{1},\set{2},\dots,\set{10}$, וכן הלאה.
+\end{example}
+
+\begin{keybox}
+\[
+  \binom{n}{k}=\text{\RL{מספר תתי-הקבוצות בגודל $k$ של קבוצה עם $n$ איברים.}}
+\]
+למשל, $\binom{4}{2}=6$ (ראו את טבלת הבחירה של 2 מתוך $\set{A,B,C,D}$).
+\end{keybox}
+
+\begin{corollary}{}{powsize}
+אם ב-$A$ יש $n$ איברים, אז
+\[
+  \big|2^A\big|=\big|\Pow(A)\big|=2^n,
+\]
+כלומר ל-$A$ יש $2^n$ תתי-קבוצות. (נובע מהשימוש הראשון: סוכמים את מספר תתי-הקבוצות מכל גודל $k=0,1,\dots,n$.)
+\end{corollary}
+
+\begin{attention}{השימוש השני חסר}
+כותרת הסעיף ברשימות היא "שני שימושים של הבינום של ניוטון", אבל מופיע רק שימוש אחד. ייתכן שהשני נכתב רק על הלוח או נלמד בהרצאה הבאה. יש להשלים.
+\end{attention}
+
+\begin{suggestion}{מועמד לשימוש השני}
+שימוש נפוץ: ניקח $a=-1$, $b=1$. לכל $n\ge1$:
+\[
+  0=(-1+1)^n=\sum_{k=0}^{n}(-1)^k\binom{n}{k}
+  \quad\Longrightarrow\quad
+  \binom{n}{0}+\binom{n}{2}+\binom{n}{4}+\cdots=\binom{n}{1}+\binom{n}{3}+\cdots.
+\]
+במילים: לקבוצה עם $n\ge1$ איברים יש אותו מספר של תתי-קבוצות בגודל זוגי ובגודל אי-זוגי. למשל עבור $n=3$: $1+3=3+1$.
+\end{suggestion}
+
+\end{document}
