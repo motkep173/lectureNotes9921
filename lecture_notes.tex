@@ -173,6 +173,14 @@
 \newcommand{\Pow}{\mathcal{P}}
 \newcommand{\heb}[1]{\text{\RL{#1}}}
 \renewcommand{\emptyset}{\varnothing}
+% הסתברות
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\Ber}{\mathrm{Ber}}
+\newcommand{\Bin}{\mathrm{Bin}}
+\newcommand{\Geo}{\mathrm{Geo}}
+\newcommand{\Poi}{\mathrm{Poi}}
 
 % קו מפריד בכותרות (לגופן Simple CLM אין קו מפריד ארוך)
 \newcommand{\dash}{{\rmfamily —}}
@@ -827,6 +835,1497 @@ $\binom{n}{k}$ מוגדר (ובעל משמעות) רק כאשר $n,k$ שלמים
   \binom{n}{0}+\binom{n}{2}+\binom{n}{4}+\cdots=\binom{n}{1}+\binom{n}{3}+\cdots.
 \]
 במילים: לקבוצה עם $n\ge1$ איברים יש אותו מספר של תתי-קבוצות בגודל זוגי ובגודל אי-זוגי. למשל עבור $n=3$: $1+3=3+1$.
+\end{suggestion}
+
+% =====================================================================
+\chapter{מבוא להסתברות}
+% =====================================================================
+
+\lecture{3}
+
+\section{מרחב מדגם}
+
+\begin{definition}{מרחב מדגם}{sample}
+מבצעים ניסוי. את קבוצת כל התוצאות האפשריות של הניסוי נכנה \textbf{מרחב המדגם} של הניסוי. לרוב נסמן אותה ב-$\Omega$ (אומגה).
+\end{definition}
+
+\begin{example}{מרחבי מדגם}{omegas}
+\begin{enumerate}
+  \item זורקים קובייה רגילה: $\Omega=\set{1,2,3,4,5,6}$.
+  \item זורקים מטבע רגיל: $\Omega=\set{\heb{ע},\heb{פ}}$ (עץ או פלי).
+  \item זורקים שתי קוביות, אחת אחרי השנייה:
+  \[
+    \Omega=\setof{(a,b)}{1\le a\le 6,\ 1\le b\le 6}=\set{1,\dots,6}\times\set{1,\dots,6},
+  \]
+  כאשר $a$ היא התוצאה בקובייה הראשונה ו-$b$ התוצאה בקובייה השנייה.
+  \item \textbf{משחק דו-שלבי:} זורקים קובייה. אם יצא מספר זוגי מטילים מטבע, ואחרת זורקים קובייה נוספת.
+  \[
+  \begin{aligned}
+    \Omega=\big\{&(2,\heb{ע}),(2,\heb{פ}),(4,\heb{ע}),(4,\heb{פ}),(6,\heb{ע}),(6,\heb{פ}),\\
+    &(1,1),\dots,(1,6),\ (3,1),\dots,(3,6),\ (5,1),\dots,(5,6)\big\}.
+  \end{aligned}
+  \]
+  \item \textbf{מכונת מזל} שמגרילה מספר טבעי וסמל ($\heartsuit$ או $\diamondsuit$):
+  \[
+    \Omega=\setof{(a,b)}{a\in\N,\ b\in\set{\heartsuit,\diamondsuit}}=\N\times\set{\heartsuit,\diamondsuit}.
+  \]
+  למשל $(3,\heartsuit)$, $(10002,\heartsuit)$, $(11,\diamondsuit)$. זהו מרחב מדגם \emph{אינסופי}.
+  \item \textbf{משחקים קטאן:} זורקים 2 קוביות, $\Omega=\set{1,\dots,6}\times\set{1,\dots,6}$. מתעניינים במצב שבו סכום הקוביות הוא $7$:
+  \[
+    A=\set{(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)}.
+  \]
+  $A$ הוא אוסף של תוצאות אפשריות בניסוי, כלומר תת-קבוצה של $\Omega$.
+  \needcheck{ליד דוגמת קטאן הופיעה ברשימות הערה בתיבה אדומה שלא הצלחתי לפענח (אולי "השודד מגיע"?)}
+\end{enumerate}
+\end{example}
+
+\section{מאורעות}
+
+\begin{definition}{מאורע}{event}
+אם מבצעים ניסוי עם מרחב מדגם $\Omega$, אז כל תת-קבוצה $A\subseteq\Omega$ נקראת \textbf{מאורע} בניסוי.
+\end{definition}
+
+\begin{example}{זריקת קובייה, $\Omega=\set{1,\dots,6}$}{}
+\begin{itemize}
+  \item "יצא מספר זוגי": \quad $A=\set{2,4,6}$.
+  \item "יצא המספר 5": \quad $B=\set{5}$.
+  \item "יצא מספר שמחלק את 6": \quad $C=\set{1,2,3,6}$.
+  \needcheck{ברשימות נכתב $C=\set{2,3,6}$, אבל גם $1$ מחלק את $6$. הוספתי את $1$; ייתכן שהתנאי המקורי היה שונה}
+  \item "לא קרה כלום": \quad $D=\emptyset$.
+  \item "יצא מספר שגדול מ-$(-100)$": \quad $E=\set{1,\dots,6}=\Omega$.
+\end{itemize}
+כמה מאורעות יש? בדיוק כמספר תתי-הקבוצות של $\Omega$, כלומר $2^{|\Omega|}=2^6=64$.
+\end{example}
+
+\begin{remark}
+בכל ניסוי עם $\Omega\neq\emptyset$ יש שני מאורעות מיוחדים: $\emptyset$ (\textbf{המאורע הריק}) ו-$\Omega$ (\textbf{המאורע השלם}). אם $\Omega$ סופית ו-$|\Omega|=n$, יש בדיוק $2^n$ מאורעות (מסקנה~\ref{cor:powsize}).
+\end{remark}
+
+\begin{remark}
+כשאומרים שמאורע $A$ \emph{התרחש} (או \emph{קרה}), הכוונה היא שהתוצאה שהתקבלה בניסוי שייכת ל-$A$.
+\end{remark}
+
+\section{פונקציית הסתברות}
+
+מבצעים ניסוי. לכל מאורע $A\subseteq\Omega$ נרצה להתאים מספר $0\le\PP(A)\le1$ ("ההסתברות ש-$A$ קרה"), שמשקף את מידת הסבירות שהמאורע יתרחש: ככל שהמספר קרוב יותר ל-$1$ המאורע סביר יותר, וככל שהוא קרוב ל-$0$ הוא פחות סביר.
+
+\begin{example}{מטבע הוגן, $\Omega=\set{\heb{ע},\heb{פ}}$}{}
+\[
+  \PP(\emptyset)=0,\qquad \PP(\set{\heb{פ}})=\tfrac12,\qquad \PP(\set{\heb{ע}})=\tfrac12,\qquad \PP(\set{\heb{ע},\heb{פ}})=1.
+\]
+כאן $\PP$ היא פונקציה שמוגדרת על כל המאורעות, כלומר על $2^\Omega=\Pow(\Omega)$.
+\end{example}
+
+\begin{definition}{פונקציית הסתברות}{probfunc}
+בהינתן ניסוי עם מרחב מדגם $\Omega$, פונקציה $\PP:2^\Omega\to[0,1]$ נקראת \textbf{פונקציית הסתברות} אם:
+\begin{enumerate}[label=(\alph*)]
+  \item $\PP(\Omega)=1$;
+  \item לכל אוסף אינסופי של מאורעות $A_1,A_2,\dots$ \textbf{הזרים בזוגות} ($A_i\cap A_j=\emptyset$ לכל $i\neq j$):
+  \[
+    \PP\Big(\bigcup_{n=1}^{\infty}A_n\Big)=\sum_{n=1}^{\infty}\PP(A_n).
+  \]
+\end{enumerate}
+במילים: ההסתברות ש\emph{לפחות אחד} מהמאורעות $A_1,A_2,\dots$ קרה שווה לסכום ההסתברויות.
+\end{definition}
+
+\begin{example}{המטבע ההוגן הוא פונקציית הסתברות}{}
+תנאי (a) מתקיים. לגבי (b), נבדוק כמה אוספים של מאורעות זרים בזוגות. למשל $\set{\heb{ע}},\set{\heb{פ}},\emptyset,\emptyset,\dots$:
+\[
+  1=\PP(\Omega)=\PP\Big(\bigcup A_n\Big)=\sum\PP(A_n)=\tfrac12+\tfrac12+0+0+\dots=1.
+\]
+או $\Omega,\emptyset,\emptyset,\dots$:\ \ $\PP(\Omega)+\PP(\emptyset)+\dots=1+0+0+\dots=1$.
+אוספים נוספים: $\set{\heb{ע}},\emptyset,\emptyset,\dots$;\ \ $\set{\heb{פ}},\emptyset,\emptyset,\dots$;\ \ $\emptyset,\emptyset,\dots$.
+\end{example}
+
+\section{תכונות של פונקציית הסתברות}
+
+\begin{claim}{}{pempty}
+אם $\PP$ פונקציית הסתברות, אז $\PP(\emptyset)=0$.
+\end{claim}
+\begin{proof}
+האוסף $\emptyset,\emptyset,\emptyset,\dots$ זר בזוגות, ולכן לפי (b):
+\[
+  \PP(\emptyset)=\PP\Big(\bigcup_n\emptyset\Big)=\sum_{n=1}^\infty\PP(\emptyset)=\PP(\emptyset)+\PP(\emptyset)+\cdots,
+\]
+ולכן $\PP(\emptyset)=0$.
+\end{proof}
+
+\begin{suggestion}{הסבר נוסף~\dash{} למה בדיוק?}
+המעבר האחרון בהוכחה דורש מילה: אם היה $\PP(\emptyset)=c>0$, אז הסכום $c+c+c+\cdots$ היה שווה ל-$\infty$, ולא למספר הסופי $c$. לכן האפשרות היחידה היא $c=0$.
+\end{suggestion}
+
+\begin{claim}{מאוד שימושית}{add2prob}
+לכל שני מאורעות זרים $A,B$:\quad $\PP(A\cup B)=\PP(A)+\PP(B)$.
+\end{claim}
+\begin{proof}
+האוסף $A,B,\emptyset,\emptyset,\dots$ זר בזוגות, ולכן לפי (b) ולפי טענה~\ref{clm:pempty}:
+\[
+  \PP(A\cup B)=\PP\Big(\bigcup_n A_n\Big)=\sum_n\PP(A_n)=\PP(A)+\PP(B)+0+0+\cdots.\qedhere
+\]
+\end{proof}
+
+\begin{claim}{המשלים}{pcomp}
+לכל מאורע $A$:\quad $\PP(\comp A)=1-\PP(A)$, כאשר $\comp A=A^c=\Omega\setminus A$.
+\end{claim}
+\begin{proof}
+$A$ ו-$\comp A$ זרים, ולכן $1=\PP(\Omega)=\PP(A\cup\comp A)=\PP(A)+\PP(\comp A)$.
+\end{proof}
+
+\begin{claim}{הכלה והפרדה}{inclexcl}
+לכל שני מאורעות $A,B$:
+\[
+  \PP(A\cup B)=\PP(A)+\PP(B)-\PP(A\cap B).
+\]
+\end{claim}
+\begin{proof}
+$A\cup B=A\cup(B\setminus A)$, והקבוצות $A$ ו-$B\setminus A$ זרות. לכן $\PP(A\cup B)=\PP(A)+\PP(B\setminus A)$.
+מצד שני, $B=(B\setminus A)\cup(A\cap B)$, איחוד זר, ולכן $\PP(B)=\PP(B\setminus A)+\PP(A\cap B)$, כלומר $\PP(B\setminus A)=\PP(B)-\PP(A\cap B)$. נציב ונקבל את הדרוש.
+\end{proof}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+  \def\A{(0,0) circle (1.2)}\def\B{(1.4,0) circle (1.2)}
+  \begin{scope}\begin{scope}[even odd rule]\clip\A (-2,-2) rectangle (4,2);\fill[defc!25]\B;\end{scope}\end{scope}
+  \begin{scope}\clip\A;\fill[thmc!35]\B;\end{scope}
+  \draw[thick]\A; \draw[thick]\B;
+  \node at (-0.5,0) {$A$};
+  \node at (0.7,0) {\small $A\cap B$};
+  \node at (2.05,0) {\small $B\setminus A$};
+\end{tikzpicture}
+\end{center}
+
+\begin{claim}{}{addn}
+אם $A,B,C$ זרים בזוגות, אז $\PP(A\cup B\cup C)=\PP(A)+\PP(B)+\PP(C)$.
+באופן כללי, אם $A_1,\dots,A_n$ זרים בזוגות, אז $\PP(A_1\cup\dots\cup A_n)=\PP(A_1)+\dots+\PP(A_n)$.
+\end{claim}
+\begin{proof}[הסבר]
+$A$ ו-$B\cup C$ זרות, ולכן לפי טענה~\ref{clm:add2prob}: $\PP(A\cup B\cup C)=\PP(A)+\PP(B\cup C)=\PP(A)+\PP(B)+\PP(C)$.
+\end{proof}
+
+\begin{claim}{חסם האיחוד}{unionbound}
+לכל מאורעות $A_1,\dots,A_n$:\quad $\PP(A_1\cup\dots\cup A_n)\le\PP(A_1)+\dots+\PP(A_n)$.
+\end{claim}
+\begin{proof}[הסבר]
+עבור $n=2$: $\PP(A_1\cup A_2)=\PP(A_1)+\PP(A_2)-\underbrace{\PP(A_1\cap A_2)}_{\ge0}\le\PP(A_1)+\PP(A_2)$.
+עבור $n=3$: $\PP(A_1\cup A_2\cup A_3)\le\PP(A_1\cup A_2)+\PP(A_3)\le\PP(A_1)+\PP(A_2)+\PP(A_3)$, וכן הלאה.
+\end{proof}
+
+\begin{definition}{מרחב הסתברות}{probspace}
+\textbf{מרחב הסתברות} הוא שלשה $(\Omega,2^\Omega,\PP)$: מרחב המדגם, אוסף כל המאורעות, ופונקציית הסתברות.
+\end{definition}
+
+\section{מרחב הסתברות אחיד}
+
+\begin{example}{קובייה הוגנת}{}
+$\Omega=\set{1,\dots,6}$. לכל מאורע $A$ נגדיר $\PP(A)=\frac{|A|}{|\Omega|}$. למשל
+\[
+  \PP(\set{1,2})=\tfrac26=\tfrac13,\qquad \PP(\set{1,3,5})=\tfrac36=\tfrac12.
+\]
+\needcheck{ברשימות נכתב $\PP(\set{1,2})=\frac26=\frac12$ ו-$\PP(\set{1,3,5})=\frac36=\frac13$; תיקנתי את הצמצום}
+\end{example}
+
+\lecture{4}
+\needcheck{גבול ההרצאות 3 ו-4 אינו מסומן בקובץ \LR{\texttt{003\_004}}. ניחשתי שהרצאה 4 מתחילה כאן (עמוד 6 בקובץ)}
+
+\begin{definition}{מרחב הסתברות אחיד}{uniform}
+מרחב הסתברות נקרא \textbf{אחיד} אם מרחב המדגם הוא קבוצה \emph{סופית} $\Omega=\set{a_1,\dots,a_m}$ (לניסוי יש $m$ תוצאות אפשריות) ומתקיים
+\[
+  \PP(\set{a_1})=\PP(\set{a_2})=\dots=\PP(\set{a_m})=\frac1m.
+\]
+בקיצור: כל התוצאות שוות הסתברות!
+\end{definition}
+
+\begin{keybox}[title={במרחב הסתברות אחיד}]
+לכל מאורע $A$:\qquad $\displaystyle \PP(A)=\frac{|A|}{|\Omega|}$.
+\end{keybox}
+
+\begin{example}{}{}
+\begin{itemize}
+  \item מטבע הוגן עם צדדים "$0$" ו-"$1$": $\Omega=\set{0,1}$ ו-$\PP(\set0)=\PP(\set1)=\frac12$. זהו מרחב אחיד.
+  \item מטבע \emph{לא} הוגן: $\Omega=\set{0,1}$, $\PP(\set0)=\frac14$, $\PP(\set1)=\frac34$. זה \emph{אינו} מרחב אחיד.
+  \item קובייה הוגנת: $\PP(\set1)=\dots=\PP(\set6)=\frac16$. מרחב אחיד.
+  \item מחלקים לשחקן 3 קלפים מחפיסה רגילה (52 קלפים). כאן $|\Omega|=\binom{52}{3}$, וההסתברות שהשחקן קיבל את הקלפים $3,7,J$ היא $\frac{1}{\binom{52}{3}}$.
+  \needcheck{כדי שהתשובה $1/\binom{52}{3}$ תהיה נכונה צריך שמדובר בשלושה קלפים מסוימים (כולל הצורה), למשל $3\heartsuit,7\heartsuit,J\heartsuit$. לבדוק מה נאמר בהרצאה}
+\end{itemize}
+\end{example}
+
+\begin{example}{אותו ניסוי, שני מרחבים}{urn}
+בכד 4 כדורים לבנים ו-3 שחורים. מוציאים כדור אחד.
+\begin{itemize}
+  \item אם $\Omega=\set{\heb{לבן},\heb{שחור}}$, המרחב \emph{אינו} אחיד: $\PP(\heb{ש})=\frac37$, $\PP(\heb{ל})=\frac47$.
+  \item אם נמספר את הכדורים, $\Omega=\set{1,\dots,7}$, המרחב אחיד: $\PP(\set1)=\dots=\PP(\set7)=\frac17$.
+\end{itemize}
+\end{example}
+
+\section{מרחב הסתברות בדיד}
+
+\begin{definition}{קבוצה בת-מנייה}{countable}
+קבוצה נקראת \textbf{בת-מנייה} אם היא סופית, או אינסופית כך שאפשר לסדר את איבריה בסדרה $\set{a_1,a_2,a_3,\dots}$.
+\end{definition}
+
+\begin{example}{}{}
+$\N=\set{1,2,3,\dots}$ בת-מנייה; גם הזוגיים $\set{2,4,6,\dots}$, $\Z$ ו-$\Q$ בנות-מנייה. לעומת זאת, $\R$, האי-רציונליים והקטע $[0,1]$ \emph{אינם} בני-מנייה.
+\end{example}
+
+\begin{definition}{מרחב הסתברות בדיד}{discrete}
+מרחב הסתברות נקרא \textbf{בדיד} (דיסקרטי) אם $\Omega$ היא קבוצה בת-מנייה.
+\end{definition}
+
+\begin{example}{}{}
+\begin{itemize}
+  \item מגרילים מספר בין 0 ל-1: $\Omega=[0,1]$, לא בת-מנייה.
+  \item מודדים את אורך זמן החיים של נורה: $\Omega=[0,\infty)$, לא בת-מנייה.
+  \item מודדים את מספר השנים השלמות שבהן הנורה לא נשרפה: $\Omega=\set{0,1,2,\dots}$, בת-מנייה.
+  \item מודדים כמה ימים בשנה הראשונה הנורה לא נשרפה: $\Omega=\set{0,\dots,365}$, בת-מנייה.
+\end{itemize}
+\end{example}
+
+\begin{claim}{אין מרחב אחיד אינסופי}{nouniform}
+לא קיים מרחב הסתברות "אחיד" עם $\Omega=\set{1,2,3,\dots}$.
+\end{claim}
+\begin{proof}
+נניח ש-$\PP(\set1)=\PP(\set2)=\dots=x$. מתקיים $\set{1,2,3,\dots}=\set1\cup\set2\cup\set3\cup\cdots$, איחוד של קבוצות זרות בזוגות, ולכן
+\[
+  1=\PP(\Omega)=\PP(\set1)+\PP(\set2)+\PP(\set3)+\cdots=x+x+x+\cdots.
+\]
+אם $x=0$ הסכום הוא $0$, ואם $x>0$ הסכום אינסופי. בשני המקרים קיבלנו סתירה. לכן התשובה היא: לא!
+\end{proof}
+
+% =====================================================================
+\chapter{הסתברות מותנית ואי-תלות}
+% =====================================================================
+
+\section{הסתברות מותנית}
+
+נרצה לשאול: מה ההסתברות שמאורע $A$ קורה, \emph{בהינתן} שקרה מאורע $B$?
+
+\begin{definition}{הסתברות מותנית}{cond}
+יהיו $A,B$ מאורעות, כאשר $\PP(B)\neq0$. \textbf{ההסתברות של $A$ בהינתן $B$} היא
+\[
+  \PP(A\mid B)=\frac{\PP(A\cap B)}{\PP(B)}.
+\]
+כאן $A$ הוא המאורע שעליו שואלים, ו-$B$ הוא המאורע \emph{שידוע} שקרה.
+\end{definition}
+
+\begin{remark}
+הדרישה $\PP(B)\neq0$ לא הופיעה בהגדרה בהרצאה עצמה, אבל הודגשה בדף ההשלמה להרצאה 4 ("חשוב להשלים לפני תרגול 5").
+\end{remark}
+
+\begin{example}{כד כדורים}{condurn}
+בכד 2 כדורים שחורים, 3 כחולים ו-4 סגולים. מוציאים כדור אחד.
+\begin{itemize}
+  \item מה ההסתברות להוציא כדור כחול? \quad $\PP(\heb{כחול})=\frac39=\frac13$.
+  \item אם ידוע שלא יצא שחור, מה ההסתברות שיצא כחול? נסמן $A$ = "יצא כחול", $B$ = "לא יצא שחור". אז
+  \[
+    \PP(A\mid B)=\frac{\PP(A\cap B)}{\PP(B)}=\frac{3/9}{7/9}=\frac37.
+  \]
+  אינטואיטיבית: מרחב המדגם "הצטמצם" ל-7 הכדורים שאינם שחורים.
+\end{itemize}
+\end{example}
+
+\begin{keybox}[title={במרחב הסתברות אחיד}]
+\[
+  \PP(A\mid B)=\frac{\PP(A\cap B)}{\PP(B)}=\frac{|A\cap B|/|\Omega|}{|B|/|\Omega|}=\frac{|A\cap B|}{|B|}.
+\]
+\end{keybox}
+
+\begin{example}{דנה בוחרת קורס}{dana}
+לדנה יש נפש של אמנית ומוח של מתמטיקאית. אם דנה לוקחת קורס בהסתברות, ההסתברות שתעבור אותו היא $\frac13$. אם היא לוקחת קורס באמנות, ההסתברות שתעבור היא $\frac12$. דנה מחליטה איזה קורס לקחת על ידי הטלת מטבע הוגן: עץ = הסתברות, פלי = אמנות.
+\begin{enumerate}[label=(\alph*)]
+  \item מה הסיכוי שדנה תיקח את הקורס בהסתברות \emph{ו}תעבור אותו?
+  \item מה ההסתברות שדנה תעבור, לא משנה איזה קורס לקחה?
+\end{enumerate}
+\textbf{פתרון.} נסמן: $A$ = "דנה בחרה בקורס הסתברות", $\comp A$ = "דנה בחרה באמנות", $B$ = "דנה עוברת". נתון:
+\[
+  \PP(B\mid A)=\tfrac13,\qquad \PP(B\mid\comp A)=\tfrac12,\qquad \PP(A)=\PP(\comp A)=\tfrac12.
+\]
+\begin{enumerate}[label=(\alph*)]
+  \item $\frac13=\PP(B\mid A)=\frac{\PP(B\cap A)}{\PP(A)}=\frac{\PP(B\cap A)}{1/2}$, ולכן $\PP(B\cap A)=\frac12\cdot\frac13=\frac16$.
+  \item באותו אופן, $\frac12=\PP(B\mid\comp A)=\frac{\PP(B\cap\comp A)}{1/2}$, ולכן $\PP(B\cap\comp A)=\frac14$. מאחר ש-$B$ הוא איחוד זר של $B\cap A$ ו-$B\cap\comp A$:
+  \[
+    \PP(B)=\PP(B\cap A)+\PP(B\cap\comp A)=\tfrac16+\tfrac14=\tfrac5{12}.
+  \]
+\end{enumerate}
+\end{example}
+
+\begin{keybox}[title={שני כללים}]
+\begin{enumerate}
+  \item $\PP(A\cap B)=\PP(A\mid B)\cdot\PP(B)$ \quad (ישירות מההגדרה).
+  \item $\PP(A)=\PP(A\cap B)+\PP(A\cap\comp B)=\PP(A\mid B)\PP(B)+\PP(A\mid\comp B)\PP(\comp B)$.
+\end{enumerate}
+הכלל השני הוא מקרה פרטי של נוסחת ההסתברות השלמה.
+\end{keybox}
+
+\section{נוסחת ההסתברות השלמה}
+
+\begin{theorem}{נוסחת ההסתברות השלמה}{total}
+יהיו $B_1,B_2,\dots$ (אוסף סופי או אינסופי) מאורעות המהווים \textbf{חלוקה} של $\Omega$, כלומר זרים בזוגות ו-$\bigcup_k B_k=\Omega$. אז לכל מאורע $A$:
+\[
+  \PP(A)=\sum_{k}\PP(A\cap B_k)=\sum_k\PP(A\mid B_k)\cdot\PP(B_k).
+\]
+\end{theorem}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[thick] (0,0) rectangle (6,3);
+  \node[above left] at (6,3) {$\Omega$};
+  \draw (2,0)--(2,3); \draw (4,0)--(4,3);
+  \node at (1,2.6) {$B_1$}; \node at (3,2.6) {$B_2$}; \node at (5,2.6) {$B_3$};
+  \begin{scope}
+    \clip (3,1.3) ellipse (2.2 and 0.9);
+    \fill[defc!20] (0,0) rectangle (2,3);
+    \fill[thmc!25] (2,0) rectangle (4,3);
+    \fill[sugc!20] (4,0) rectangle (6,3);
+  \end{scope}
+  \draw[thick,keyc] (3,1.3) ellipse (2.2 and 0.9);
+  \node at (1.45,1.3) {\small $A\cap B_1$};
+  \node at (3,1.3) {\small $A\cap B_2$};
+  \node at (4.55,1.3) {\small $A\cap B_3$};
+  \node[keyc] at (3,0.15) {$A$};
+\end{tikzpicture}
+\end{center}
+
+\begin{example}{טושים פגומים}{markers}
+בקופסה יש 3 טושים שחורים, 4 טושים כחולים ו-6 טושים אדומים. ההסתברות שטוש שחור יהיה פגום היא $\frac13$, שטוש כחול יהיה פגום $\frac12$, ושטוש אדום יהיה פגום $\frac12$. מה ההסתברות שטוש שנבחר באקראי מהקופסה פגום?
+
+\textbf{פתרון.} נסמן $A$ = "הטוש פגום"; אנחנו מחפשים את $\PP(A)$. נסמן $B_1$, $B_2$, $B_3$ = "נבחר טוש שחור / כחול / אדום". אלו מהווים חלוקה של $\Omega$, ומתקיים
+\[
+\begin{aligned}
+  &\PP(B_1)=\tfrac3{13}, && \PP(B_2)=\tfrac4{13}, && \PP(B_3)=\tfrac6{13},\\
+  &\PP(A\mid B_1)=\tfrac13, && \PP(A\mid B_2)=\tfrac12, && \PP(A\mid B_3)=\tfrac12.
+\end{aligned}
+\]
+לפי נוסחת ההסתברות השלמה:
+\[
+  \PP(A)=\sum_{k=1}^3\PP(A\mid B_k)\PP(B_k)=\frac13\cdot\frac3{13}+\frac12\cdot\frac4{13}+\frac12\cdot\frac6{13}=\frac{1+2+3}{13}=\frac6{13}.
+\]
+\needcheck{ברשימות החישוב נעצר לפני התוצאה הסופית; השלמתי $\frac{6}{13}$}
+\end{example}
+
+\section{נוסחת בייס}
+
+\begin{theorem}{נוסחת בייס}{bayes}
+\[
+  \PP(A\mid B)=\PP(B\mid A)\cdot\frac{\PP(A)}{\PP(B)}.
+\]
+\end{theorem}
+\begin{proof}[הסבר]
+\[
+  \PP(B\mid A)\cdot\frac{\PP(A)}{\PP(B)}=\frac{\PP(A\cap B)}{\PP(A)}\cdot\frac{\PP(A)}{\PP(B)}=\frac{\PP(A\cap B)}{\PP(B)}=\PP(A\mid B).\qedhere
+\]
+\end{proof}
+
+\begin{suggestion}{דוגמה נוספת~\dash{} בייס על הטושים}
+נוסחת בייס מופיעה ברשימות בלי דוגמה. דוגמת הטושים מתאימה בדיוק: \emph{נבחר טוש והתברר שהוא פגום; מה ההסתברות שהוא שחור?}
+\[
+  \PP(B_1\mid A)=\PP(A\mid B_1)\cdot\frac{\PP(B_1)}{\PP(A)}=\frac13\cdot\frac{3/13}{6/13}=\frac16.
+\]
+שימו לב לשילוב: את המכנה $\PP(A)$ חישבנו בעזרת נוסחת ההסתברות השלמה. זה התבנית הנפוצה ביותר בתרגילים.
+\end{suggestion}
+
+\lecture{5}
+
+\section{מאורעות בלתי תלויים}
+
+\begin{definition}{מאורעות תלויים ובלתי תלויים}{indep}
+במרחב הסתברות $(\Omega,2^\Omega,\PP)$, שני מאורעות $A,B$ נקראים \textbf{תלויים} אם $\PP(A\cap B)\neq\PP(A)\PP(B)$.
+אם $\PP(A\cap B)=\PP(A)\cdot\PP(B)$, נאמר ש-$A,B$ \textbf{בלתי תלויים} (ב"ת).
+\end{definition}
+
+\begin{example}{קלפים}{cards}
+בוחרים קלף מתוך חפיסת קלפים רגילה: 52 קלפים, ב-4 צורות ($\heartsuit,\diamondsuit,\clubsuit,\spadesuit$), עם הערכים $2,\dots,10$, נסיך ($J$), מלכה ($Q$), מלך ($K$) ואס ($A$). נסמן:
+\begin{itemize}
+  \item $A$ = "יצא לב";
+  \item $B$ = "יצא 4";
+  \item $C$ = מאורע שמכיל 5 קלפים, ובהם בדיוק לב אחד (למשל: "יצא 8, או קלף מסוים נוסף").
+  \needcheck{לא הצלחתי לפענח את הגדרת $C$ ("יצא 8 או שיצא ..."). מהחישובים עולה ש-$|C|=5$ ו-$A\cap C=\set{8\heartsuit}$}
+\end{itemize}
+\textbf{האם $A,B$ תלויים?} אינטואיטיבית לא. ואכן,
+\[
+  \PP(A)=\tfrac{13}{52}=\tfrac14,\qquad \PP(B)=\tfrac4{52}=\tfrac1{13},\qquad \PP(A\cap B)=\PP(\set{4\heartsuit})=\tfrac1{52}=\tfrac14\cdot\tfrac1{13},
+\]
+ולכן $A,B$ בלתי תלויים.
+
+\textbf{האם $A,C$ תלויים?} $\PP(C)=\frac5{52}$ ו-$\PP(A\cap C)=\PP(\set{8\heartsuit})=\frac1{52}$, אבל $\frac14\cdot\frac5{52}\neq\frac1{52}$. לכן $A,C$ תלויים.
+\end{example}
+
+\begin{remark}
+אם $\PP(A)\neq0$, אז
+\[
+  A,B\ \heb{ב"ת}\iff \PP(A\cap B)=\PP(A)\PP(B)\iff \PP(B\mid A)=\frac{\PP(A\cap B)}{\PP(A)}=\PP(B).
+\]
+\textbf{במילים:} $A,B$ בלתי תלויים אם ורק אם ההסתברות של $B$ לא משתנה גם כשיודעים ש-$A$ קרה!
+בדוגמת הקלפים: $\PP(B\mid A)=\frac1{13}$ (יצא 4, בהינתן שיצא לב), וגם $\PP(B)=\frac1{13}$.
+\end{remark}
+
+\begin{example}{שתי קוביות}{twodice}
+זורקים 2 קוביות רגילות והוגנות, $|\Omega|=36$. נסמן: $A$ = "בקובייה הראשונה יצא 4", $B$ = "סכום הקוביות 6", $C$ = "סכום הקוביות 7".
+\[
+  B=\set{(1,5),\dots,(5,1)},\qquad C=\set{(1,6),(2,5),\dots,(6,1)}.
+\]
+\begin{itemize}
+  \item $\PP(A)=\frac6{36}=\frac16$, $\PP(B)=\frac5{36}$, $\PP(A\cap B)=\PP(\set{(4,2)})=\frac1{36}$. אבל $\frac16\cdot\frac5{36}\neq\frac1{36}$, ולכן $A,B$ \textbf{תלויים}.
+  \item $\PP(C)=\frac6{36}=\frac16$, $\PP(A\cap C)=\PP(\set{(4,3)})=\frac1{36}=\frac16\cdot\frac16$, ולכן $A,C$ \textbf{בלתי תלויים}.
+\end{itemize}
+\needcheck{ברשימות נכתב $\PP(A\cap C)=\frac16$; תיקנתי ל-$\frac1{36}$}
+\end{example}
+
+\begin{claim}{מקרים פשוטים}{indepcases}
+\begin{enumerate}
+  \item אם $A,B$ זרים ($A\cap B=\emptyset$) וגם $\PP(A)>0$, $\PP(B)>0$, אז $A,B$ \emph{תלויים}.
+  \item אם $\PP(A)=0$, אז $A,B$ בלתי תלויים לכל מאורע $B$.
+  \item אם $A,B$ בלתי תלויים, אז גם $A,\comp B$ בלתי תלויים. (תרגיל!)
+\end{enumerate}
+\end{claim}
+\begin{proof}
+\begin{enumerate}
+  \item $\PP(A\cap B)=\PP(\emptyset)=0$, אבל $\PP(A)\PP(B)>0$.
+  \item לפי תכונת המונוטוניות (למטה), $0\le\PP(A\cap B)\le\PP(A)=0$. לכן $\PP(A\cap B)=0=\PP(A)\PP(B)$.\qedhere
+\end{enumerate}
+\end{proof}
+
+\begin{claim}{מונוטוניות של פונקציית הסתברות}{monotone}
+אם $\PP$ פונקציית הסתברות, אז לכל $A\subseteq B$ מתקיים $\PP(A)\le\PP(B)$.
+\end{claim}
+\begin{proof}
+$B=A\cup(B\setminus A)$, איחוד זר, ולכן $\PP(B)=\PP(A)+\PP(B\setminus A)\ge\PP(A)$.
+\end{proof}
+
+\begin{suggestion}{פתרון לסעיף 3 ("תרגיל!")}
+$A$ הוא איחוד זר של $A\cap B$ ו-$A\cap\comp B$, ולכן
+\[
+  \PP(A\cap\comp B)=\PP(A)-\PP(A\cap B)=\PP(A)-\PP(A)\PP(B)=\PP(A)\big(1-\PP(B)\big)=\PP(A)\PP(\comp B).
+\]
+בהפעלה חוזרת מקבלים שגם $\comp A,\comp B$ בלתי תלויים.
+\end{suggestion}
+
+\begin{definition}{אי-תלות במשותף}{mutual}
+אוסף מאורעות $A_1,A_2,A_3,\dots$ (סופי או אינסופי) נקרא \textbf{בלתי תלוי במשותף} (בהדדיות) אם לכל בחירה של מספר סופי של מאורעות מתוך האוסף, ההסתברות של החיתוך שווה למכפלת ההסתברויות. כלומר, לכל $n\ge2$ ולכל אינדקסים שונים $i_1,\dots,i_n$:
+\[
+  \PP(A_{i_1}\cap A_{i_2}\cap\dots\cap A_{i_n})=\PP(A_{i_1})\cdot\PP(A_{i_2})\cdots\PP(A_{i_n}).
+\]
+\end{definition}
+
+\begin{example}{ב"ת בזוגות, אבל לא במשותף}{pairwise}
+מטילים 2 מטבעות הוגנים שצדדיהם מסומנים $0,1$. $\Omega=\set{(0,0),(0,1),(1,0),(1,1)}$. נסמן:
+\begin{itemize}
+  \item $A$ = "במטבע הראשון יצא 0" $=\set{(0,0),(0,1)}$;
+  \item $B$ = "במטבע השני יצא 0" $=\set{(0,0),(1,0)}$;
+  \item $C$ = "במטבעות יצאו ערכים שונים" $=\set{(1,0),(0,1)}$.
+\end{itemize}
+$\PP(A)=\PP(B)=\PP(C)=\frac12$, ו-$\PP(A\cap B)=\PP(A\cap C)=\PP(B\cap C)=\frac14$. לכן כל זוג מבין השלושה בלתי תלוי.
+אבל $A\cap B\cap C=\emptyset$, ולכן
+\[
+  \PP(A\cap B\cap C)=0\neq\tfrac18=\PP(A)\PP(B)\PP(C).
+\]
+כלומר $A,B,C$ \textbf{אינם} בלתי תלויים במשותף.
+\end{example}
+
+% =====================================================================
+\chapter{משתנים מקריים}
+% =====================================================================
+
+\section{הגדרה ודוגמאות}
+
+במרחב הסתברות $(\Omega,2^\Omega,\PP)$ נרצה להתעניין בפונקציות, או במדדים, שקשורים לתוצאת הניסוי.
+
+\begin{example}{סכום שלוש קוביות}{sum3}
+זורקים 3 קוביות רגילות והוגנות, ומתעניינים בסכום. נסמן ב-$X$ את סכום הקוביות. אם יצא $(1,1,1)$ אז $X=3$, ואם יצא $(2,5,1)$ אז $X=8$.
+באופן כללי, אם יצא $(a,b,c)\in\Omega$, אז $X$ יהיה $a+b+c$. כלומר הגדרנו פונקציה
+\[
+  X(a,b,c)=a+b+c,\qquad X:\Omega\to\R.
+\]
+\end{example}
+
+\begin{example}{הימור}{bet}
+זורקים 5 קוביות. אם בקובייה השנייה יצא 5 מרוויחים 2000 ש"ח; אם בקובייה השנייה יצא 4 מפסידים 100 ש"ח; אחרת אין רווח ואין הפסד. נסמן ב-$X$ את הרווח לאחר הניסוי. גם כאן $X:\Omega\to\R$:
+\[
+  X\big((i_1,i_2,i_3,i_4,i_5)\big)=
+  \begin{cases}
+    2000, & i_2=5,\\
+    -100, & i_2=4,\\
+    0, & \heb{אחרת}.
+  \end{cases}
+\]
+\end{example}
+
+בשתי הדוגמאות $X$ הוא פונקציה מ-$\Omega$ ל-$\R$, כלומר הוא מתאים לכל תוצאה אפשרית של הניסוי מספר כלשהו.
+
+\begin{definition}{משתנה מקרי}{rv}
+\textbf{משתנה מקרי} (מ"מ) $X$ הוא פונקציה $X:\Omega\to\R$.
+\end{definition}
+
+\begin{example}{עשרה מטבעות}{}
+זורקים 10 מטבעות שצדדיהם $0,1$. דוגמאות למשתנים מקריים:
+$X_1$ = התוצאה של המטבע הראשון;\ \
+$X_2$ = המכפלה של כל התוצאות;\ \
+$X_3=2^n$, כאשר $n$ הוא מספר ה-1-ים שיצאו.
+\end{example}
+
+\section{פונקציית ההסתברות של משתנה מקרי}
+
+משתנה מקרי $X$ הוא לא מאורע, אבל "$X=3$" \emph{כן} מאורע: זו קבוצת כל התוצאות $\omega\in\Omega$ שעבורן $X(\omega)=3$.
+
+\begin{example}{}{}
+$X$ = סכום של 2 קוביות.
+"$X=2$" הוא המאורע $\set{(1,1)}$, ו-"$X=1$" הוא המאורע הריק.
+"$X=6$" הוא המאורע שסכום הקוביות 6, ולכן $\PP(X=6)=\frac5{36}$.
+\end{example}
+
+באופן כללי, אם $X$ מ"מ, אז $X=t$ הוא מאורע לכל $t\in\R$. לכן אפשר לדבר על $\PP(X=t)$.
+
+\begin{definition}{פונקציית ההסתברות}{pmf}
+\textbf{פונקציית ההסתברות} של המ"מ $X$ היא
+\[
+  P_X(t)=\PP(X=t),\qquad t\in\R.
+\]
+\end{definition}
+
+\begin{example}{סכום שתי קוביות}{sum2}
+$P_X(1)=\PP(X=1)=\PP(\emptyset)=0$,\ \ $P_X(2)=\frac1{36}$,\ \ $P_X(2.5)=0$. באופן כללי:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|cccccccccccc}
+  $t$ & $2$ & $3$ & $4$ & $5$ & $6$ & $7$ & $8$ & $9$ & $10$ & $11$ & $12$ & \heb{אחר}\\ \hline
+  $P_X(t)$ & $\frac1{36}$ & $\frac2{36}$ & $\frac3{36}$ & $\frac4{36}$ & $\frac5{36}$ & $\frac6{36}$ & $\frac5{36}$ & $\frac4{36}$ & $\frac3{36}$ & $\frac2{36}$ & $\frac1{36}$ & $0$
+\end{tabular}
+\end{center}
+\end{example}
+
+\begin{example}{אותה פונקציית הסתברות, ניסויים שונים}{samepmf}
+נניח ש-$X$ מ"מ עם $P_X(1)=P_X(0)=\frac12$ ו-$P_X(t)=0$ לכל $t$ אחר. פונקציית ההסתברות הזו מתאימה, למשל:
+\begin{itemize}
+  \item להטלת מטבע הוגן, כאשר $X$ היא תוצאת ההטלה;
+  \item לזריקת 6 קוביות, כאשר $X=1$ אם בקובייה הראשונה יצא מספר זוגי ו-$X=0$ אם יצא מספר אי-זוגי.
+\end{itemize}
+\end{example}
+
+\begin{remark}
+בפועל, פונקציית ההסתברות של $X$ מספרת לנו מהם הערכים האפשריים של $X$, ומה ההסתברות לקבל כל אחד מהם.
+\end{remark}
+
+\section{פונקציית ההתפלגות המצטברת}
+
+לעיתים נעסוק גם במאורעות כמו $X\le t$, $X>t$ או $X<t$.
+
+\begin{definition}{פונקציית התפלגות מצטברת}{cdf}
+בהינתן מ"מ $X$, \textbf{פונקציית ההתפלגות המצטברת} של $X$ היא $F_X:\R\to[0,1]$ המוגדרת על ידי
+\[
+  F_X(t)=\PP(X\le t),\qquad t\in\R.
+\]
+\end{definition}
+
+\begin{example}{מספר השלשות}{threes}
+זורקים 2 קוביות. נסמן ב-$X$ את מספר הקוביות שבהן יצא 3. נמצא את $P_X$ ואת $F_X$.
+
+\textbf{פתרון.} הערכים האפשריים של $X$ הם $0,1,2$:
+\[
+  P_X(0)=\tfrac{25}{36},\qquad P_X(1)=\tfrac{10}{36},\qquad P_X(2)=\tfrac1{36},\qquad P_X(t)=0\ \ \heb{לכל $t$ אחר}.
+\]
+\needcheck{ברשימות מציאת $F_X$ בדוגמה זו לא הושלמה; ההשלמה בתיבה הוורודה}
+\end{example}
+
+\begin{suggestion}{השלמת הדוגמה}
+$F_X(t)$ "אוספת" את ההסתברויות של כל הערכים שקטנים או שווים ל-$t$:
+\[
+  F_X(t)=\begin{cases}
+    0, & t<0,\\
+    \frac{25}{36}, & 0\le t<1,\\
+    \frac{35}{36}, & 1\le t<2,\\
+    1, & t\ge 2.
+  \end{cases}
+\]
+\end{suggestion}
+
+\lecture{6}
+
+\begin{example}{מספר העצים בשני מטבעות}{twocoins}
+זורקים 2 מטבעות רגילים, ונגדיר $X$ = מספר העצים שיצאו:
+\[
+  X(\heb{ע},\heb{ע})=2,\quad X(\heb{ע},\heb{פ})=1,\quad X(\heb{פ},\heb{ע})=1,\quad X(\heb{פ},\heb{פ})=0.
+\]
+כאן $X$ יכול לקבל את הערכים $0,1,2$. המאורע "$X=0$" הוא $\set{(\heb{פ},\heb{פ})}$, ו-"$X=1$" הוא $\set{(\heb{ע},\heb{פ}),(\heb{פ},\heb{ע})}$. גם "$X\le1$" הוא מאורע:
+\[
+  \set{X\le 1}=\set{(\heb{פ},\heb{פ}),(\heb{ע},\heb{פ}),(\heb{פ},\heb{ע})}=\Omega\setminus\set{(\heb{ע},\heb{ע})}.
+\]
+פונקציית ההתפלגות המצטברת:
+\[
+  F_X(t)=\PP(X\le t)=\begin{cases}
+    0, & t<0,\\
+    \frac14, & 0\le t<1,\\
+    \frac34, & 1\le t<2,\\
+    1, & t\ge2.
+  \end{cases}
+\]
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=2.4cm]
+  \draw[->] (-1.2,0)--(3,0) node[below] {$t$};
+  \draw[->] (0,-0.1)--(0,1.2) node[left] {$F_X(t)$};
+  \foreach \y/\l in {0.25/\frac14,0.75/\frac34,1/1} \draw (0.05,\y)--(-0.05,\y) node[left] {$\l$};
+  \foreach \x in {1,2} \draw (\x,0.05)--(\x,-0.05) node[below] {$\x$};
+  \draw[very thick,defc] (-1.2,0)--(0,0);
+  \draw[very thick,defc] (0,0.25)--(1,0.25);
+  \draw[very thick,defc] (1,0.75)--(2,0.75);
+  \draw[very thick,defc] (2,1)--(3,1);
+  \foreach \x/\y in {0/0.25,1/0.75,2/1} \fill[defc] (\x,\y) circle (2pt);
+  \foreach \x/\y in {0/0,1/0.25,2/0.75} \filldraw[fill=white,draw=defc,thick] (\x,\y) circle (2pt);
+  \draw[densely dashed,exc] (1.5,0)--(1.5,0.75);
+  \node[exc,above right] at (1.5,0.75) {\small $\PP(X\le\frac32)=\frac34$};
+\end{tikzpicture}
+\end{center}
+\end{example}
+
+\begin{claim}{תכונות של $F_X$}{cdfprops}
+לכל מ"מ $X$:
+\begin{enumerate}
+  \item $F_X$ מונוטונית עולה (במובן החלש): אם $t_1<t_2$ אז $F_X(t_1)\le F_X(t_2)$.
+  \item $\displaystyle\lim_{t\to\infty}F_X(t)=1$.
+  \item $\displaystyle\lim_{t\to-\infty}F_X(t)=0$.
+  \item $F_X$ רציפה מימין בכל נקודה (אבל לא בהכרח רציפה משמאל).
+\end{enumerate}
+\end{claim}
+
+\begin{remark}
+בדוגמה הקודמת $F_X$ רציפה מימין, אבל אינה רציפה משמאל בנקודות $0,1,2$.
+\end{remark}
+
+\begin{proof}[הוכחת תכונה 1]
+אם $t_1<t_2$, אז $\set{X\le t_1}\subseteq\set{X\le t_2}$. לפי תכונת המונוטוניות של פונקציית ההסתברות (טענה~\ref{clm:monotone}):
+$F_X(t_1)=\PP(X\le t_1)\le\PP(X\le t_2)=F_X(t_2)$.
+\end{proof}
+
+\section{משתנים מקריים בדידים}
+
+\begin{remark}
+\textbf{בקורס זה נעסוק רק במשתנים מקריים בדידים!}
+\end{remark}
+
+\begin{definition}{משתנה מקרי בדיד}{discreterv}
+מ"מ $X$ נקרא \textbf{בדיד} אם קיימת קבוצה $R_X\subseteq\R$ סופית או בת-מנייה, כך ש-$X$ מקבל ערכים רק מתוך $R_X$. במילים אחרות, $\PP(X\in R_X)=1$.
+הקבוצה $R_X$ נקראת \textbf{טווח הערכים} של $X$.
+\end{definition}
+
+\begin{example}{}{}
+\begin{enumerate}
+  \item בדוגמת שני המטבעות, $R_X=\set{0,1,2}$ סופית, ולכן $X$ בדיד.
+  \item $X$ = סכום של 3 קוביות: $R_X=\set{3,4,\dots,18}$ ו-$\PP(X\in\set{3,\dots,18})=1$, ולכן $X$ בדיד.
+  \item $X$ = מספר שמוגרל בין 0 ל-1: $R_X=[0,1]$ אינה בת-מנייה, ולכן $X$ \emph{אינו} בדיד.
+  \item $X$ = מספר הפעמים שקרה אירוע מסוים: $R_X=\set{0,1,2,\dots}$, קבוצה אינסופית בת-מנייה, ולכן $X$ בדיד.
+  \needcheck{לא הצלחתי לפענח את התיאור של דוגמה 4 ("$X$ מספר הפעמים ש..."). רק הטווח $\set{0,1,2,\dots}$ ברור}
+\end{enumerate}
+מעכשיו, כל משתנה מקרי יהיה בדיד.
+\end{example}
+
+\begin{remark}
+אם $R_X=\set{a_1,\dots,a_m}$ סופי, אז $P_X(a_1)+\dots+P_X(a_m)=1$, כי
+\[
+  1=\PP(X\in\set{a_1,\dots,a_m})=\PP(X=a_1\ \heb{או}\ \dots\ \heb{או}\ X=a_m)=\PP(X=a_1)+\dots+\PP(X=a_m).
+\]
+הטווח יכול להיות גם אינסופי: למשל מ"מ עם $R_X=\set{1,2,3,\dots}$ ו-$P_X(k)=\frac1{2^k}$ (כלומר $P_X(1)=\frac12$, $P_X(2)=\frac14$, \dots, $\PP(X=10)=\frac1{2^{10}}$).
+\end{remark}
+
+\section{משתנים מקריים מוכרים}
+
+\subsection{משתנה ברנולי}
+
+\begin{definition}{ברנולי}{bernoulli}
+$X$ הוא מ"מ \textbf{ברנולי} עם הסתברות $p$, ונסמן $X\sim\Ber(p)$, אם $R_X=\set{0,1}$ ופונקציית ההסתברות שלו היא
+\[
+  P_X(1)=p,\qquad P_X(0)=1-p.
+\]
+\end{definition}
+
+\textbf{הסיפור:} מבצעים ניסוי שתוצאתו הצלחה או כישלון, וההסתברות להצלחה היא $p$. נגדיר $X=1$ אם הצלחנו ו-$X=0$ אם נכשלנו. כלומר, $X$ הוא מספר ההצלחות:
+$\PP(X=1)=p$ (הצלחה), $\PP(X=0)=1-p$ (כישלון).
+
+\begin{example}{}{}
+זורקים 2 קוביות. נגדיר $X=1$ אם סכום הקוביות הוא 4, ו-$X=0$ אחרת. מהי ההתפלגות של $X$, כלומר איזה משתנה מוכר הוא $X$?
+\[
+  \text{(א)}\ \Ber(\tfrac12)\qquad \text{(ב)}\ \Ber(\tfrac14)\qquad \text{(ג)}\ \Ber(\tfrac1{10})\qquad \text{(ד)}\ \Ber(\tfrac1{12})
+\]
+\textbf{תשובה: (ד).} שימו לב ש-$R_X=\set{0,1}$, ו-$\PP(X=1)=\PP(\heb{סכום הקוביות 4})=\frac3{36}=\frac1{12}$.
+\end{example}
+
+\subsection{משתנה בינומי}
+
+\begin{definition}{בינומי}{binomial}
+מבצעים $n$ ניסויי ברנולי, כלומר $n$ ניסויים שבכל אחד מהם מצליחים בהסתברות $p$ ונכשלים בהסתברות $1-p$, כאשר הניסויים \textbf{בלתי תלויים} זה בזה. נגדיר $X$ = מספר ההצלחות, ונסמן $X\sim\Bin(n,p)$.
+\end{definition}
+
+מהו $R_X$ ומהי $P_X$? כאן $R_X=\set{0,1,\dots,n}$. למשל $P_X(0)=\PP(X=0)=(1-p)^n$ ו-$P_X(1)=\binom n1p^1(1-p)^{n-1}$. באופן כללי:
+
+\begin{keybox}[title={פונקציית ההסתברות של $\Bin(n,p)$}]
+\[
+  P_X(k)=\PP(X=k)=\binom nk p^k(1-p)^{n-k},\qquad 0\le k\le n.
+\]
+($\binom nk$ דרכים לבחור באילו ניסויים תהיינה ההצלחות; בדיוק $k$ הצלחות, והיתר, $n-k$, כישלונות.)
+\end{keybox}
+
+\textbf{בדיקה:} לפי הבינום של ניוטון (משפט~\ref{thm:binom}),
+\[
+  \sum_{k=0}^n\PP(X=k)=\sum_{k=0}^n\binom nk p^k(1-p)^{n-k}=\big(p+(1-p)\big)^n=1.
+\]
+
+\begin{example}{דניס בבר}{beer}
+דניס יושב בבר, ובמשך שעה שלמה הוא מזמין בירה בדיוק כל חמש דקות ($20{:}00,\ 20{:}05,\ 20{:}10,\ \dots$). במשמרת יש ברמנית חדשה: בהסתברות $\frac23$ היא מגישה לו בירה רגילה, ובהסתברות $\frac13$ בירה ללא אלכוהול, ואין קשר בין הבירות. מה ההסתברות שדניס יוכל לנהוג הביתה באופן חוקי, כלומר שלא ישתה יותר מבירה אלכוהולית אחת?
+\needcheck{פרטי הסיפור (השם "דניס", "ברמנית חדשה") פוענחו בקושי. לוודא}
+
+\textbf{פתרון.} דניס יזמין 12 בירות. נגדיר $X$ = מספר הבירות האלכוהוליות שקיבל. יש כאן 12 ניסויים בלתי תלויים, ו"הצלחה" היא קבלת בירה עם אלכוהול. לכן $X\sim\Bin(12,\frac23)$, ו-
+\begin{multline*}
+  \PP(\heb{דניס יכול לנהוג})=\PP(X\le1)=\PP(X=0)+\PP(X=1)\\
+  =\binom{12}0\Big(\frac23\Big)^0\Big(\frac13\Big)^{12}+\binom{12}1\Big(\frac23\Big)^1\Big(\frac13\Big)^{11}=\frac{25}{3^{12}}.
+\end{multline*}
+\end{example}
+
+\subsection{משתנה גיאומטרי}
+
+\begin{definition}{גיאומטרי}{geometric}
+מבצעים ניסוי ברנולי עם הסתברות הצלחה $p$ שוב ושוב, עד שמתקבלת ההצלחה הראשונה. הניסויים בלתי תלויים זה בזה. נגדיר $X$ = מספר הניסויים עד ההצלחה, \textbf{כולל}. נסמן $X\sim\Geo(p)$.
+\end{definition}
+
+כאן $R_X=\set{1,2,3,\dots}=\N$, טווח אינסופי.
+
+\begin{keybox}[title={$X\sim\Geo(p)$}]
+\[
+  P_X(k)=\PP(X=k)=\PP(\heb{$k-1$ כישלונות ואז הצלחה})=(1-p)^{k-1}p,\qquad k=1,2,3,\dots
+\]
+\[
+  F_X(k)=1-(1-p)^k,\qquad k\ge1\ \heb{שלם}.
+\]
+\end{keybox}
+
+\begin{example}{כדורים עם החזרה}{}
+בכד 10 כדורים כחולים ו-15 אדומים. מוציאים כדור ומחזירים, מוציאים ומחזירים, וכן הלאה, עד שיוצא כדור כחול. נסמן ב-$X$ את מספר הכדורים שמוציאים עד שיוצא כחול (כולל). כאן "הצלחה" היא שיצא כדור כחול, ו-$p=\frac{10}{25}$. לכן $X\sim\Geo(\frac{10}{25})$.
+\end{example}
+
+\begin{example}{מטבע עד עץ}{coinuntil}
+מה ההסתברות שאם נזרוק מטבע שוב ושוב עד שיצא "עץ", נעצור אחרי 10 פעמים בדיוק?
+
+\textbf{פתרון.} $p=\frac12$ (ההסתברות ל"הצלחה", כלומר לעץ). נסמן $X\sim\Geo(\frac12)$ = מספר הזריקות עד שיוצא עץ (כולל). אז
+\[
+  \PP(X=10)=\Big(1-\frac12\Big)^9\cdot\frac12=\frac1{2^{10}}=\frac1{1024}.
+\]
+\textbf{המשך:} מה ההסתברות שנצליח תוך לכל היותר 100 זריקות?
+\[
+  \PP(X\le100)=F_X(100)=1-\Big(\frac12\Big)^{100}.
+\]
+\needcheck{ברשימות נכתב $\PP(X=100)=F_X(100)$; לפי ההקשר הכוונה ל-$\PP(X\le100)$}
+\end{example}
+
+\textbf{פונקציית ההתפלגות המצטברת של $\Geo(p)$:}
+\[
+  F_X(k)=\PP(X\le k)=\PP(X=1)+\dots+\PP(X=k)=1-\PP(X>k)=1-(1-p)^k,
+\]
+כי המאורע $X>k$ פירושו שנכשלנו ב-$k$ הניסויים הראשונים. למשל
+$F_X(9.5)=\PP(X\le9.5)=\PP(X\le9)=1-(1-p)^9$. באופן כללי, לכל $t\in\R$:
+\[
+  F_X(t)=\PP(X\le t)=\begin{cases}1-(1-p)^{\lfloor t\rfloor}, & t\ge1,\\ 0, & t<1.\end{cases}
+\]
+
+\subsection{משתנה פואסון}
+
+באופן לא פורמלי, מ"מ פואסון סופר כמה פעמים קרתה תופעה מסוימת בפרק זמן נתון. למשל, מספר המכוניות שעוברות בכביש מסוים במשך שעה יכול להתפלג $\Poi(400)$.
+
+\begin{definition}{פואסון}{poisson}
+יהי $\lambda>0$. נאמר ש-$X\sim\Poi(\lambda)$ אם $R_X=\set{0,1,2,3,\dots}$ ופונקציית ההסתברות של $X$ היא
+\[
+  \PP(X=k)=\frac{\lambda^k}{k!}\,e^{-\lambda},\qquad k\ge0\ \heb{שלם}.
+\]
+\end{definition}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|ccccc}
+  $k$ & $0$ & $1$ & $2$ & $3$ & $\cdots$\\ \hline
+  $\PP(X=k)$ & $e^{-\lambda}$ & $\lambda e^{-\lambda}$ & $\frac{\lambda^2}{2}e^{-\lambda}$ & $\frac{\lambda^3}{6}e^{-\lambda}$ & $\cdots$
+\end{tabular}
+\end{center}
+
+\begin{keybox}[title={צריך לזכור}]
+\[
+  \sum_{k=0}^\infty\frac{\lambda^k}{k!}=e^\lambda\qquad\heb{לכל}\ \lambda>0.
+\]
+\end{keybox}
+
+\textbf{בדיקה} שאכן $\sum_k\PP(X=k)=1$:
+\[
+  \sum_{k=0}^\infty\frac{\lambda^k}{k!}e^{-\lambda}=e^{-\lambda}\sum_{k=0}^\infty\frac{\lambda^k}{k!}
+  =e^{-\lambda}\Big[1+\frac{\lambda}{1!}+\frac{\lambda^2}{2!}+\frac{\lambda^3}{3!}+\cdots\Big]=e^{-\lambda}e^{\lambda}=1.
+\]
+
+\begin{suggestion}{הסבר נוסף~\dash{} מאיפה בא פואסון?}
+אפשר לחשוב על $\Poi(\lambda)$ כגבול של $\Bin(n,p)$, כאשר $n$ גדול מאוד, $p$ קטן מאוד ו-$np=\lambda$. למשל, נחלק שעה ל-$n=3600$ שניות, ובכל שנייה עוברת מכונית בהסתברות $p=\frac{400}{3600}$. אפשר להראות שלכל $k$ קבוע
+\[
+  \binom nk p^k(1-p)^{n-k}\ \xrightarrow[n\to\infty]{}\ \frac{\lambda^k}{k!}e^{-\lambda}.
+\]
+זה מסביר למה פואסון מתאים ל"ספירת אירועים נדירים בפרק זמן".
+\end{suggestion}
+
+\lecture{7}
+\needcheck{גבול ההרצאות 6 ו-7 אינו מסומן בקובץ \LR{\texttt{הרצאות\_6\_7}}. ניחשתי שהרצאה 7 מתחילה כאן (עמוד 5 בקובץ)}
+
+\begin{example}{תור בסופר}{queue}
+בסופר יש קופה, ומספר האנשים שממתינים בתור לקופה הוא מ"מ $\Poi(5)$.
+(א) מה ההסתברות שבתור ממתינים בדיוק 3 אנשים? \quad (ב) מה ההסתברות שאין תור?
+
+\textbf{פתרון.} נסמן $X$ = מספר האנשים שממתינים; ידוע ש-$X\sim\Poi(5)$.
+\[
+  \text{(א)}\ \ \PP(X=3)=\frac{5^3}{3!}e^{-5},\qquad\qquad \text{(ב)}\ \ \PP(X=0)=\frac{5^0}{0!}e^{-5}=e^{-5}.
+\]
+\end{example}
+
+\section{משתנים מקריים בלתי תלויים}
+
+\begin{definition}{משתנים מקריים בלתי תלויים}{indeprv}
+שני משתנים מקריים $X,Y$ נקראים \textbf{בלתי תלויים} אם
+\[
+  \PP(X=k,\ Y=n)=\PP(X=k)\cdot\PP(Y=n)\qquad\heb{לכל}\ n,k.
+\]
+במילים אחרות, $X,Y$ בלתי תלויים אם לכל $n,k$ המאורעות $\set{X=k}$ ו-$\set{Y=n}$ בלתי תלויים.
+\end{definition}
+
+\begin{example}{שתי קופות}{twoqueues}
+נחזור לסופר. נניח שיש גם קופה מהירה, ומספר הממתינים בתור שלה הוא $\Poi(2)$. הקופות בלתי תלויות זו בזו. מה ההסתברות שבשני התורים יחד ממתינים 10 אנשים?
+
+\textbf{פתרון.} נסמן $Y$ = מספר האנשים שממתינים בקופה המהירה; $Y\sim\Poi(2)$, ו-$X,Y$ בלתי תלויים. אנחנו מחפשים את $\PP(X+Y=10)$:
+\begin{align*}
+  \PP(X+Y=10)&=\PP\Big(\bigcup_{k=0}^{10}\set{X=k,\ Y=10-k}\Big)\\
+  &=\sum_{k=0}^{10}\PP(X=k,\ Y=10-k) && \heb{(איחוד זר)}\\
+  &=\sum_{k=0}^{10}\PP(X=k)\,\PP(Y=10-k) && \heb{(אי-תלות)}\\
+  &=\sum_{k=0}^{10}\frac{5^k}{k!}e^{-5}\cdot\frac{2^{10-k}}{(10-k)!}e^{-2}\\
+  &=\frac{e^{-7}}{10!}\sum_{k=0}^{10}\binom{10}{k}5^k2^{10-k}\\
+  &=\frac{e^{-7}}{10!}(5+2)^{10}=\frac{7^{10}}{10!}e^{-7} && \heb{(הבינום של ניוטון)}
+\end{align*}
+וזה בדיוק $\PP(Z=10)$ עבור $Z\sim\Poi(7)$!
+\end{example}
+
+\begin{keybox}[title={כללים}]
+\begin{itemize}
+  \item אם $X\sim\Poi(\lambda)$ ו-$Y\sim\Poi(\mu)$ בלתי תלויים, אז $X+Y\sim\Poi(\lambda+\mu)$.
+  \item אם $X\sim\Bin(n,p)$ ו-$Y\sim\Bin(m,p)$ בלתי תלויים, אז $X+Y\sim\Bin(n+m,p)$.
+\end{itemize}
+\end{keybox}
+\needcheck{בכלל הפואסון נכתב ברשימות "$X\sim\Poi(\lambda+\mu)$"; תיקנתי ל-$X+Y$}
+
+\begin{remark}
+ההסבר לכלל הבינומי: $X$ סופר הצלחות ב-$n$ ניסויים ו-$Y$ סופר הצלחות ב-$m$ ניסויים אחרים, ולכן $X+Y$ סופר הצלחות ב-$n+m$ ניסויים בלתי תלויים, כולם עם אותה הסתברות הצלחה $p$.
+\end{remark}
+
+% =====================================================================
+\chapter{תוחלת ושונות}
+% =====================================================================
+
+\section{תוחלת}
+
+באופן לא פורמלי, \textbf{תוחלת} היא ממוצע משוקלל של הערכים של המשתנה המקרי.
+
+\begin{definition}{תוחלת}{expect}
+יהי $X$ מ"מ עם טווח ערכים $R_X=\set{a_1,a_2,a_3,\dots}$ (סופי או אינסופי). \textbf{התוחלת} של $X$ (\LR{Expectation}) היא
+\[
+  \E[X]=\sum_k a_k\cdot\PP(X=a_k).
+\]
+כל ערך $a_k$ מוכפל ב"משקל" שלו, $\PP(X=a_k)$.
+\end{definition}
+
+\begin{remark}
+$\E[X]$ הוא \emph{מספר}, לא משתנה מקרי.
+\end{remark}
+
+\begin{example}{}{expex1}
+יהי $X$ מ"מ עם $R_X=\set{1,2,3}$ ופונקציית ההסתברות
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|ccc}
+  $k$ & $1$ & $2$ & $3$\\ \hline
+  $P_X(k)$ & $\frac12$ & $\frac13$ & $\frac16$
+\end{tabular}
+\end{center}
+אז
+\[
+  \E[X]=1\cdot\frac12+2\cdot\frac13+3\cdot\frac16=\frac53.
+\]
+\end{example}
+
+\begin{attention}{הסתברויות שאינן מסתכמות ל-1}
+ברשימות הטבלה היא $P_X(1)=\frac12$, $P_X(2)=\frac13$, $P_X(3)=\frac38$, ומתקבל $\E[X]=\frac{15}{8}$. אבל $\frac12+\frac13+\frac38\neq1$, ולכן זו לא פונקציית הסתברות. גם החשבון עצמו לא מסתדר: $\frac12+\frac23+\frac98=\frac{55}{24}$. החלפתי ל-$P_X(3)=\frac16$ (הערך היחיד שמשלים ל-1). צריך לבדוק מול התרגול או ההרצאה מה היו המספרים המקוריים.
+\end{attention}
+
+\begin{example}{התפלגות אחידה}{}
+אם $P_X(1)=P_X(2)=P_X(3)=\frac13$, אז
+$\E[X]=1\cdot\frac13+2\cdot\frac13+3\cdot\frac13=\frac{1+2+3}3=2$, כלומר הממוצע של הערכים של $X$.
+\end{example}
+
+\begin{example}{קובייה}{}
+אם $X$ היא תוצאת קובייה הוגנת, אז $\E[X]=\frac{1+2+3+4+5+6}{6}=3.5$.
+שימו לב: $\E[X]$ \emph{לא} חייבת להיות שווה לאחד הערכים של $X$.
+\end{example}
+
+\begin{keybox}[title={כלל}]
+אם $X$ מתפלג \textbf{אחיד} על $R_X=\set{a_1,\dots,a_n}$, כלומר $\PP(X=a_1)=\dots=\PP(X=a_n)=\frac1n$, אז
+\[
+  \E[X]=\sum_{k=1}^n a_k\PP(X=a_k)=\frac{a_1+\dots+a_n}{n}.
+\]
+\end{keybox}
+
+\subsection{התוחלת של המשתנים המוכרים}
+
+\textbf{1. ברנולי.} אם $X\sim\Ber(p)$, אז $R_X=\set{0,1}$, $\PP(X=0)=1-p$, $\PP(X=1)=p$, ולכן
+\[
+  \E[X]=0\cdot\PP(X=0)+1\cdot p=p.
+\]
+
+\textbf{2. בינומי.} אם $X\sim\Bin(n,p)$, אז $\E[X]=np$.
+\begin{proof}
+נשתמש בזהות
+\[
+  k\binom nk=k\cdot\frac{n!}{k!\,(n-k)!}=\frac{n!}{(k-1)!\,(n-k)!}=n\cdot\frac{(n-1)!}{(k-1)!\,\big((n-1)-(k-1)\big)!}=n\binom{n-1}{k-1}.
+\]
+כעת (האיבר $k=0$ מתאפס):
+\begin{align*}
+  \E[X]&=\sum_{k=0}^nk\,\PP(X=k)=\sum_{k=1}^n k\binom nk p^k(1-p)^{n-k}
+  =\sum_{k=1}^n n\binom{n-1}{k-1}p^k(1-p)^{n-k}\\
+  &=np\sum_{k=1}^n\binom{n-1}{k-1}p^{k-1}(1-p)^{(n-1)-(k-1)}
+  =np\big(p+(1-p)\big)^{n-1}=np.\qedhere
+\end{align*}
+\end{proof}
+\needcheck{ברשימות ההוכחה לא הושלמה בכתב (יש תמונה של הלוח). השלמתי לפי מה שנראה בתמונה}
+
+\lecture{8}
+
+\textbf{3. גיאומטרי.} אם $X\sim\Geo(p)$, אז $\E[X]=\frac1p$.
+\begin{proof}
+כאן $R_X=\set{1,2,3,\dots}$. נשתמש בטריק של "$k=(k+1)-1$":
+\begin{align*}
+  \E[X]&=\sum_{k=1}^\infty k(1-p)^{k-1}p=(1-p)^{-1}\sum_{k=1}^\infty\big((k+1)-1\big)(1-p)^kp\\
+  &=(1-p)^{-1}\sum_{k=1}^\infty(k+1)(1-p)^kp\ -\ \underbrace{\sum_{k=1}^\infty(1-p)^{k-1}p}_{=1}\\
+  &=(1-p)^{-1}\sum_{m=2}^\infty m(1-p)^{m-1}p\ -\ 1 && (m=k+1)\\
+  &=(1-p)^{-1}\big(\E[X]-1\cdot(1-p)^0p\big)-1=(1-p)^{-1}\big(\E[X]-p\big)-1.
+\end{align*}
+נכפול ב-$(1-p)$: \ $\E[X](1-p)=\E[X]-p-(1-p)$, כלומר $-p\,\E[X]=-1$, ולכן $\E[X]=\frac1p$.
+\end{proof}
+
+\begin{suggestion}{הערה על ההוכחה}
+ההוכחה פותרת משוואה שבה $\E[X]$ מופיע בשני האגפים. זה לגיטימי רק כשיודעים מראש ש-$\E[X]$ סופי (אחרת מקבלים "$\infty=\infty$"). אפשר להוסיף משפט קצר: הטור $\sum k(1-p)^{k-1}$ מתכנס כש-$0<p\le1$ (למשל לפי מבחן המנה).
+יש גם דרך מהירה בלי משוואה: $\E[X]=\sum_{k\ge1}\PP(X\ge k)=\sum_{k\ge1}(1-p)^{k-1}=\frac1p$.
+\end{suggestion}
+
+\textbf{4. פואסון.} אם $X\sim\Poi(\lambda)$, אז $\E[X]=\lambda$.
+\begin{proof}
+$R_X=\set{0,1,2,\dots}$ ו-$\PP(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}$. האיבר $k=0$ מתאפס, ולכן
+\[
+  \E[X]=\sum_{k=1}^\infty k\,e^{-\lambda}\frac{\lambda^k}{k!}
+  =\lambda\sum_{k=1}^\infty e^{-\lambda}\frac{\lambda^{k-1}}{(k-1)!}
+  =\lambda\underbrace{\sum_{m=0}^\infty e^{-\lambda}\frac{\lambda^m}{m!}}_{=1}=\lambda.\qquad(m=k-1)\qedhere
+\]
+\end{proof}
+
+\subsection{תכונות של התוחלת}
+
+\begin{theorem}{תכונות התוחלת}{expprops}
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{מונוטוניות:} אם $X\le Y$, אז $\E[X]\le\E[Y]$.
+  \item \textbf{לינאריות:} לכל שני משתנים מקריים $X,Y$ מתקיים $\E[X+Y]=\E[X]+\E[Y]$, ולכל $a\in\R$ מתקיים $\E[aX]=a\,\E[X]$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+\textbf{לינאריות התוחלת מתקיימת תמיד}, גם כשהמשתנים \emph{תלויים}. זה הופך אותה לכלי חזק במיוחד, כפי שנראה בדוגמאות הבאות.
+\end{remark}
+
+\begin{example}{מספרי רכב}{plates}
+מגרילים מספר רכב באורך 7 ספרות מתוך $\set{0,\dots,9}$, וכל האפשרויות שוות הסתברות ($10^7$ מספרים).
+\begin{enumerate}[label=(\alph*)]
+  \item נסמן ב-$X$ את מספר ה-"1"-ים שמופיעים במספר. חשבו את $\E[X]$.
+  \item נסמן ב-$Y$ את מספר זוגות הספרות הצמודות והזהות במספר. חשבו את $\E[Y]$.
+  \item נסמן ב-$Z$ את מספר זוגות ה-"11" הצמודים במספר. חשבו את $\E[Z]$.
+\end{enumerate}
+
+\textbf{פתרון.}
+\begin{enumerate}[label=(\alph*)]
+  \item עוברים על 7 המקומות אחד-אחד וסופרים הצלחות, כאשר "הצלחה" היא שבאותו מקום מופיעה הספרה 1. לכן $X\sim\Bin(7,\frac1{10})$ ו-$\E[X]=np=\frac7{10}$.
+  \item למשל, עבור $0123456$ נקבל $Y=0$, ועבור $1123444$ נקבל $Y=3$.
+  ההסתברות שהספרות במקומות 2 ו-3 שוות היא $\frac1{10}$, וגם ההסתברות שהספרות במקומות 1 ו-2 שוות היא $\frac{10}{10^2}=\frac1{10}$. ההסתברות ששני הזוגות שווים היא $\frac{10}{10^3}=\frac1{100}=\frac1{10}\cdot\frac1{10}$, כלומר אלו מאורעות בלתי תלויים.
+  $Y$ סופר כמה הצלחות יש ב-6 ניסויים: ניסוי 1 בודק אם הספרות במקומות 1,2 זהות, \dots, ניסוי 6 בודק אם הספרות במקומות 6,7 זהות. לכן $Y\sim\Bin(6,\frac1{10})$ ו-$\E[Y]=6\cdot\frac1{10}=0.6$.
+  \item כאן הניסויים כבר \emph{תלויים} (למשל, אם במקומות 1,2 יש "11", זה משנה את הסיכוי ל-"11" במקומות 2,3), ולכן $Z$ אינו בינומי. נשתמש ב\textbf{שיטת המציינים}: לכל $k=1,\dots,6$ נגדיר
+  \[
+    Z_k=\begin{cases}1, & \heb{אם במקומות $k,k+1$ מופיע "11"},\\ 0, & \heb{אחרת}.\end{cases}
+  \]
+  אז $Z=Z_1+\dots+Z_6$, ו-$Z_k\sim\Ber(p)$ עם $p=\PP(\heb{"11" במקומות $k,k+1$})=\frac1{100}$.
+  לא משנה אם $Z_1,\dots,Z_6$ תלויים או לא, כי לינאריות התוחלת תמיד מתקיימת:
+  \[
+    \E[Z]=\E[Z_1]+\dots+\E[Z_6]=6\cdot\frac1{100}=0.06.
+  \]
+\end{enumerate}
+\needcheck{בסעיף (ג) נכתב ברשימות $Z=Z_1+\dots+Z_k$; תיקנתי ל-$Z_6$. גם את המשפט "למה $Z$ אינו בינומי" הוספתי בעצמי}
+\end{example}
+
+\begin{example}{שוב $\E[\Bin(n,p)]$, בשיטת המציינים}{binind}
+$X$ סופר את מספר ההצלחות ב-$n$ ניסויים בלתי תלויים, עם הסתברות הצלחה $p$. לכל $k=1,\dots,n$ נגדיר משתנה מציין $X_k=1$ אם הצלחנו בניסוי ה-$k$, ו-$X_k=0$ אחרת. אז $X=X_1+\dots+X_n$, ו-$X_k\sim\Ber(p)$. לפי לינאריות התוחלת:
+\[
+  \E[X]=\E[X_1]+\dots+\E[X_n]=p+\dots+p=np.
+\]
+הרבה יותר קצר מהחישוב הישיר!
+\end{example}
+
+\begin{example}{בעיית אספן הקלפים}{coupon}
+בסדרה יש $N$ קלפים שונים, ודני רוצה לאסוף את כולם. בכל קנייה, כל אחד מ-$N$ הקלפים מתקבל באותה הסתברות. נסמן ב-$X$ את מספר הקלפים שדני קונה עד שיש לו את כל $N$ הקלפים. חשבו את $\E[X]$.
+
+\textbf{חישוב ישיר:} $R_X=\set{N,N+1,\dots}$, ולמשל
+$\PP(X=N)=\frac NN\cdot\frac{N-1}N\cdot\frac{N-2}N\cdots\frac1N=\frac{N!}{N^N}$. אז $\E[X]=\sum_{k=N}^\infty k\,\PP(X=k)$, וזו עבודה ארוכה. נשתמש בשיטה אחרת.
+
+\textbf{שיטה אחרת:} נכתוב $X=X_1+X_2+\dots+X_N$, כאשר $X_k$ הוא מספר הקלפים שקונים עד שמתקבל הקלף החדש ה-$k$, החל מהרגע שבו כבר יש לנו $k-1$ קלפים שונים. "הצלחה" היא קבלת קלף שעוד אין לנו. הקנייה הראשונה תמיד מצליחה ($X_1=1$), ובאופן כללי
+\[
+  X_2\sim\Geo\Big(\frac{N-1}N\Big),\quad X_3\sim\Geo\Big(\frac{N-2}N\Big),\quad\dots,\quad X_k\sim\Geo\Big(\frac{N-(k-1)}N\Big).
+\]
+לפי לינאריות התוחלת, $\E[X]=\E[X_1]+\E[X_2]+\dots+\E[X_N]$.
+\needcheck{ברשימות נכתב $X_k\sim\Geo(\frac{N-k-1}{N})$; תיקנתי ל-$\frac{N-k+1}{N}$ (בדיקה: $k=2$ נותן $\frac{N-1}{N}$). כמו כן החישוב לא הושלם ברשימות}
+\end{example}
+
+\begin{suggestion}{השלמת החישוב ומספר לדוגמה}
+מכיוון ש-$\E[\Geo(p)]=\frac1p$:
+\[
+  \E[X]=\sum_{k=1}^N\frac{N}{N-k+1}=N\Big(\frac1N+\frac1{N-1}+\dots+\frac11\Big)=N\Big(1+\frac12+\frac13+\dots+\frac1N\Big).
+\]
+למשל, כדי לראות את כל 6 הפאות של קובייה צריך בממוצע $6\big(1+\frac12+\dots+\frac16\big)=14.7$ זריקות. זו דוגמה טובה לכך שהקלפים "האחרונים" הם היקרים: רק הקלף האחרון לבדו דורש בממוצע $N$ קניות.
+\end{suggestion}
+
+\begin{example}{תוחלת יכולה להיות אינסופית}{infexp}
+מכונת משחק מגרילה מספר מתוך $\set{2,4,8,16,\dots}$, עם ההסתברויות $\PP(X=2)=\frac12$, $\PP(X=4)=\frac14$, $\PP(X=8)=\frac18$, ובאופן כללי $\PP(X=2^k)=\frac1{2^k}$. חשבו את $\E[X]$.
+\[
+  \E[X]=\sum_{k=1}^\infty2^k\cdot\frac1{2^k}=\sum_{k=1}^\infty1=\infty.
+\]
+\end{example}
+
+\section{שונות}
+
+התוחלת $\E[X]$ היא הממוצע המשוקלל, כלומר הערך הממוצע שיוצא בניסוי אם חוזרים עליו אינסוף פעמים. אבל היא לא מספרת עד כמה הערכים \emph{מפוזרים} סביב הממוצע.
+
+\begin{definition}{שונות}{variance}
+אם $X$ מ"מ, \textbf{השונות} של $X$ (\LR{variance}) היא
+\[
+  \Var[X]=\E\Big[\big(X-\E[X]\big)^2\Big].
+\]
+(כאן $X-\E[X]$ הוא משתנה מקרי פחות מספר קבוע.) במילים: השונות היא ממוצע ריבועי המרחקים של $X$ מהתוחלת שלו.
+\end{definition}
+
+\begin{example}{ציונים}{grades}
+בקבוצה 10 סטודנטים, והציונים שלהם במבחן הם $50,50,60,60,70,90,90,100,100,100$. נסמן ב-$X$ את הציון של סטודנט שנבחר באקראי. אז $R_X=\set{50,60,70,90,100}$, ו-
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|ccccc}
+  $k$ & $50$ & $60$ & $70$ & $90$ & $100$\\ \hline
+  $P_X(k)$ & $0.2$ & $0.2$ & $0.1$ & $0.2$ & $0.3$\\
+  $(k-77)^2$ & $(-27)^2$ & $(-17)^2$ & $(-7)^2$ & $13^2$ & $23^2$
+\end{tabular}
+\end{center}
+\textbf{הציון הממוצע:} $\E[X]=50\cdot0.2+60\cdot0.2+70\cdot0.1+90\cdot0.2+100\cdot0.3=77$.
+
+\textbf{השונות:} מעלים בריבוע את המרחקים מ-77:
+\[
+  \Var[X]=(-27)^2\cdot0.2+(-17)^2\cdot0.2+(-7)^2\cdot0.1+13^2\cdot0.2+23^2\cdot0.3=401.
+\]
+\needcheck{ברשימות חישוב השונות נעצר באמצע; השלמתי ל-$401$ (ובדקתי גם לפי הנוסחה $\E[X^2]-(\E[X])^2=6330-5929$)}
+\end{example}
+
+\begin{suggestion}{סטיית תקן}
+הכותרת ברשימות מזכירה "סטיית תקן" בלי להגדיר אותה. כדאי להוסיף: \textbf{סטיית התקן} היא $\sigma_X=\sqrt{\Var[X]}$. יש לה אותן יחידות כמו ל-$X$, ולכן קל יותר לפרש אותה. בדוגמת הציונים $\sigma_X=\sqrt{401}\approx20$: ציון "טיפוסי" רחוק בערך 20 נקודות מהממוצע 77.
+\end{suggestion}
+
+\lecture{9}
+
+\begin{claim}{נוסחה נוחה לשונות}{varformula}
+\[
+  \Var[X]=\E[X^2]-\big(\E[X]\big)^2.
+\]
+\end{claim}
+\begin{proof}
+לפי ההגדרה ולינאריות התוחלת (כאשר $\E[X]$ הוא מספר קבוע):
+\begin{align*}
+  \Var[X]&=\E\big[(X-\E[X])^2\big]=\E\big[X^2-2X\,\E[X]+(\E[X])^2\big]\\
+  &=\E[X^2]-2\,\E[X]\cdot\E[X]+(\E[X])^2=\E[X^2]-(\E[X])^2.\qedhere
+\end{align*}
+\end{proof}
+
+\begin{remark}
+בהוכחה השתמשנו בכך שאם $Y$ הוא מ"מ קבוע, כלומר תמיד $Y=a$, אז $\E[Y]=a\cdot\PP(Y=a)=a$. בנוסף השתמשנו ב-$\E[bY]=b\,\E[Y]$ וב-$\E[X+Y]=\E[X]+\E[Y]$.
+\end{remark}
+
+\begin{theorem}{כללי עבודה עם שונות}{varrules}
+\begin{enumerate}[label=(\alph*)]
+  \item אם $X$ מ"מ ו-$a,b\in\R$, אז $\Var[aX+b]=a^2\Var[X]$.
+  \item אם $X,Y$ משתנים מקריים \textbf{בלתי תלויים}, אז $\Var[X+Y]=\Var[X]+\Var[Y]$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}[הוכחת (א)]
+\begin{align*}
+  \Var[aX+b]&=\E\big[(aX+b)^2\big]-\big(\E[aX+b]\big)^2=\E\big[a^2X^2+2abX+b^2\big]-\big(a\E[X]+b\big)^2\\
+  &=a^2\E[X^2]+2ab\E[X]+b^2-a^2(\E[X])^2-2ab\E[X]-b^2\\
+  &=a^2\big(\E[X^2]-(\E[X])^2\big)=a^2\Var[X].\qedhere
+\end{align*}
+\end{proof}
+
+\begin{example}{}{}
+$\Var[2X]=4\Var[X]$, \quad $\Var[X+3]=\Var[X]$.
+\end{example}
+
+\begin{example}{בלי אי-תלות, (ב) לא בהכרח מתקיים}{}
+ניקח מ"מ $X$ כלשהו עם $\Var[X]\neq0$, ונגדיר $Y=X$. אז
+\[
+  \Var[X+Y]=\Var[2X]=4\Var[X]\ \neq\ 2\Var[X]=\Var[X]+\Var[Y].
+\]
+\end{example}
+
+\begin{keybox}[title={תוחלת של פונקציה של משתנה מקרי}]
+אם $X$ מ"מ עם טווח $R_X=\set{a_1,a_2,\dots}$, אז לכל פונקציה $g$:
+\[
+  \E\big[g(X)\big]=\sum_i g(a_i)\cdot\PP(X=a_i).
+\]
+($g(X)$ הוא משתנה מקרי חדש.) למשל, עבור $g(t)=t^2$: $\E[X^2]=\sum_i a_i^2\,\PP(X=a_i)$. ובדיקת שפיות: עבור $g(t)=t$ מקבלים בחזרה את $\E[X]$.
+\end{keybox}
+
+\subsection{השונות של המשתנים המוכרים}
+
+כמו שעשינו עם התוחלת, נחשב את השונות של המשתנים המוכרים בעזרת $\Var[X]=\E[X^2]-(\E[X])^2$. את $\E[X]$ כבר חישבנו, ולכן חסר רק $\E[X^2]$.
+
+\textbf{1. ברנולי.} אם $X\sim\Ber(p)$, אז $\E[X^2]=0^2\cdot\PP(X=0)+1^2\cdot\PP(X=1)=p$. (שימו לב: $X^2=X$, ולכן $\E[X^2]=\E[X]=p$.) לכן
+\[
+  \Var[X]=p-p^2=p(1-p).
+\]
+\needcheck{ברשימות נכתב $\Var[X^2]=p(1-p)$; הכוונה ל-$\Var[X]$}
+
+\textbf{2. בינומי.} אם $X\sim\Bin(n,p)$, אז $\Var[X]=np(1-p)$.
+\begin{proof}[דרך 1 (ישירה)]
+$R_X=\set{0,\dots,n}$. בעזרת $k\binom nk=n\binom{n-1}{k-1}$ והחלפת אינדקס $m=k-1$:
+\begin{align*}
+  \E[X^2]&=\sum_{k=0}^nk^2\binom nkp^k(1-p)^{n-k}=n\sum_{k=1}^nk\binom{n-1}{k-1}p^k(1-p)^{n-k}\\
+  &=np\sum_{m=0}^{n-1}(m+1)\binom{n-1}{m}p^m(1-p)^{n-1-m}.
+\end{align*}
+נסמן $Y\sim\Bin(n-1,p)$. הביטוי $\binom{n-1}mp^m(1-p)^{n-1-m}$ הוא בדיוק $\PP(Y=m)$, ולכן לפי הכלל עם $g(t)=t+1$:
+\[
+  \E[X^2]=np\sum_{m=0}^{n-1}(m+1)\PP(Y=m)=np\,\E[Y+1]=np\big(\E[Y]+1\big)=np\big((n-1)p+1\big).
+\]
+לכן $\Var[X]=np\big((n-1)p+1\big)-(np)^2=np-np^2=np(1-p)$.
+\end{proof}
+\begin{proof}[דרך 2 (מציינים)]
+נכתוב $X=X_1+\dots+X_n$, כאשר $X_i=1$ אם הצלחנו בניסוי ה-$i$ ו-$X_i=0$ אחרת. המשתנים $X_1,\dots,X_n$ בלתי תלויים ו-$X_i\sim\Ber(p)$, ולכן
+\[
+  \Var[X]=\Var[X_1]+\dots+\Var[X_n]=p(1-p)+\dots+p(1-p)=np(1-p).\qedhere
+\]
+\end{proof}
+
+\textbf{3. פואסון.} אם $X\sim\Poi(\lambda)$, אז $\Var[X]=\lambda$.
+\begin{proof}
+עם החלפת אינדקס $m=k-1$:
+\[
+  \E[X^2]=\sum_{k=1}^\infty k^2e^{-\lambda}\frac{\lambda^k}{k!}=\lambda\sum_{k=1}^\infty k\,e^{-\lambda}\frac{\lambda^{k-1}}{(k-1)!}
+  =\lambda\sum_{m=0}^\infty(m+1)\PP(X=m)=\lambda\,\E[X+1]=\lambda(\lambda+1).
+\]
+לכן $\Var[X]=\lambda^2+\lambda-\lambda^2=\lambda$.
+\end{proof}
+
+\textbf{4. גיאומטרי.} אם $X\sim\Geo(p)$, אז $\Var[X]=\frac{1-p}{p^2}$.
+\begin{proof}
+$R_X=\set{1,2,3,\dots}$. נכתוב $k^2=(k-1)^2+(2k-1)$:
+\begin{align*}
+  \E[X^2]&=\sum_{k=1}^\infty k^2(1-p)^{k-1}p=\sum_{k=1}^\infty(k-1)^2(1-p)^{k-1}p+\sum_{k=1}^\infty(2k-1)(1-p)^{k-1}p\\
+  &=(1-p)\sum_{m=1}^\infty m^2(1-p)^{m-1}p+\E[2X-1]=(1-p)\E[X^2]+2\E[X]-1.
+\end{align*}
+(במחובר הראשון הצבנו $m=k-1$; האיבר $m=0$ מתאפס.) לכן $p\,\E[X^2]=\frac2p-1$, כלומר $\E[X^2]=\frac{2-p}{p^2}$, ו-
+\[
+  \Var[X]=\frac{2-p}{p^2}-\frac1{p^2}=\frac{1-p}{p^2}.\qedhere
+\]
+\end{proof}
+
+\begin{suggestion}{טבלת סיכום}
+טבלה אחת שמרכזת את כל המשתנים המוכרים, טובה לחזרה לפני מבחן:
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{c|c|c|c|c}
+  & $R_X$ & $\PP(X=k)$ & $\E[X]$ & $\Var[X]$\\ \hline
+  $\Ber(p)$ & $\set{0,1}$ & $p^k(1-p)^{1-k}$ & $p$ & $p(1-p)$\\
+  $\Bin(n,p)$ & $\set{0,\dots,n}$ & $\binom nkp^k(1-p)^{n-k}$ & $np$ & $np(1-p)$\\
+  $\Geo(p)$ & $\set{1,2,\dots}$ & $(1-p)^{k-1}p$ & $\frac1p$ & $\frac{1-p}{p^2}$\\
+  $\Poi(\lambda)$ & $\set{0,1,\dots}$ & $\frac{\lambda^k}{k!}e^{-\lambda}$ & $\lambda$ & $\lambda$
+\end{tabular}
+\end{center}
+\end{suggestion}
+
+% =====================================================================
+\chapter{אי-שוויונות מרקוב וצ'בישב}
+% =====================================================================
+
+אלו דוגמאות למה שאפשר לומר על הסתברויות כשידועות רק התוחלת של משתנה מקרי (ואולי גם השונות שלו), בלי לדעת את ההתפלגות המלאה.
+
+\begin{example}{שכר במשק}{salary}
+השכר הממוצע במשק הוא 10,000 ש"ח. מה אפשר לומר על הסיכוי שאדם אקראי משתכר מעל 40,000 ש"ח?
+\end{example}
+
+\section{אי-שוויון מרקוב}
+
+\begin{theorem}{אי-שוויון מרקוב}{markov}
+אם $X$ מ"מ שמקבל רק ערכים \textbf{אי-שליליים}, אז לכל $a>0$:
+\[
+  \PP(X\ge a)\le\frac{\E[X]}{a}.
+\]
+\end{theorem}
+
+הרעיון: אם יודעים את $\E[X]$, אפשר לחסום ולהעריך את הסיכוי $\PP(X\ge\square)$.
+
+\begin{example}{המשך~\dash{} שכר במשק}{salary2}
+נסמן ב-$X$ את השכר של אדם אקראי. ידוע ש-$\E[X]=10{,}000$. לפי אי-שוויון מרקוב:
+\[
+  \PP(X\ge40{,}000)\le\frac{10{,}000}{40{,}000}=\frac14,\qquad
+  \PP(X\ge20{,}000)\le\frac{10{,}000}{20{,}000}=\frac12.
+\]
+כלומר, לכל היותר רבע מהאוכלוסייה משתכרים 40,000 ש"ח ומעלה, ולכל היותר מחצית משתכרים 20,000 ש"ח ומעלה.
+\needcheck{ברשימות המספרים 40,000 ו-$\frac14$ נמחקו ותוקנו בירוק ל-20,000 ו-$\frac12$ ("50\%"). הצגתי את שתי הגרסאות}
+
+\textbf{למה צריך גם את השונות?} (הערה בירוק ברשימות.) שתי אוכלוסיות עם אותה תוחלת, 10,000:
+\begin{itemize}
+  \item \textbf{אוכלוסייה א':} כולם משתכרים 10,000. לפי הגדרת השונות, $\Var[X]=0$.
+  \item \textbf{אוכלוסייה ב':} חצי משתכרים 0 וחצי משתכרים 20,000. כאן $\Var[X]=(10{,}000)^2$.
+\end{itemize}
+התוחלת לבדה לא מבחינה בין שתי האוכלוסיות; השונות כן.
+\end{example}
+
+\lecture{10}
+
+\begin{proof}[הוכחת אי-שוויון מרקוב]
+יהי $a>0$. נגדיר מ"מ $Y$:
+\[
+  Y=\begin{cases}a, & X\ge a,\\ 0, & X<a.\end{cases}
+\]
+ל-$Y$ יש רק שני ערכים, $R_Y=\set{0,a}$. מה הקשר בין $X$ ל-$Y$? מתקיים $Y\le X$ (כי $X\ge0$), ולכן לפי מונוטוניות התוחלת $\E[Y]\le\E[X]$:
+\[
+  \E[Y]=0\cdot\PP(Y=0)+a\cdot\PP(Y=a)=a\cdot\PP(X\ge a)\le\E[X].
+\]
+נחלק ב-$a$ ונקבל $\PP(X\ge a)\le\frac{\E[X]}a$.
+\end{proof}
+
+\section{אי-שוויון צ'בישב}
+
+\begin{theorem}{אי-שוויון צ'בישב}{chebyshev}
+אם $X$ מ"מ עם $\E[X]$ ו-$\Var[X]$ ידועים, אז לכל $a>0$:
+\[
+  \PP\big(|X-\E[X]|\ge a\big)\le\frac{\Var[X]}{a^2}.
+\]
+\end{theorem}
+\needcheck{ברשימות המכנה נכתב $x^2$; תיקנתי ל-$a^2$}
+
+\begin{suggestion}{הוכחה בשורה אחת, וניסוח שימושי}
+צ'בישב נובע ממרקוב: נפעיל את מרקוב על המשתנה האי-שלילי $(X-\E[X])^2$ עם הסף $a^2$:
+\[
+  \PP\big(|X-\E[X]|\ge a\big)=\PP\big((X-\E[X])^2\ge a^2\big)\le\frac{\E\big[(X-\E[X])^2\big]}{a^2}=\frac{\Var[X]}{a^2}.
+\]
+\textbf{ניסוח שימושי:} אם $\sigma$ היא סטיית התקן ונבחר $a=k\sigma$, נקבל $\PP(|X-\E[X]|\ge k\sigma)\le\frac1{k^2}$. כלומר, לכל היותר רבע מהערכים רחוקים מהממוצע ב-2 סטיות תקן או יותר, בלי שום הנחה על צורת ההתפלגות.
+\end{suggestion}
+
+\begin{example}{גובה}{height}
+ידוע שהגובה הממוצע הוא 170 ס"מ.
+\begin{enumerate}[label=(\alph*)]
+  \item מה אפשר לומר על הסיכוי שאדם אקראי גבוה מ-180 ס"מ?
+  \item ידוע גם שהשונות של התפלגות הגובה היא 100 (כלומר סטיית התקן היא 10 ס"מ). מה אפשר לומר על ההסתברות שגובהו של אדם אקראי יהיה בין 150 ל-190 ס"מ?
+\end{enumerate}
+\needcheck{ברשימות סעיף (ב) נכתב בטווח "1.50-1.90" (מטרים), בעוד הממוצע 170 (ס"מ). איחדתי לס"מ}
+
+\textbf{פתרון.} נסמן ב-$X$ את הגובה של אדם אקראי.
+\begin{enumerate}[label=(\alph*)]
+  \item לפי מרקוב:
+  \[
+    \PP(X>180)\le\PP(X\ge180)\le\frac{\E[X]}{180}=\frac{170}{180}=\frac{17}{18}.
+  \]
+  (אם $X$ מקבל רק ערכים שלמים, אפשר לקבל חסם מעט טוב יותר: $\PP(X>180)=\PP(X\ge181)\le\frac{170}{181}$.)
+  \needcheck{בהערת השוליים ברשימות נכתב $\PP(X\ge181)\le\frac{170}{180}$; תיקנתי ל-$\frac{170}{181}$}
+  \item לפי צ'בישב, עם $\E[X]=170$:
+  \[
+  \begin{aligned}
+    \PP(150<X<190)&=\PP(-20<X-170<20)\\&=\PP\big(|X-170|<20\big)=1-\PP\big(|X-170|\ge20\big),
+  \end{aligned}
+  \]
+  ו-$\PP\big(|X-170|\ge20\big)\le\frac{100}{20^2}=\frac14$. לכן
+  \[
+    \PP(150<X<190)\ge1-\frac14=\frac34.
+  \]
+\end{enumerate}
+\needcheck{ברשימות נכתב בתיבה $\PP(|X-170|\ge20)\ge\frac34$; לפי החישוב, המסקנה הנכונה היא $\PP(|X-170|<20)\ge\frac34$}
+\end{example}
+
+% =====================================================================
+\chapter{משתנים מקריים רב-ממדיים}
+% =====================================================================
+
+\section{הגדרה}
+
+לעיתים מבצעים ניסוי (למשל זורקים 2 קוביות רגילות) ומתעניינים בכמה משתנים מקריים בבת אחת:
+\begin{itemize}
+  \item $X$ = התוצאה של הקובייה הראשונה;
+  \item $Y$ = התוצאה של הקובייה השנייה;
+  \item $Z$ = 1 אם התוצאות זהות, ו-0 אם הן שונות.
+\end{itemize}
+אפשר להסתכל על הווקטור $(X,Y,Z)$ כעל משתנה מקרי \emph{תלת-ממדי}. למשל, אם בניסוי יצא \fbox{3}\,\fbox{2}, אז $X=3$, $Y=2$, $Z=0$, והווקטור $(X,Y,Z)$ מחזיר $(3,2,0)$.
+
+\begin{definition}{משתנה מקרי רב-ממדי}{multirv}
+אם $X_1,X_2,\dots,X_n$ משתנים מקריים (בדידים), אז $(X_1,\dots,X_n)$ נקרא \textbf{משתנה מקרי $n$-ממדי}. פונקציית ההסתברות שלו מוגדרת על ידי
+\[
+  P_{X_1,\dots,X_n}(a_1,\dots,a_n)=\PP(X_1=a_1,\ X_2=a_2,\ \dots,\ X_n=a_n).
+\]
+פונקציה זו נקראת גם \textbf{פונקציית ההסתברות המשותפת} של $X_1,\dots,X_n$.
+\end{definition}
+
+\begin{example}{שני מטבעות}{coins3d}
+זורקים 2 מטבעות רגילים שצדדיהם $0,1$. נגדיר:
+$X_1$ = התוצאה של המטבע הראשון; $X_2$ = התוצאה של המטבע השני; $X_3=1$ אם התוצאות שונות ו-$X_3=0$ אם הן שוות.
+הערכים האפשריים של $(X_1,X_2,X_3)$ הם $\setof{(a,b,c)}{a,b,c\in\set{0,1}}$. נחשב את פונקציית ההסתברות:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|cccccccc}
+  $(a,b,c)$ & $(1,1,1)$ & $(1,1,0)$ & $(1,0,1)$ & $(1,0,0)$ & $(0,1,1)$ & $(0,1,0)$ & $(0,0,1)$ & $(0,0,0)$\\ \hline
+  $P_{X_1,X_2,X_3}$ & $0$ & $\frac14$ & $\frac14$ & $0$ & $\frac14$ & $0$ & $0$ & $\frac14$
+\end{tabular}
+\end{center}
+למשל, $P_{X_1,X_2,X_3}(1,1,1)=\PP(X_1=1,X_2=1,X_3=1)=0$, כי זה המאורע הריק.
+הטווח \emph{בפועל} של $(X_1,X_2,X_3)$ הוא $\set{(1,1,0),(1,0,1),(0,1,1),(0,0,0)}$.
+\end{example}
+
+\begin{example}{כדורים בקופסה}{balls2d}
+בקופסה 2 כדורים סגולים, 4 כדורים שחורים ו-6 כדורים כחולים. מוציאים 2 כדורים בבת אחת, וכל התוצאות שוות הסתברות. נגדיר $X$ = מספר הכדורים הכחולים ו-$Y$ = מספר הכדורים השחורים. נמצא את פונקציית ההסתברות של המ"מ הדו-ממדי $(X,Y)$.
+
+\textbf{פתרון.} $|\Omega|=\binom{12}{2}=66$. למשל
+\[
+  P_{X,Y}(0,0)=\PP(\heb{שני סגולים})=\frac{1}{66},\qquad
+  P_{X,Y}(0,1)=\PP(\heb{שחור וסגול})=\frac{\binom41\binom21}{66}=\frac8{66}.
+\]
+באופן כללי:
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|ccc}
+  $X\backslash Y$ & $0$ & $1$ & $2$\\ \hline
+  $0$ & $\frac1{66}$ & $\frac8{66}$ & $\frac6{66}$\\
+  $1$ & $\frac{12}{66}$ & $\frac{24}{66}$ & $0$\\
+  $2$ & $\frac{15}{66}$ & $0$ & $0$
+\end{tabular}
+\end{center}
+\end{example}
+
+\begin{example}{ההתפלגויות של $X$ ושל $Y$ לא קובעות את ההתפלגות של $(X,Y)$}{notdetermined}
+לדעת את פונקציית ההסתברות של $X$ ואת זו של $Y$ \emph{לא} מספיק כדי לדעת את פונקציית ההסתברות של $(X,Y)$.
+\begin{enumerate}
+  \item מטילים 2 מטבעות בלתי תלויים. $X$ = התוצאה של המטבע הראשון, $Y$ = התוצאה של המטבע השני.
+  \item מטילים מטבע אחד. $X$ = התוצאה של המטבע, ו-$Y=X$.
+\end{enumerate}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c|cc|c}
+  \multicolumn{4}{c}{\small (1) מטבעות ב"ת}\\[2pt]
+  $X\backslash Y$ & $0$ & $1$ & $P_X$\\ \hline
+  $0$ & $\frac14$ & $\frac14$ & $\frac12$\\
+  $1$ & $\frac14$ & $\frac14$ & $\frac12$\\ \hline
+  $P_Y$ & $\frac12$ & $\frac12$ &
+\end{tabular}
+\qquad\qquad
+\begin{tabular}{c|cc|c}
+  \multicolumn{4}{c}{\small (2) $Y=X$}\\[2pt]
+  $X\backslash Y$ & $0$ & $1$ & $P_X$\\ \hline
+  $0$ & $\frac12$ & $0$ & $\frac12$\\
+  $1$ & $0$ & $\frac12$ & $\frac12$\\ \hline
+  $P_Y$ & $\frac12$ & $\frac12$ &
+\end{tabular}
+\end{center}
+בשני המקרים $X$ ו-$Y$ מתפלגים $\Ber(\frac12)$, אבל ההתפלגות המשותפת שונה.
+\end{example}
+
+\begin{remark}
+אם $X,Y$ בלתי תלויים, אז $\PP(X=a,Y=b)=\PP(X=a)\PP(Y=b)$ לכל $a,b$. כלומר
+\[
+  P_{X,Y}(a,b)=P_X(a)\cdot P_Y(b).
+\]
+\end{remark}
+
+\section{פונקציית התפלגות מצטברת דו-ממדית}
+
+\begin{definition}{פונקציית התפלגות מצטברת של מ"מ דו-ממדי}{cdf2d}
+עבור מ"מ דו-ממדי $(X,Y)$, \textbf{פונקציית ההתפלגות המצטברת} היא
+\[
+  F_{X,Y}(t_1,t_2)=\PP(X\le t_1,\ Y\le t_2).
+\]
+זו פונקציה של שני משתנים שמחזירה מספר בין 0 ל-1.
+\end{definition}
+\needcheck{ברשימות נכתב $E_{X,Y}(t_1,t_2)=\PP(X\le t_1,X\le t_2)$; תיקנתי ל-$F_{X,Y}$ ול-$Y\le t_2$}
+
+\begin{example}{המשך~\dash{} כדורים}{}
+\begin{gather*}
+  F_{X,Y}(2,2)=\PP(X\le2,\ Y\le2)=1,\\
+  F_{X,Y}(1,1)=\PP(X\le1,\ Y\le1)=\frac{1+8+12+24}{66}=\frac{45}{66}
+\end{gather*}
+(בטבלה: סכום המשבצות שבהן $X\le1$ וגם $Y\le1$).
+\needcheck{ברשימות נכתב רק "חיבור המשבצות"; השלמתי את הערך $\frac{45}{66}$}
+\end{example}
+
+\section{פונקציית ההסתברות השולית}
+
+\begin{definition}{פונקציית הסתברות שולית}{marginal}
+אם $(X,Y)$ מ"מ דו-ממדי, \textbf{פונקציית ההסתברות השולית} של $X$ היא
+\[
+  P_X(a)=\sum_{b\in R_Y}P_{X,Y}(a,b).
+\]
+\end{definition}
+
+זו בדיוק נוסחת ההסתברות השלמה: $P_X(a)=\PP(X=a)=\sum_{b\in R_Y}\PP(X=a,\ Y=b)$. בטבלה זה סכום של שורה; עבור $P_Y$, סכום של עמודה.
+
+\begin{example}{המשך~\dash{} כדורים}{}
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|ccc|c}
+  $X\backslash Y$ & $0$ & $1$ & $2$ & $P_X$\\ \hline
+  $0$ & $\frac1{66}$ & $\frac8{66}$ & $\frac6{66}$ & $\frac{15}{66}$\\
+  $1$ & $\frac{12}{66}$ & $\frac{24}{66}$ & $0$ & $\frac{36}{66}$\\
+  $2$ & $\frac{15}{66}$ & $0$ & $0$ & $\frac{15}{66}$\\ \hline
+  $P_Y$ & $\frac{28}{66}$ & $\frac{32}{66}$ & $\frac6{66}$ & $1$
+\end{tabular}
+\end{center}
+\end{example}
+
+\begin{keybox}[title={באופן כללי}]
+אם $(X_1,X_2,X_3)$ מ"מ תלת-ממדי, אז
+\[
+  \sum_{c\in R_{X_3}}P_{X_1,X_2,X_3}(a,b,c)=P_{X_1,X_2}(a,b),\qquad
+  P_{X_1}(a)=\sum_b\sum_cP_{X_1,X_2,X_3}(a,b,c).
+\]
+\end{keybox}
+
+\begin{example}{שיעורי בית או טלוויזיה}{hwtv}
+נעמה ונועם מגיעים הביתה, וכל אחד מהם עושה שיעורי בית (\LR{HW}) או רואה טלוויזיה (\LR{TV}). נגדיר
+\[
+  X=\begin{cases}1, & \heb{נעמה עושה \LR{HW}},\\0, & \heb{אחרת},\end{cases}\qquad
+  Y=\begin{cases}1, & \heb{נועם עושה \LR{HW}},\\0, & \heb{אחרת}.\end{cases}
+\]
+נתון: $P_{X,Y}(1,1)=\frac14$, $P_{X,Y}(0,0)=\frac12$, $P_{X,Y}(1,0)=\frac3{16}$.
+\begin{enumerate}[label=(\alph*)]
+  \item מצאו את פונקציות ההסתברות השוליות של $X$ ושל $Y$.
+  \item מי נוטה יותר לעשות שיעורי בית?
+\end{enumerate}
+\needcheck{השמות "נעמה" ו"נועם" פוענחו בקושי}
+
+\textbf{פתרון.} (א) הערך החסר הוא $P_{X,Y}(0,1)=1-\frac14-\frac12-\frac3{16}=\frac1{16}$, ולכן
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|cc|c}
+  $X\backslash Y$ & $0$ & $1$ & $P_X$\\ \hline
+  $0$ & $\frac12$ & $\frac1{16}$ & $\frac9{16}$\\
+  $1$ & $\frac3{16}$ & $\frac14$ & $\frac7{16}$\\ \hline
+  $P_Y$ & $\frac{11}{16}$ & $\frac5{16}$ & $1$
+\end{tabular}
+\end{center}
+(ב) $\PP(X=1)=\frac7{16}>\frac5{16}=\PP(Y=1)$, ולכן נעמה נוטה יותר לעשות שיעורי בית.
+\end{example}
+
+\begin{suggestion}{שאלה טבעית להמשך~\dash{} האם הם בלתי תלויים?}
+בשתי הדוגמאות האחרונות כדאי לבדוק אי-תלות בעזרת $P_{X,Y}(a,b)=P_X(a)P_Y(b)$:
+\begin{itemize}
+  \item \textbf{כדורים:} $P_{X,Y}(2,1)=0$, אבל $P_X(2)P_Y(1)=\frac{15}{66}\cdot\frac{32}{66}\neq0$. לכן $X,Y$ תלויים (וזה הגיוני: אם שני הכדורים כחולים, אין מקום לשחור).
+  \item \textbf{שיעורי בית:} $P_{X,Y}(1,1)=\frac14=\frac{64}{256}$, אבל $P_X(1)P_Y(1)=\frac7{16}\cdot\frac5{16}=\frac{35}{256}$. לכן $X,Y$ תלויים: כשנעמה עושה שיעורי בית, גם נועם נוטה לעשות.
+\end{itemize}
+מספיקה משבצת אחת שבה המכפלה לא מתקיימת כדי להראות תלות. כדי להראות אי-תלות צריך לבדוק את \emph{כל} המשבצות.
 \end{suggestion}
 
 \end{document}
