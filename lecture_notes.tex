@@ -278,7 +278,6 @@
   \Q &= \setof{\tfrac{m}{n}}{m,n\in\Z,\ n\neq 0} && \heb{המספרים הרציונליים}\\
   \R & && \heb{המספרים הממשיים}
 \end{align*}
-\needcheck{בהגדרת $\Q$ ברשימות נכתב $m\neq 0$; תיקנתי ל-$n\neq 0$ (המכנה הוא שאסור שיתאפס)}
 
 למשל, $\frac13\in\Q$ ו-$-\frac{10}{4}\in\Q$.
 
@@ -344,10 +343,8 @@ $\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
 \]
 \end{example}
 
-\begin{suggestion}{איור~\dash{} דיאגרמות ון}
-דיאגרמות ון עוזרות לזכור את ההגדרות (האזור הצבוע הוא תוצאת הפעולה):
+\textbf{דיאגרמות ון.} כדאי לזכור את ההגדרות בעזרת ציור (האזור הצבוע הוא תוצאת הפעולה):
 
-\medskip
 \begin{center}
 \newcommand{\venn}[2]{%
 \begin{tikzpicture}[scale=0.55]
@@ -357,12 +354,12 @@ $\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
   \node at (-0.55,0) {$A$}; \node at (1.95,0) {$B$};
   \node[below] at (0.7,-1.35) {#2};
 \end{tikzpicture}}
-\venn{\begin{scope}[even odd rule]\fill[sugc!35]\A \B;\end{scope}}{$A\symdiff B$}\hfill
-\venn{\begin{scope}\begin{scope}[even odd rule]\clip\B (-2,-2) rectangle (4,2);\fill[sugc!35]\A;\end{scope}\end{scope}}{$A\setminus B$}\hfill
-\venn{\fill[sugc!35]\A;\fill[sugc!35]\B;}{$A\cup B$}\hfill
-\venn{\begin{scope}\clip\A;\fill[sugc!35]\B;\end{scope}}{$A\cap B$}
+\venn{\begin{scope}[even odd rule]\fill[defc!25]\A \B;\end{scope}}{$A\symdiff B$}\hfill
+\venn{\begin{scope}\begin{scope}[even odd rule]\clip\B (-2,-2) rectangle (4,2);\fill[defc!25]\A;\end{scope}\end{scope}}{$A\setminus B$}\hfill
+\venn{\fill[defc!25]\A;\fill[defc!25]\B;}{$A\cup B$}\hfill
+\venn{\begin{scope}\clip\A;\fill[defc!25]\B;\end{scope}}{$A\cap B$}
 \end{center}
-\end{suggestion}
+
 
 \begin{claim}{}{basic}
 לכל שתי קבוצות $A,B$ מתקיים:
@@ -376,16 +373,17 @@ $\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
 \]
 \end{claim}
 
-\begin{suggestion}{דוגמה להוכחה}
-ברשימות הטענה מופיעה ללא הוכחה. כדאי להראות לפחות סעיף אחד, כדי להדגים את השיטה הסטנדרטית להוכחת הכלה: \emph{לוקחים איבר כלשהו בצד שמאל ומראים שהוא שייך לצד ימין.}
+\begin{proof}[הוכחה (סעיפים נבחרים)]
+השיטה הסטנדרטית להוכחת הכלה: \emph{לוקחים איבר כלשהו בצד שמאל ומראים שהוא שייך לצד ימין.}
 
-\textbf{הוכחת (1).} יהי $x\in A\cap B$. לפי הגדרת החיתוך $x\in A$ וגם $x\in B$; בפרט $x\in A$. מכיוון ש-$x$ היה איבר כלשהו של $A\cap B$, קיבלנו $A\cap B\subseteq A$.
+\textbf{(1)} יהי $x\in A\cap B$. לפי הגדרת החיתוך $x\in A$ וגם $x\in B$; בפרט $x\in A$. מכיוון ש-$x$ היה איבר כלשהו של $A\cap B$, קיבלנו $A\cap B\subseteq A$.
 
-\textbf{הוכחת (8).} יהי $x\in A\setminus B$. מאחר ש-$A\symdiff B=(A\setminus B)\cup(B\setminus A)$, ו-$x$ שייך לקבוצה הראשונה באיחוד, נקבל $x\in A\symdiff B$.
+\textbf{(8)} יהי $x\in A\setminus B$. מאחר ש-$A\symdiff B=(A\setminus B)\cup(B\setminus A)$, ו-$x$ שייך לקבוצה הראשונה באיחוד, נקבל $x\in A\symdiff B$.
+\end{proof}
 
-\smallskip
-כדי להוכיח \emph{שוויון} $X=Y$ מראים שתי הכלות: $X\subseteq Y$ וגם $Y\subseteq X$.
-\end{suggestion}
+\begin{remark}
+כדי להוכיח \emph{שוויון} של קבוצות $X=Y$ מראים שתי הכלות: $X\subseteq Y$ וגם $Y\subseteq X$.
+\end{remark}
 
 \subsection{המשלים}
 
@@ -395,7 +393,6 @@ $\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
   \comp{A}=A^c=\setof{x\in U}{x\notin A}=U\setminus A.
 \]
 \end{definition}
-\needcheck{ברשימות ההגדרה נכתבה בלי קבוצה אוניברסלית, $\comp{A}=\setof{x}{x\notin A}$, ורק בדוגמה הופיע $U=\N$. הוספתי את $U$ להגדרה. יש לוודא שזה תואם את ההגדרה של המרצה}
 
 \begin{example}{$U=\N$}{}
 \begin{itemize}
@@ -405,14 +402,19 @@ $\N\subseteq\Z$, כי $\set{1,2,3,\dots}\subseteq\set{\dots,-1,0,1,2,\dots}$.
 \end{itemize}
 \end{example}
 
-\begin{suggestion}{תוספת תוכן~\dash{} כללי דה־מורגן}
-טבעי להוסיף כאן את כללי דה־מורגן, שמקשרים בין משלים, איחוד וחיתוך:
+\begin{claim}{כללי דה־מורגן}{demorgan}
+לכל שתי קבוצות $A,B\subseteq U$:
 \[
   \comp{A\cup B}=\comp{A}\cap\comp{B},\qquad \comp{A\cap B}=\comp{A}\cup\comp{B}.
 \]
-\emph{בדיקה על דוגמה} ($U=\N$, $A=\set{1,2,3}$, $B=\set{2,3,4}$):
-$\comp{A\cup B}=\set{5,6,\dots}$, ומצד שני $\comp{A}\cap\comp{B}=\set{4,5,\dots}\cap\set{1,5,6,\dots}=\set{5,6,\dots}$.
-\end{suggestion}
+\end{claim}
+
+\begin{example}{בדיקה על דוגמה}{}
+$U=\N$, $A=\set{1,2,3}$, $B=\set{2,3,4}$. אז $\comp{A\cup B}=\comp{\set{1,2,3,4}}=\set{5,6,\dots}$, ומצד שני
+\[
+  \comp{A}\cap\comp{B}=\set{4,5,6,\dots}\cap\set{1,5,6,\dots}=\set{5,6,\dots}.
+\]
+\end{example}
 
 \section{קבוצת החזקה}
 
@@ -437,7 +439,6 @@ $\comp{A\cup B}=\set{5,6,\dots}$, ומצד שני $\comp{A}\cap\comp{B}=\set{4,5
   \emptyset,\quad \set{a},\ \set{b},\ \set{c},\quad \set{a,b},\ \set{a,c},\ \set{b,c},\quad \set{a,b,c}.
 \]
 סך הכול $8=2^3$ תתי-קבוצות, ול-$A$ יש $3$ איברים.
-\needcheck{ברשימות $\set{a,c}$ הופיעה פעמיים; תיקנתי את המופע השני ל-$\set{b,c}$}
 \end{example}
 
 \begin{remark}
@@ -467,19 +468,6 @@ $A=\set{1,2}$, $B=\set{3,4}$. אז
 \textbf{שימו לב:} הזוגות הסדורים $(1,3)$ ו-$(3,1)$ \emph{שונים}! בזוג סדור הסדר חשוב, בניגוד לקבוצה.
 \end{example}
 
-\begin{example}{}{}
-מצאו את כל האיברים בקבוצה $\Pow(\set{1})\times\Pow(\emptyset)$.
-\[
-  \Pow(\set{1})\times\Pow(\emptyset)
-  =\underbrace{\set{\emptyset,\set{1}}}_{A}\times\underbrace{\set{\emptyset}}_{B}
-  =\big\{(\emptyset,\emptyset),\ (\set{1},\emptyset)\big\}.
-\]
-\end{example}
-
-\begin{suggestion}{הסבר נוסף}
-נקודה עדינה בדוגמה האחרונה: $\Pow(\emptyset)=\set{\emptyset}$ היא קבוצה עם \emph{איבר אחד} (הקבוצה הריקה), ולכן היא אינה ריקה. אילו היינו כופלים ב-$\emptyset$ עצמה, היינו מקבלים $A\times\emptyset=\emptyset$.
-כדאי לשים לב גם לגדלים: $|A\times B|=|A|\cdot|B|$ (כאן $2\cdot1=2$). זו הצצה ל\emph{עקרון הכפל} שבפרק הבא.
-\end{suggestion}
 
 % =====================================================================
 \chapter{קומבינטוריקה}
