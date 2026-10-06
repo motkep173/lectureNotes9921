@@ -1,0 +1,706 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\Arg}{\mathrm{Arg}}
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\Log}{\mathrm{Log}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 1: פתרונות }}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent\rule{17cm}{0.4pt}
+
+\begin{enumerate}
+
+
+\item
+גפן הולכת למכולת השכונתית ומתלבטת איזה מבין שלושת הסוגים הבאים של חלב לקנות: סויה, שקדים או שיבולת-שועל.
+נסמן את המאורעות הבאים:
+
+$A$
+-
+גפן קנתה חלב סויה,
+
+$B$
+-
+גפן קנתה חלב שקדים,
+
+$C$
+גפן קנתה חלב שיבולת-שועל.
+
+תארו כל אחד מהמאורעות (קבוצות) הבאים בעזרת
+$A,B,C$
+והפעולות חיתוך, חיבור, הפרש ומשלים של קבוצות. בנוסף ציירו את דיאגרמת ון המתאימה בכל אחד מהסעיפים:
+\begin{enumerate}
+\item
+גפן קונה את שלושת הסוגים:
+$$\boxed{A\cap B\cap C}$$
+\item
+גפן קונה חלב סויה  אבל לא קונה שקדים ולא קונה שיבולת-שועל:
+$$\boxed{A\cap \ol{B}\cap \ol{C}}$$
+\item
+גפן קונה חלב שקדים, ועוד בדיוק אחד מבין השניים האחרים:
+$$\boxed{B\cap ((A\cap \ol{C}) \cup (\ol{A}\cup C))}$$
+\item
+גפן קונה לכל היותר סוג חלב אחד:
+$$\boxed{(\ol{A}\cap \ol{B}\cap \ol{C})
+\cup
+(A\cap \ol{B}\cap \ol{C})\cup
+(\ol{A}\cap B\cap \ol{C})
+\cup
+(\ol{A}\cap \ol{B}\cap C)}$$
+\item
+גפן קונה בדיוק סוג חלב אחד:
+$$\boxed{(A\cap \ol{B}\cap \ol{C})\cup
+(\ol{A}\cap B\cap \ol{C})
+\cup
+(\ol{A}\cap \ol{B}\cap C)}$$
+\item
+גפן קונה בדיוק שני סוגי חלב:
+$$\boxed{(A\cap B\cap \ol{C})\cup
+(A\cap \ol{B}\cap C)
+\cup
+(\ol{A}\cap B\cap C)}$$
+\item
+גפן לא קונה חלב כלל:
+$$\boxed{\ol{A\cup B\cup C}}$$
+\item 
+גפן קונה לפחות שני סוגים שונים של חלב:
+$$\boxed{(A\cap B)\cup (A\cap C)\cup (B\cap C)}$$
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\newpage
+
+\item
+פרופסור אקס רוצה לסדר במשרדו החדש
+$10$
+ספרים 
+\underline{שונים}
+על המדף:
+
+$4$
+ספרי היסטוריה,
+$3$
+ספרי מדע בדיוני,
+$2$
+ספרי רפואה,
+וספר סטטיסטיקה אחד.
+\begin{enumerate}
+\item
+בכמה דרכים הוא יכול לעשות זאת?
+\\
+
+\underline{תשובה:}
+אלו
+$10$
+ספרים שונים ולכן יש
+$\boxed{10!}$
+אפשרויות שונות לסדר אותם על המדף.
+\\
+%%%%
+\item
+בכמה דרכים יוכל לעשות זאת, אם הוא רוצה שספר הסטטיסטיקה יהיה באחד מהקצוות של המדף?
+\\
+
+\underline{תשובה:}
+מספר האפשרויות לסדר את הספרים על המדף כך שספר הסטטיסטיקה נמצא בצידו הימני, שווה ל-$9!$
+כי נותר לסדר את יתר 
+$9$
+הספרים.
+ובדומה, מספר הדרכים לסדר את הספרים על המדף כך שספר הסטטיסטיקה נמצא בצדו השמאלי, שווה
+$9!$.
+לכן סך כמות הסידורים היא
+$\boxed{2\cdot 9!}$.
+\\
+%%%
+\item
+אם הוא רוצה לסדר את הספרים כך שכל שהספרים באותו הנושא יהיו צמודים זה לזה, בכמה דרכים יוכל לעשות זאת?
+\\
+
+\underline{תשובה:}
+נחשוב על כל הספרים של אותו הנושא בתור בלוק ספרים אחד, אז בעצם יש לנו 
+$4$
+בלוקים של ספרים לסדר בשורה, ואת זה ניתן לעשות ב-$4!$
+אפשרויות.
+כעת, על כל סידור שכזה: 
+
+ניתן לסדר את
+$4$
+ספרי ההיסטוריה ב-$4!$
+סידורים פנימיים (כבלוק),
+
+ניתן לסדר את
+$3$
+ספרי המדע בדיוני ב-$3!$
+סידורים פנימיים (כבלוק),
+
+ניתן לסדר את
+$2$
+ ספרי הרפואה ב-$2!$
+ סידורים פנימיים (כבלוק),
+ 
+ וניתן לסדר את ספר הסטטיסטיקה בדרך אחת ($1!$) בדיוק.
+
+ לכן מעקרון הכפל נקבל כי מספר הסידורים יהיו
+ $$\boxed{4! \cdot 4!\cdot 3!\cdot 2!\cdot 1!}$$
+ 
+\item
+אחיינית של פרופסור אקס מגיעה לביקור, וכמתנה ליום הולדתה השביעי הוא רוצה להביא לה במתנה
+שלושה
+ספרים מתוך העשרה שיש לו. כמה מתנות שונות יכול הפרופסור לתת לאחייניתו האהובה?
+\\
+
+\underline{תשובה:}
+כל מתנה נבדלת מאחרת על ידי הרכב הספרים השונה, ללא חשיבות לסדר הבחירה, כלומר השאלה היא בכמה דרכים ניתן לבחור
+$3$
+ספרים
+מתוך ה-$10$,
+כאשר הבחירה נעשית ללא חזרה וללא חשיבות לסדר, לכן המספר הוא
+$\boxed{\binom{10}{3}}$.
+%%%
+\\
+\item
+בכל יום ראשון בוחר הפרופסור שני ספרים ושם אותם בתיבת הדואר של התאגדות הסטודנטים. 
+מהיותו פרופסור מסודר, הוא מנהל רשימה בה רושם את שמות שני הספרים שבחר בכל שבוע.
+\begin{enumerate}
+\item[(1)]
+בהנחה כי הסטודנטים לא  מחזירים לפרופסור את הספרים,
+כמה רשימות שונות יכול לנהל הפרופסור עד שיגמרו לו הספרים על המדף? (כלומר, בתום 
+$5$
+שבועות)
+\\
+
+\underline{תשובה:}
+בגלל שבכל פעם שהפרופסור בוחר ספרים אין
+חשיבות לסדר שלהם, ואין חזרות:
+
+בשבוע הראשון יש לפרופסור
+$\binom{10}{2}$
+אפשרויות לבחור את הספרים,
+
+בשבוע השני יש לפרופסור כבר
+$\binom{8}{2}$
+אפשרויות לבחור את הספרים,
+
+בשבוע השלישי יש לפרופסור
+$\binom{6}{2}$
+אפשרויות לבחור את הספרים,
+
+ בשבוע הרביעי יש לפרופסור רק
+ $\binom{4}{2}$
+ אפשרויות לבחור את הספרים,
+ 
+ ובשבוע החמישי יש לפרופסור  בדיוק
+ $\binom{2}{2}=1$
+ אפשרויות לבחור את הספרים.
+ 
+ מעקרון הכפל נקבל כי בסך הכל מספר האפשרויות של רשימות אפשריות הוא 
+ $$.\boxed{\binom{10}{2}\cdot \binom{8}{2}\cdot 
+ \binom{6}{2}\cdot
+ \binom{4}{2}\cdot \binom{2}{2}}$$
+ אפשרויות לרשימות עד שייגמרו הספרים.
+ 
+\item[(2)]
+בהנחה
+שהסטודנטים מחזירים לפרופסור את הספרים עד סוף השבוע, בכל שבוע, כמה רשימות שונות יכולות היו להיות לפרופסור בתום
+$5$
+שבועות?
+\\
+
+\underline{תשובה:}
+כאן ההבדל הוא שבכל שבוע מספר האפשרויות שלו נשאר
+$\binom{10}{2}$,
+כי זוג הספרים שבחר באותו שבוע יחזרו בסוף השבוע, לפני שעליו לבחור שוב בשבוע לאחר מכן.
+לכן מעקרון הכפל נקבל כי מספר האפשרויות של הפרופסור לניהול הרשימה בתם
+$5$
+השבועות הוא
+$$.\boxed{\binom{10}{2}^5}$$
+\end{enumerate}
+\end{enumerate}
+
+\noindent\rule{17cm}{0.4pt}
+
+
+\item
+ בשאלה זו נעסוק במקדם הבינומי
+ $$\binom{n}{k}=\frac{n!}{k!(n-k)!}$$
+ כאשר משמעותו הקומבינטורית היא ״מספר הדרכים בהם ניתן לבחור
+ $k$
+ עצמים מתוך
+ $n$
+ עצמים שונים״.
+\begin{enumerate}
+\item
+חשבו, ללא מחשבון:
+\begin{enumerate}
+\item[(1)]
+$\boxed{\binom{4}{2}=\frac{4!}{2!(4-2)!}=\frac{3\cdot 4}{2}=6}$
+\item[(2)]
+יש בדיוק
+$100$
+אפשרויות לבחור
+סטודנט  מתוך קבוצה של
+$100$
+סטודנטים,
+לכן
+$\boxed{\binom{100}{1}=100}$.
+\item[(3)]
+$\boxed{\binom{20}{2}=\frac{20!}{2!18!}=\frac{19\cdot 20}{2}=19\cdot 10=190}$.
+\\
+\end{enumerate}
+\item
+הראו כי
+לכל
+$1\le k\le n$
+ מתקיימת הזהות הבאה:
+$$.k\cdot \binom{n}{k}
+=n\cdot \binom{n-1}{k-1}$$
+\underline{תשובה:}
+נפתח את אגף שמאל 
+$$k\cdot \binom{n}{k}
+=
+k\cdot \frac{n!}{k!(n-k)!}
+=\frac{n!}{(k-1)!(n-k)!}$$
+מצד שני, נפתח את אגף ימין ונקבל
+$$n\cdot\binom{n--1}{k-1}
+=n\cdot
+\frac{(n-1)!}{(k-1)!(n-1-(k-1))!}
+=
+\frac{n!}{(k-1)!(n-k)!}$$
+נשים לב כי קיבלנו את אותו הביטוי וכך הראנו את נכונות הזהות.
+\\
+
+\item
+נסמן
+$\Omega=\{A,B,C\}$.
+\begin{enumerate}
+\item[(1)]
+כמה תתי-קבוצות שונות 
+יש ל-$\Omega$?
+כתבו את כולן.
+\\
+
+\underline{תשובה:}
+יש 
+$\boxed{2^3=8}$
+תתי-קבוצות שונות, והנה הן:
+$$.\boxed{\emptyset,\quad
+\{A\},\quad
+\{B\},\quad
+\{C\},\quad
+\{A,B\},\quad
+\{A,C\},\quad
+\{B,C\},\quad
+\{A,B,C\}}$$
+\item[(2)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל זוגי? ($0$
+נחשב זוגי)
+\\
+
+\underline{תשובה:}
+יש בדיוק 
+$\boxed{4}$
+כאלו:
+$$\emptyset, \quad
+ \{A,B\}, \quad
+\{A,C\}, \quad
+\{B,C\}$$
+\item[(3)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל אי-זוגי?
+\\
+
+\underline{תשובה:}
+יש בדיוק 
+$\boxed{4}$
+כאלו:
+$$.\{A\},\quad
+\{B\},\quad
+\{C\},\quad
+\{A,B,C\}$$
+\end{enumerate}
+
+\item
+נסמן
+$\Omega=\{A,B,C,D,E,F,G,H\}$.
+\begin{enumerate}
+\item[(1)]
+כמה תתי-קבוצות שונות בגודל
+$2$
+יש ל-$\Omega$?
+\\
+
+\underline{תשובה:}
+השאלה היא בעצם בכמה דרכים שונות ניתן לבחור שני איברים שונים מתוך הקבוצה
+$\Omega$,
+כאשר אין חשיבות לסדר הבחירה ולא ניתן לחזור על בחירה, לכן מספר הדרכים הוא
+$$.\boxed{\binom{8}{2}=\frac{8!}{2!6!}=\frac{7\cdot 8}{1}=7\cdot 4=28}$$
+\item[(2)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$?
+\\
+
+\underline{תשובה:}
+ מספר תתי הקבוצות שיש ל-$\Omega$
+הוא שווה
+$2^{|\Omega|}$
+כלומר
+$\boxed{2^8=256}$.\\
+%%%%
+\item[(3)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל זוגי? ($0$
+נחשב זוגי)
+\\
+
+\underline{תשובה:}
+בגלל ש-$|\Omega|=8$
+אז תת-קבוצה שלה בגודל זוגי יכולה להיות מגודל
+$0,2,4,6$
+או
+$8$.
+מספר תתי-הקבוצות של
+$\Omega$
+בגודל 
+$0$
+שווה ל-$\binom{8}{0}=1$,
+
+מספר תתי-הקבוצות של
+$\Omega$
+בגודל 
+$2$
+שווה ל-
+$\binom{8}{2}=28$,
+
+מספר תתי-הקבוצות של
+$\Omega$
+בגודל 
+$4$
+שווה ל-
+$\binom{8}{4}=70$,
+
+מספר תתי-הקבוצות של
+$\Omega$
+בגודל 
+$6$
+שווה ל-
+$\binom{8}{6}=28$,
+
+מספר תתי-הקבוצות של
+$\Omega$
+בגודל 
+$8$
+שווה ל-
+$\binom{8}{8}=1$,
+
+ולכן מספר תתי-הקבוצות שיש ל-$\Omega$
+שהן בגודל זוגי יהיה 
+$$\boxed{\binom{8}{0}+\binom{8}{2}+\binom{8}{4}+\binom{8}{6}+\binom{8}{8}
+=1+28+70+28+1=128}
+$$
+\item[(4)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל אי-זוגי?
+\\
+
+\underline{תשובה:}
+באופן דומה, נקבל כי המספר שווה
+$$\boxed{.\binom{8}{1}+\binom{8}{3}+\binom{8}{5}+\binom{8}{7}=
+8+56+56+8=128}$$
+\end{enumerate}
+\item
+היעזרו בנוסחת הבינום של ניוטון שנלמדה בכיתה
+$$(a+b)^n=
+\sum_{k=0}^{n}
+\binom{n}{k}a^kb^{n-k}$$
+והראו כי לכל קבוצה סופית
+$\Omega$
+מספר תתי-הקבוצות השונות
+של
+$\Omega$
+שהן בגודל זוגי תמיד יהיה שווה למספר תתי-הקבוצות השונות 
+של
+$\Omega$
+שהן בגודל אי-זוגי.
+(רמז: סמנו
+$|\Omega|=n$
+ובחרו את
+$a,b$ 
+להיות....)
+\\
+
+\underline{תשובה:}
+נסמן את הגודל של הקבוצה
+$\Omega$
+להיות
+$n$,
+כלומר ב-$\Omega$
+יש
+$n$
+שונים.
+כעת נתבונן בנוסחת הבינום של ניוטון, עבור
+$a=-1$
+ו-$b=1$,
+כלומר
+$$0=((-1)+1)^n=
+\sum_{k=0}^{n}
+\binom{n}{k}(-1)^k\cdot 1^{n-k}=
+\sum_{k=0}^n
+\binom{n}{k}(-1)^k$$
+כלומר
+$$0=\binom{n}{0}-\binom{n}{1}+\binom{n}{2}-\binom{n}{3}+....+(-1)^n\cdot\binom{n}{n}$$
+אז אם נעביר את כל המחוברים במקומות הזוגיים לאגף שמאל נקבל את השיוויון הבא
+$$\boxed{\binom{n}{1}+\binom{n}{3}+\cdots = \binom{n}{0}+\binom{n}{2}+\cdots}$$
+כאשר המחובר האחרון באגף ימין ובאגף שמאל הם
+$\binom{n}{n}$
+ו-
+$\binom{n}{n-1}$,
+בהתאם לזוגיות של
+$n$.
+המשמעות הוקמבינטורית של אגף ימין היא מספר כל תתי-הקבוצות השונות של
+$\Omega$
+ שהן בגודל זוגי, כאשר המשמעות של אגף שאמל היא מספר כל תתי-הקבוצות השונות של
+ $\Omega$
+ שהן בגודל אי-זוגי.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+\begin{enumerate}
+\item
+נסו לתת הסבר קומבינטורי לשיוויון הבא:
+$$\binom{30}{13}
+=\sum_{k=0}^{10}
+\binom{10}{k}\cdot \binom{20}{13-k}$$
+(רמז:
+חשבו על
+גפן שצריכה לארוז 
+$13$
+זוגות מכנסיים 
+ביציאתה לחופשה, כאשר בארון יש לה
+$30$
+זוגות מכנסיים, מתוכם 
+$10$
+ארוכים
+ו-$20$
+קצרים. בכמה דרכים תוכל לעשות זאת?)
+\\
+
+\underline{תשובה:}
+נחשוב על התרחיש בו לגפן יש
+$30$
+זוגות מכנסיים, מתוכם
+$10$
+ארוכים
+ו-$20$
+קצרים, והיא צריכה לארוז לטיול הגדול שלה בדיוק
+$13$
+זוגות מתוכם. בכמה דרכים היא תוכל לעשות זאת?
+ יש לה
+$\binom{30}{13}$
+דרכים.
+
+מצד שני, נשתמש בעקרון החיבור ונפריד לכמה מקרים:
+כל הדרכים שיש לה לארוז
+$13$
+זוגות מכנסיים, מתחלקות באופן הבא: 
+\begin{itemize}
+\item
+היא ארזה
+$0$
+ארוכים
+ו-$13$
+קצרים:
+יש לה
+$\binom{10}{0}\cdot\binom{20}{13}$
+דרכים לעשות זאת.
+\item
+היא ארזה
+$1$
+ארוכים
+ו-$12$
+קצרים:
+יש לה
+$\binom{10}{1}\cdot\binom{20}{12}$
+דרכים לעשות זאת.
+\item
+\vdots
+\item
+היא ארזה
+$9$
+ארוכים
+ו-$4$
+קצרים:
+יש לה
+$\binom{10}{9}\cdot\binom{20}{4}$
+דרכים לעשות זאת.
+\item
+היא ארזה
+$10$
+ארוכים
+ו-$3$
+קצרים:
+יש לה
+$\binom{10}{10}\cdot\binom{20}{3}$
+דרכים לעשות זאת.
+\end{itemize}
+לכן סך כמות הדרכים יהיה
+$$
+\binom{10}{0}\cdot\binom{20}{13}
++\binom{10}{1}\cdot\binom{20}{12}
++\ldots
++\binom{10}{9}\cdot\binom{20}{4}
++\binom{10}{10}\cdot\binom{20}{3}$$
+כלומר
+$$\binom{30}{13}
+=\sum_{k=0}^{10}
+\binom{10}{k}\cdot \binom{20}{13-k}$$
+\item
+נסו לחשוב על שיקול דומה לסעיף הקודם, ולהוכיח כי לכל
+$n\in\nn$
+מתקיימת הזהות הבאה:
+$$\binom{2n}{n}=
+\sum_{k=0}^{n}
+\binom{n}{k}^2$$
+(הכוונה: כמה זוגות מכנסיים יש לגפן בארון כעת, וכמה היא צריכה לארוז?)
+\end{enumerate}
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+

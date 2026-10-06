@@ -1,0 +1,888 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\Log}{\mathrm{Log}}
+\newcommand{\PP}{\mathbb{P}}
+
+%%%%%probabilty shorts
+
+\newcommand{\Geo}{\mathrm{Geo}}
+\newcommand{\Bin}{\mathrm{Bin}}
+\newcommand{\Poi}{\mathrm{Poi}}
+\newcommand{\Ber}{\mathrm{Ber}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\EE}{\mathbb{E}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 3:
+פתרון}}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{enumerate}
+
+\item
+שנה אחרי שנה פרופסור אקס מלמד את אותו הקורס ״מבוא למוטנטים״ באוניברסיטה.  
+הקורס נחשב לקשה וידוע כי ההסתברות שיש סטודנט (אחד לפחות) שקיבל
+$100$
+בקורס היא
+$0.02$,
+כך זה בכל שנה באופן בלתי תלוי בשנים הקודמות בהן התקיים הקורס.
+פתרו כל אחד מהסעיפים הלא קשורים הבאים.
+\begin{enumerate}
+\item
+מה ההסתברות שרק בשנה הרביעית היה סטודנט שקיבל
+$100$,
+לראשונה בתולדות הקורס?
+\item
+מה ההסתברות שב-$6$
+השנים הראשונות לא היה סטודנט שקיבל
+$100$
+כלל?
+\item
+מה ההסתברות שב-$10$ השנים הראשונות, היו בדיוק שנתיים בהן היה סטודנט שקיבל 
+$100$?
+\item
+ בכל שנה,
+ פרופ׳ מקגונגל (קולגה של פרופ׳ אקס) מלמדת במקביל אליו את הקורס ״מבוא לקסמים״.
+ 
+ידוע כי  ההסתברות שיש לפחות סטודנט אחד שקיבל בקורס שלה
+$100$
+היא
+$0.05$,
+באופן בלתי תלוי בשנים הקודמות בהן התקיים הקורס.
+
+עוד ידוע כי הקורסים של פרופ׳ אקס ופרופ׳ מקגונגל  בלתי תלויים אחד בשני.
+
+שני הפרופסורים הסכימו (כל אחד/ת עבור הקורס שלו/ה) כי בשנה הראשונה  בה יש סטודנט המקבל
+$100$
+בקורס, הוא/היא יוצא/ת לשנת שבתון. 
+\begin{enumerate}
+\item[(i)]
+מה ההסתברות כי שניהם יצאו לשבתון לאחר שנה בלבד?
+\item[(ii)]
+מה ההסתברות כי שניהם יצאו לשבתון בדיוק באותה השנה? 
+\end{enumerate}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+נסמן ב-$X$
+את מספר השנים שלקח עד שהיה סטודנט שקיבל
+$100$
+בקורס. לכן
+$X\sim \Geo(0.02)$.
+\begin{enumerate}
+\item
+בסעיף זה שואלים בעצם לגבי ההסתברות הבאה
+$$\PP(X=4)
+(1-0.02)^3\cdot 0.02=0.98^3\cdot 0.02=
+0.0188$$
+%%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+בסעיף זה שואלים על המאורע בו ב-$6$
+השנים הראשונות לא היה סטודנט שקיבל 
+$100$
+(כלומר, לא הייתה הצלחה $6$
+שנים), כלומר
+$$\PP(X>6)=(1-0.02)^6=0.98^6=0.8858$$
+%%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+כאן שואלים על מספר ההצלחות אבל בטווח של
+$10$
+שנים, זוהי כבר התנהגות של משתנה בינומי, אז נסמן ב-$Y$
+את מספר השנים בהן היה סטודנט שקיבל
+$100$
+בקורס, מתוך 
+$10$
+השנים הראשונות. לכן
+$Y\sim \Bin(10,0.02)$
+ונחשב
+$$\PP(Y=2)
+=\binom{10}{2}\cdot
+(0.02)^2\cdot(0.98)^8=0.0153$$
+%%%%
+\item
+ניעזר ב-$X$
+אותו הגדרנו בתחילת השאלה, ונגדיר משתנה נוסף
+$Z$
+להיות מספר  השנים שלקח עד שסטודנט קיבל
+$100$
+בקורס של פרופ׳ מקגונגל. אז מהנתונים נסיק כי
+$Z\sim\Geo(0.05)$
+וכי
+$X,Z$
+משתנים בלתי תלויים.
+\begin{enumerate}
+\item[(i)]
+כאן  השאלה היא מהי ההסתברות של המאורע שהוא
+"$X=1$
+וגם
+$Z=1$":
+$$\PP(X=Z=1)=\PP(X=1)\cdot \PP(Z=1)$$
+כי הם בלתי תלויים, ונמשיך לחשב
+$$\PP(X=Z=1)
+=0.02\cdot 0.05
+=0.001$$
+\item[(ii)]
+נסמן ב-$A$
+את המאורע המבוקש ״שניהם יצאו לשבתון באותה השנה״, ונשים לב כי
+$$A=
+\{X=Z=1\}\cup\{X=Z=2\}\cup\ldots=
+\bigcup_{n=1}^{\infty}
+A_n$$
+כאשר
+$A_n=\{ X=Z=n\}$
+זה בעצם המאורע ששניהם יצאו לשבתון בדיוק בשנה ה-$n$.
+בגלל שהמאורעות האלו
+$A_1,A_2,\ldots$
+זרים בזוגות, אז
+\begin{align*}
+\PP(A)=\PP(A_1\cup A_2\cup\ldots)=
+\sum_{n=1}^{\infty}
+\PP(A_n)
+=\sum_{n=1}^{\infty}=
+\end{align*}
+לכל
+$n\ge1$
+נשתמש בעובדה כי
+$X,Y$
+משתנים בלתי תלויים ואז
+$$\PP(A_n)=\PP(X=n)\cdot \PP(Y=n)
+=0.98^{n-1}\cdot 0.02\cdot 0.95^{n-1}\cdot 0.05
+=q^{n-1}\cdot 0.001$$
+כאשר
+$q=0.98\cdot 0.95$.
+לכן
+$$\PP(A)=0.001\cdot
+\sum_{n=1}^{\infty}
+q^{n-1}
+=0.001\cdot
+\frac{1}{1-q}=0.0144$$
+כאשר נעזרנו בסכום של סדרה הנדסית אינסופית.
+\end{enumerate}
+\end{enumerate}
+
+\newpage
+\item
+יהיו
+$X\sim \Bin(4,0.3)$
+ו-
+$Y\sim \mathrm{Poi}(3)$
+שני משתנים מקריים
+ונניח כי הם
+ בלתי תלויים.
+
+חשבו את ההסתברויות הבאות:
+\begin{enumerate}
+\begin{multicols}{3}
+\item
+$\PP(X+Y=1)$.
+\item
+$\PP(X+Y=5)$.
+\item
+$\PP(X< Y)$.
+\end{multicols}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+נזכיר כי טווח הערכים של 
+$X$
+ הוא
+ $\cR_X=
+ \{0,1,2,3,4\}$
+ וטווח הערכים של
+ $Y$
+ הוא
+ 
+ $\cR_Y=\{0,1,2,\ldots\}$.
+\begin{enumerate}
+\item
+נקבל
+ \begin{align*}
+ \PP(X+Y=1)
+ &=
+ \PP(X=0, Y=1)
+ +\PP(X=1,Y=0)
+ \\&=\PP(X=0)\cdot \PP(Y=1)
+ +\PP(X=1)\cdot \PP(Y=0)
+ \\&=
+ 0.7^4\cdot e^{-3}\cdot \frac{3^1}{1!}+
+ \binom{4}{1}0.3\cdot 0.7^3\cdot e^{-3}\cdot
+ \frac{3^0}{0!}
+ \end{align*}
+ %%%
+ 
+ \noindent\rule{15cm}{0.4pt}
+
+ \item
+ באופן דומה לסעיף הראשון, נציג את המאורע
+ $\{X+Y=5\}$
+ כאיחוד של מספר מאורעות זרים בזוגות ונשים לב כי
+ $X=4$
+ הערך הכי גדול של
+ $X$
+ כי המאורע
+ $X=5$
+ הוא ריק, אז נקבל
+ $$\PP(X+Y=5)=
+\sum_{k=0}^5
+ \PP(X=k, Y=5-k)
+ =\sum_{k=0}^4
+ \binom{4}{k}0.3^k0.7^{4-k}\cdot
+ e^{-3}\cdot
+ \frac{3^{5-k}}{(5-k)!}$$
+ %%%%
+ 
+ \noindent\rule{15cm}{0.4pt}
+
+ \item
+ גם כאן נחשוב על המאורע המבוקש
+ $\{X<Y\}$
+ ונבין כי הוא מורכב מהרבה מאוד (אינסוף) מקרים מהצורה
+ $\{X=k, Y=m\}$
+ כאשר
+ $k=0,1,2,3,4$
+ וגם
+ $n>k$.
+ במקום לחשב זאת באופן ישיר, נעדיף לחשב את ההסתברות של המאורע המשלים
+ \begin{align*}
+ \PP(X<Y)
+& =1-\PP(X\ge Y)
+ =1-\sum_{k=0}^4
+ \PP(X=k, Y\le k)
+ \\&=
+ 1-\PP(X=0,Y=0)-\PP(X=1,Y=0)-\PP(X=1,Y=1)
+\\& -\PP(X=2,Y=0)-\PP(X=2,Y=1)-\PP(X=2,Y=2)
+\\& -\PP(X=3,Y=0)-\ldots-\PP(X=3,Y=3)
+\\& -\PP(X=4,Y=0)-\ldots-\PP(X=4,Y=4) 
+ \end{align*}
+ מפרידים כל הסתברות לכפל הסתברויות כי המשתנים בלתי תלויים וממשיכים את החישוב הסיזיפי.
+\end{enumerate}
+\newpage
+
+\item
+זורקים
+$2$
+מטבעות הוגנים ובלתי-תלויים עם 
+$0$
+ו-$1$
+משני צידי המטבעות.
+נגדיר את המשתנים המקריים הבאים:
+$X_0$
+מספר ה-$0$-ים שיצאו.
+\quad
+$X_1$
+מספר ה-$1$-ים שיצאו.
+\quad
+$Y$
+סכום המספרים שיצאו במטבעות.
+
+$Z$
+שווה
+$1$
+אם תוצאות המטבעות שונות,
+ושווה
+$0$
+אם תוצאות המטבעות זהות.
+
+בכל אחד מהסעיפים הבאים בדקו
+האם 
+שני המשתנים הנתונים
+הם בלתי תלויים או לא, בעזרת ההגדרה.
+\begin{enumerate}
+\begin{multicols}{4}
+\item
+$X_0,X_1$.
+%%%
+\item
+$X_0, Y$.
+%%%%
+\item
+$X_1,Z$.
+%%%%
+\item
+$Y,Z$.
+\end{multicols}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+
+\begin{enumerate}
+\item
+המשתנים תלויים. נשים לב כי
+$\PP(X_0=2,X_1=2)=0$
+כי זהו מאורע ריק (שבשני מטבעות יצא
+$0$
+וגם בשני מטבעות יצא
+$1$)
+ אבל מצד שני
+$$.\PP(X_0=2)\cdot\PP(X_1=2)=\frac{1}{4}\cdot\frac{1}{4}\neq0
+=\PP(X_0=2,X_1=2)$$
+%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+המשתנים תלויים. נשים לב כי
+$\PP(X_0=0,Y=0)=0$
+כי זהו מאורע ריק (שבשני מטבעות יצא
+$1$
+וגם שזכום המטבעות הוא
+$0$)
+ אבל מצד שני
+$$.\PP(X_0=0)\cdot\PP(Y=0)
+=\frac{1}{4}\cdot\frac{1}{4}\neq0
+=\PP(X_0=0,Y=0)$$
+%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+המשתנים תלויים. נשים לב כי
+$\PP(X_1=2,Z=1)=0$
+כי זהו מאורע ריק (שבשני מטבעות יצא
+$1$
+וגם בשני מטבעות יצאו תוצאות שונות) אבל מצד שני
+$$.\PP(X_1=2)\cdot\PP(Z=1)=\frac{1}{4}\cdot\frac{1}{2}\neq0
+=\PP(X_1=2,Z=1)$$
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+המשתנים תלויים. נשים לב כי
+$\PP(Y=0,Z=1)=0$
+כי זהו מאורע ריק (שבשני מטבעות יצא
+$0$
+וגם בשני מטבעות יצאו תוצאות שונות) אבל מצד שני
+$$.\PP(Y=0)\cdot\PP(Z=1)=\frac{1}{4}\cdot\frac{1}{2}\neq0
+=\PP(Y=0,Z=1)$$
+\end{enumerate}
+
+\newpage
+
+\item
+נדב קיבל מתנה לכבוד יום ההולדת שלו: שני כרטיסי גירוד.
+
+בכל כרטיס גירוד ניתן לזכות ב-$100$
+ש״ח בהסתברות
+$0.15$,
+ב-$1000$
+ש״ח בהסתברות
+$0.05$
+או לא לזכות כלל.
+
+נגדיר את המשתנים המקריים:
+
+$X$
+הוא מספר הכרטיסים בהם נדב זכה בסכום כספי כלשהו (חיובי).
+
+$Y$
+הוא סכום הזכייה של נדב בסך הכל משני הכרטיסים.
+
+\begin{enumerate}
+\item
+מצאו את פונקציית ההסתברות של
+$X$,
+את התוחלת
+$\EE[X]$
+ואת השונות
+$\Var[X]$.
+%%%
+\item
+מצאו את פונקציית ההסתברות של
+$Y$,
+את התוחלת
+$\EE[Y]$
+ואת השונות
+$\Var[Y]$.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+\begin{enumerate}
+\item
+מנתוני השאלה נסיק כי ההסתברות לזכות בסכום כספי כלשהו (חיובי) היא
+$p=0.15+0.05=0.2$,
+ולכן
+$X\sim\Bin(2,p)$,
+כי יש שני ניסויים בלתי תלויים (שני כרטיסים) שבכל אחד מהם ההסתברות להצלחה (שיהיה סכום כספי חיובי) היא 
+$p$
+והמשתנה
+$X$
+סופר את מספר ההצלחות (מספר הכרטיסים בהם יש סכום כספי חיובי). מהנוסחאות שלמדנו
+$$.\EE[X]=2\cdot p=0.4\quad,\quad,
+\Var[X]=2\cdot p\cdot (1-p)=0.32$$
+%%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+נגדיר
+$Y_1$
+להיות סכום הזכייה של נדב בכרטיס הראשון,
+ו-$Y_2$
+סכום הזכייה של נדב בכרטיס השני,
+לכן
+$Y=Y_1+Y_2$
+ונזכור כי שני המשתנים בלתי תלויים.
+נכתוב את פונקציית ההסתברות של
+$Y_1$
+ושל
+$Y_2$
+שהן זהות:
+$$\PP(Y_1=0)=0.8,\quad
+\PP(Y_1=100)=0.15,\quad
+\PP(Y_1=1000)=0.05$$
+טווח הערכים של
+$Y$
+הוא
+$$\cR_Y=
+\{
+0, 100, 200, 1000, 1100, 2000
+\}$$
+ונחשב כל אחת מההסתברויות בצורה ישירה
+\begin{align*}
+&\PP(Y=0)=
+\PP(Y_1=0,Y_2=0)=\PP(Y_1=0)\PP(Y_2=0)
+=0.8^2=0.64
+\\&\PP(Y=100)=
+\PP(Y_1=100)\PP(Y_2=0)+\PP(Y_1=0)\PP(Y_2=100)=2\cdot 0.8\cdot 0.15
+=0.24
+\\&\PP(Y=200)=\PP(Y_1=100)\PP(Y_2=100)=0.15^2=0.0225
+\\&\PP(Y=1000)=
+\PP(Y_1=1000)\PP(Y_2=0)+\PP(Y_1=0)\PP(Y_2=1000)=2\cdot 0.8\cdot 0.05
+=0.08
+\\&\PP(Y=1100)=\PP(Y_1=1000)\PP(Y_2=100)+\PP(Y_1=100)\PP(Y_2=1000)
+=2\cdot 0.15\cdot 0.05=0.015
+\\&\PP(Y=2000)=\PP(Y_1=1000)\PP)Y_2=1000)=0.05^2=0.0025
+\end{align*}
+מצאנו את פונקציית ההסתברות של
+$Y$.
+ניתן לחשב את התוחלת ואת השונות בצורה ישירה
+$$\EE[Y]
+=0\cdot 0.64
++100\cdot 0.24+
+200\cdot
+0.0225
++1000\cdot
+0.08+
+1100\cdot
+0.015
++2000\cdot
+0.0025
+=130$$
+וככה גם את התוחלת 
+$$\EE[Y^2]
+=100^2\cdot 0.24+
+200^2\cdot
+0.0225
++1000^2\cdot
+0.08+
+1100^2\cdot
+0.015
++2000^2\cdot
+0.0025=111,450$$
+לכן
+$$.\Var[Y]=111,450-130^2=94,550$$
+את התוחלת והשונות ניתן לחשב גם בדרך אחרת:
+ניתן להשתמש בלינאריות התוחלת ואז
+$$\EE[Y]=\EE[Y_1+Y_2]
+\EE[Y_1]+\EE[Y_2]=
+2\cdot
+(100\cdot 0.15+1000\cdot 0.05))=130$$
+ולסיום, בגלל שהמשתנים
+$Y_1,Y_2$
+בלתי תלויים אפשר גם להשתמש בלינאריות השונות עבורם ולקבל
+$$\Var[Y]
+=
+\Var[Y_1+Y_2]=\Var[Y_1]+\Var[Y_2]$$
+כאשר השונות של
+$Y_1$
+ושל
+$Y_2$
+שוות, וניתנות לחישוב בצורה ישירה.
+
+\end{enumerate}
+
+\newpage
+\item
+בכל אחד מהסעיפים הלא קשורים הבאים, מצאו את פונקציית ההסתברות של
+$X$,
+ כאשר:
+ \begin{enumerate}
+%%%%%
+\item
+$X$
+משתנה מקרי עם טווח ערכים
+$\cR_X=\{0,1\}$
+ונתון כי
+$\EE[X]=0.25$.
+%%%
+\item
+$X$
+משתנה מקרי עם טווח ערכים
+$\cR_X=\{0,1,2\}$,
+ונתון כי
+$\EE[X]=1.4$
+וגם
+$\Var[X]=0.34$.
+%%%%
+
+\end{enumerate}
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+\begin{enumerate}
+\item
+מהגדרת התוחלת נקבל
+$$0.25=\EE[X]
+0\cdot \PP(X=0)+1\cdot \PP(X=1)=\PP(X=1)$$
+ובגלל שבטווח של
+$X$
+יש רק שני ערכים נקבל
+$\PP(X=0)=1-\PP(X=1)=0.75$.
+לסיכום, קיבלנו כי
+$X\sim\Ber(0.75)$.
+%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+
+\item
+למען הנוחות נסמן
+$\PP(X=0)=p_0, \PP(X=1)=p_1$
+ואז
+$\PP(X=2)=1-p_0-p_1$.
+שוב נשתמש בהגדרת התוחלת:
+$$1.4=\EE[X]
+=0\cdot p_0+1\cdot p_1+2\cdot (1-p_0-p_1)=2-2p_0-p_1$$
+לכן
+$p_1=0.6-2p_0$.
+מהגדרת השונות
+$\Var[X]=\EE[X^2]-(\EE[X])^2$
+ נסיק כי
+$$2.3=0.34+1.96=
+\EE[X^2]=0^2\cdot p_0+1^2\cdot p_1
++2^2\cdot (1-p_0-p_1)$$
+נציב את
+$p_1=0.6-2p_0$
+ונקבל
+$$2.3=0.6-2p_0+4(1-p_0-0.6+2p_0)
+\Longrightarrow
+p_0=0.05$$
+ואז
+$p_1=0.6-0.1=0.5$ וגם
+$p_2=1-0.05-0.5=0.45$.
+\end{enumerate}
+\newpage
+\item
+במחלקה לאומנות יפנית עתיקה יש
+$20$
+סטודנטים. כל סטודנט צריך לבחור ״קורס כללי״ אחד מתוך היצע של
+$100$
+קורסים כלליים שהאוניברסיטה מציעה בסמסטר.
+לסטודנטים לא באמת אכפת באיזה קורס כללי יבחרו, ולכן כל סטודנט בוחר באקראי אחד מבין
+$100$
+הקורסים.
+\begin{enumerate}
+\item
+מהי תוחלת מספר הקורסים הכלליים בהם לא יהיה שום סטודנט מהמחלקה לאומנות יפנית עתיקה?
+\item
+מהי תוחלת מספר הקורסים הכלליים בהם יהיה לפחות סטודנט אחד מהמחלקה לאומנות יפנית עתיקה?
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+\begin{enumerate}
+\item
+נסמן ב-$X$
+את מספר הקורסים הכלליים בהם לא יהיה שום סטודנט מהמחלקה לאומנות יפנית עתיקה, ונרצה לחשב את התוחלת של
+$X$.
+בשביל זה נגדיר כעת
+$100$
+משתנים מקריים חדשים כך:
+$$X_k=
+\begin{cases}
+1&\text{אם בקורס ה-$k$ אין סטודנט מהמחלקה לאומנות יפנית עתיקה}
+\\
+0&\text{בכל מקרה אחר}\\
+\end{cases} $$
+לכל
+$k=1,2,\ldots,100$.
+נשים לב כי טווח הערכים שלו הוא
+$\{0,1\}$,
+לכן
+$X_k\sim \Ber(p_k)$,
+כאשר
+$$p_k=\PP(\text{אם בקורס ה-$k$ אין סטודנט מהמחלקה לאומנות יפנית עתיקה})=
+\left(\frac{99}{100}\right)^{20}=0.818$$
+כי זה בעצם אומר שכל סטודנט, מבין ה-$20$, יכול לבחור כל קורס אחר פרט לקורס ה-$k$.
+מהגדרת המשתנים המקריים, מתקיים
+$$X=X_1+\ldots+X_{100}$$
+ולכן מלינאריות התוחלת
+$$.\EE[X]=\EE[X_1]+\ldots+\EE[X_{100}]=100\cdot 0.818=81.8$$
+%%%%
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+נשים לב כי 
+מספר הקורסים הכלליים בהם יהיה לפחות סטודנט אחד מהמחלקה לאומנות יפנית עתיקה שווה
+$100-X$,
+ולכן מלינאריות התוחלת ומסעיף א׳:
+$$.\EE[100-X]
+=100-\EE[X]=18.2$$
+\end{enumerate}
+\newpage
+\item
+עבור
+$X\sim \Bin(n,p)$
+חשבו את התוחלת
+$\EE[X\cdot(X-1)]$
+ בשתי דרכים שונות:
+ \begin{enumerate}
+ \item
+ (בדרך הארוכה) בעזרת כלל לוטוס וכתיבה פורמלית של התוחלת, וזה מתחיל ככה:
+ $$\EE[X(X-1)]
+ =\sum_{k=0}^n
+ k(k-1)
+ \cdot
+ \PP(X=k)$$
+ ניתן להשתמש כאן בזהות בה השתמשנו בכיתה
+ $p\cdot
+ \binom{q}{p}
+ =q\cdot \binom{q-1}{p-1}$.
+ \item
+ (בדרך הקצרה) בעזרת לינאריות התוחלת ושימוש בתוחלת ובשונות של
+ $X$.
+ \end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+\begin{enumerate}
+\item
+ניעזר בכלל לוטוס ונקבל
+\begin{align*}
+\EE[X(X-1)]
+ &=\sum_{k=0}^n
+ k(k-1)
+ \cdot
+ \PP(X=k)
+ \overset{(1)}{=}\sum_{k=2}^n
+ k(k-1)
+ \binom{n}{k}
+ p^k(1-p)^{n-k}
+ \\&\overset{(2)}{=}
+ \sum_{k=2}^n
+ (k-1)n
+ \binom{n-1}{k-1}
+ p^k(1-p)^{n-k}
+ \\&\overset{(3)}{=}n\sum_{k=2}^n 
+(n-1) \binom{n-2}{k-2}
+p^k(1-p)^{n-k}
+\\&= n(n-1)p^2\sum_{k=2}^n
+\binom{n-2}{k-2}
+p^{k-2}(1-p)^{n-2-(k-2)}
+\\&\overset{(4)}{=}
+n(n-1)p^2\sum_{\ell=0}^{n-2}
+\binom{n-2}{\ell}p^{\ell}(1-p)^{n-2-\ell}
+\overset{(5)}{=}n(n-1)p^2
+\end{align*}
+הסברים למעברים:
+
+$(1)$:
+עבור
+$k=0,1$
+המחוברים מתאפסים ולכן הסכום מתחיל מ-$2$.
+
+$(2)$:
+השתמשנו בזהות
+$k\binom{n}{k}=
+(n-1)\binom{n-1}{k-1}$.
+
+$(3)$:
+השתמשנו באותה הזהות כאשר
+$(k-1)\binom{n-1}{k-1}=
+(n-1)\binom{n-2}{k-2}$.
+
+$(4)$:
+עשינו שינוי אינדקס
+$\ell=k-2$.
+
+$(5)$:
+הסכום שווה
+$1$
+כי זהו סכום כל ההסתברויות של משתמנה מסוג
+$\Bin(n-2,p)$.
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+בעזרת הלינאריות של התוחלת נקבל
+$$\EE[X\cdot (X-1)]=
+\EE[X^2-X]
+=\EE[X^2]-\EE[X]=
+\Var[X]+(\EE[X])^2-\EE[X]$$
+כעת ניזכר כי
+$\EE[X]=np,
+\Var[X]=np(1-p)$
+אז
+$$\EE[X\cdot (X-1)]
+=np(1-p)+(np)^2-np
+=np(1-p+np-1)=n(n-1)p^2$$
+\end{enumerate}
+
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+

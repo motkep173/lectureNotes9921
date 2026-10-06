@@ -1,0 +1,328 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\Arg}{\mathrm{Arg}}
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\Log}{\mathrm{Log}}
+\newcommand{\PP}{\mathbb{P}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 2:
+ הסתברות, הסתברות מותנית ומשתנים מקריים}}
+ \boxed{\text{
+להגשה עד 19.01.25 בשעה 23:59}}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent\rule{17cm}{0.4pt}
+
+\begin{enumerate}
+
+\item
+בסיומו של כנס מתמטי מכובד,
+$10$
+ מתמטיקאיות קבעו להיפגש בסניף ארומה שבאוניברסיטת בן-גוריון שבנגב. 
+ להפתעתן, הסתבר שיש
+שלושה סניפים כאלו ברחבי האוניברסיטה,
+לכן כל אחת מהמתמטיקאיות  בחרה את אחד הסניפים באקראי והגיעה אליו.
+\begin{enumerate}
+\item
+מה ההסתברות שכל המתמטיקאיות הצליחו להיפגש כמתוכנן והגיעו כולן לאותו סניף?
+\item
+מה ההסתברות שלסניף בבניין 
+$56$
+לא הגיעה אף אחת?
+\item
+השתמשו בעקרון ההכלה וההדחה וחשבו את ההסתברות שלכל סניף תגיע לפחות מתמטיקאית אחת.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+פרופסור אקס רוצה לבחור טוש לקראת ההרצאה שלו, כאשר על השולחן במשרדו
+יש שתי קופסאות עם טושים. בקופסה א׳ יש
+$4$
+טושים
+כחולים
+ו-$6$
+טושים שחורים.
+\\
+בקופסה ב׳ יש
+$3$
+טושים כחולים
+ו-$7$
+טושים שחורים.
+\\
+הפרופסור  בוחר קופסה באקראי (כלומר שתי הקופסאות הם שוות הסתברות)  ומוציא ממנה טוש באקראי. 
+\begin{enumerate}
+\item
+מה ההסתברות שהוציא טוש כחול?
+\item
+\underline{ידוע} כי הטוש שהוציא הוא כחול, מה ההסתברות  שבחר בקופסה א׳?
+\item
+האם המאורעות ״הפרופסור בחר בקופסה א״ ו-״יצא טוש כחול״ הם תלויים או בלתי-תלויים?
+\item
+לאחר שבוע שוב רצה הפרופסור לבחור אבל הפעם היה צריך לבחור שני טושים להרצאה, ובנוסף הפעם קופסה א׳ הייתה מונחת על השולחן וקופסה ב׳ הייתה מונחת בקצה השני של החדר.
+\\
+מהיותו אדם שמתעצל לפעמים, הוא לא ממש רצה לקום וללכת עד הקצה השני של החדר, לכן כעת ההסתברות שהפרופסור יבחר בקופסה א׳ היא 
+$p$
+עבור
+$p>\frac{1}{2}$ נתון,
+\\
+וההסתברות שיקום ויבחר בקופסה ב׳ היא
+$1-p$.
+
+\begin{enumerate}
+\item[(1)]
+חשבו את ההסתברות  שהפרופסור הוציא שני טושים כחולים (הביעו אותה באמצעות
+$p$).
+\item[(2)]
+ההסתברות שהפרופסור בחר בקופסה ב׳ בהינתן שהוא הוציא שני טושים כחולים שווה
+$\frac{1}{7}$.
+\\
+חשבו את
+$p$.
+\end{enumerate}
+
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\newpage
+
+\item
+בניסוי הבא נבחר מספר טבעי כלשהו, אז
+מרחב המדגם הוא
+$\Omega=\{1,2,3,\ldots\}$
+ונתונה פונ׳ הסתברות
+$\PP$.
+\\
+פתרו כל אחד משני הסעיפים הבאים שאינם קשורים אחד לשני, כאשר בכל אחד יש מידע אחר על
+$\PP$.
+\begin{enumerate}
+\item
+ידוע כי
+$\PP(\{k\})=C\cdot
+\left(
+\frac{2}{3}\right)^k$
+לכל
+$k\ge1$.
+\begin{enumerate}
+\item[(1)]
+מצאו את
+$C$.
+\item[(2)]
+חשבו את 
+$\PP(A)$,
+כאשר
+$A$
+הוא המאורע הנתון על ידי ״נבחר מספר זוגי״.\\
+\end{enumerate}
+\item
+ידוע כי
+$\PP(\{k,k+1\})=C\cdot \left(\frac{2}{3}\right)^k$
+לכל
+$k\ge1$.
+\begin{enumerate}
+\item[(1)]
+מצאו את
+$C$.
+\item[(2)]
+חשבו את
+$\PP(B)$,
+כאשר
+$B$
+הוא המאורע הנתון על ידי
+״נבחר 
+$1$
+או
+$4$״.
+\end{enumerate}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+נתון משתנה מקרי
+$X$
+בעל טווח ערכים
+$\cR_X=\{0,1,2,3,4\}$,
+וידוע כי מתקיים:
+\begin{itemize}
+\item
+$F_X(2)=F_X(3)=0.8$.
+\item
+$\PP(X=0)+\PP(X\ge 2)=0.5$.
+\item
+$\PP(X>0)-\PP(X<3)=0.1$.
+\end{itemize}
+מצאו את פונקציית ההסתברות 
+$\PP_X(k)$
+לכל
+$k\in \cR_x$.
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+באחד מערבי חג החנוכה, נדב רוצה לאכול סופגנייה. נדב מגיע לבית הוריו ושם יש 
+$10$
+סופגניות:
+\\
+$4$
+סופגניות עם ריבה,
+$3$
+סופגניות עם פיסטוק,
+$2$
+סופגניות עם שוקולד,
+וסופגנייה אחת בלי כלום.
+
+העניין הוא שנדב אוהב לאכול סופגניות שוקולד בלבד
+וכאשר נדב בוחר סופגנייה הוא אינו רואה את הסופגניות (עוד לא הדליקו נרות אז חשוך). 
+נדב בוחר באקראי אחת מבין כל הסופגניות, לוקח את הסופגנייה לחדר הסמוך (שם יש אור) ומסתכל על הסופגנייה שבחר. אם זו לא סופגניית שוקולד הוא זורק אותה לפח (מרוב עצבים), חוזר לחדר ובוחר באותה הדרך סופגנייה נוספת מהיצע הסופגניות שנשאר.
+
+נסמן ב-$X$
+את מספר הסופגניות שנדב בחר עד שקיבל סופגניית שוקולד.
+
+הבינו מהו הטווח של
+$X$
+ומצאו את פונקציית  ההסתברות
+$\PP_X(k)$
+לכל
+$k$
+בטווח.
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+

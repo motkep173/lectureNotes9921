@@ -1,0 +1,347 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\Arg}{\mathrm{Arg}}
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\Log}{\mathrm{Log}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 1 (להגשה עד 03.12 בשעה 23:59)}}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent\rule{17cm}{0.4pt}
+
+\begin{enumerate}
+
+
+\item
+גפן הולכת למכולת השכונתית ומתלבטת איזה מבין שלושת הסוגים הבאים של חלב לקנות: סויה, שקדים או שיבולת-שועל.
+נסמן את המאורעות הבאים:
+
+$A$
+-
+גפן קנתה חלב סויה,
+
+$B$
+-
+גפן קנתה חלב שקדים,
+
+$C$
+גפן קנתה חלב שיבולת-שועל.
+
+תארו כל אחד מהמאורעות (קבוצות) הבאים בעזרת
+$A,B,C$
+והפעולות חיתוך, חיבור, הפרש ומשלים של קבוצות. בנוסף ציירו את דיאגרמת ון המתאימה בכל אחד מהסעיפים:
+\begin{enumerate}
+\item
+גפן קונה את שלושת הסוגים.
+\item
+גפן קונה חלב סויה  אבל לא קונה שקדים ולא קונה שיבולת-שועל.
+\item
+גפן קונה חלב שקדים, ועוד בדיוק אחד מבין השניים האחרים.
+\item
+גפן קונה לכל היותר סוג חלב אחד.
+\item
+גפן קונה בדיוק סוג חלב אחד.
+\item
+גפן קונה בדיוק שני סוגי חלב.
+\item
+גפן לא קונה חלב כלל.
+\item 
+גפן קונה לפחות שני סוגים שונים של חלב.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+פרופסור אקס רוצה לסדר במשרדו החדש
+$10$
+ספרים 
+\underline{שונים}
+על המדף:
+
+$4$
+ספרי היסטוריה,
+$3$
+ספרי מדע בדיוני,
+$2$
+ספרי רפואה,
+וספר סטטיסטיקה אחד.
+\begin{enumerate}
+\item
+בכמה דרכים הוא יכול לעשות זאת?
+\item
+בכמה דרכים יוכל לעשות זאת, אם הוא רוצה שספר הסטטיסטיקה יהיה באחד מהקצוות של המדף?
+\item
+אם הוא רוצה לסדר את הספרים כך שכל שהספרים באותו הנושא יהיו צמודים זה לזה, בכמה דרכים יוכל לעשות זאת?
+\item
+אחיינית של פרופסור אקס מגיעה לביקור, וכמתנה ליום הולדתה השביעי הוא רוצה להביא לה במתנה
+שלושה
+ספרים מתוך העשרה שיש לו. כמה מתנות שונות יכול הפרופסור לתת לאחייניתו האהובה?
+\item
+בכל יום ראשון בוחר הפרופסור שני ספרים ושם אותם בתיבת הדואר של התאגדות הסטודנטים. 
+מהיותו פרופסור מסודר, הוא מנהל רשימה בה רושם את שמות שני הספרים שבחר בכל שבוע.
+\begin{enumerate}
+\item[(1)]
+בהנחה כי הסטודנטים לא  מחזירים לפרופסור את הספרים,
+כמה רשימות שונות יכול לנהל הפרופסור עד שיגמרו לו הספרים על המדף? (כלומר, בתום 
+$5$
+שבועות)
+\item[(2)]
+בהנחה
+שהסטודנטים מחזירים לפרופסור את הספרים עד סוף השבוע, בכל שבוע, כמה רשימות שונות יכולות היו להיות לפרופסור בתום
+$5$
+שבועות?
+\end{enumerate}
+\end{enumerate}
+
+\item
+ בשאלה זו נעסוק במקדם הבינומי
+ $$\binom{n}{k}=\frac{n!}{k!(n-k)!}$$
+ כאשר משמעותו הקומבינטורית היא ״מספר הדרכים בהם ניתן לבחור
+ $k$
+ עצמים מתוך
+ $n$
+ עצמים שונים״.
+\begin{enumerate}
+\item
+חשבו, ללא מחשבון:
+\begin{enumerate}
+\begin{multicols}{3}
+\item[(1)]
+$\binom{4}{2}$
+\item[(2)]
+$\binom{100}{1}$
+\item[(3)]
+$\binom{20}{2}$
+\end{multicols}
+\end{enumerate}
+\item
+הראו כי
+לכל
+$1\le k\le n$
+ מתקיימת הזהות הבאה:
+$$.k\cdot \binom{n}{k}
+=n\cdot \binom{n-1}{k-1}$$
+\item
+נסמן
+$\Omega=\{A,B,C\}$.
+\begin{enumerate}
+\item[(1)]
+כמה תתי-קבוצות שונות 
+יש ל-$\Omega$?
+כתבו את כולן.
+\item[(2)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל זוגי? ($0$
+נחשב זוגי)
+\item[(3)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל אי-זוגי? \\
+\end{enumerate}
+
+\item
+נסמן
+$\Omega=\{A,B,C,D,E,F,G,H\}$.
+\begin{enumerate}
+\item[(1)]
+כמה תתי-קבוצות שונות בגודל
+$2$
+יש ל-$\Omega$?
+\item[(2)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$?
+\item[(3)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל זוגי? ($0$
+נחשב זוגי)
+\item[(4)]
+כמה תתי-קבוצות שונות יש ל-$\Omega$
+שהן בגודל אי-זוגי?\\ 
+\end{enumerate}
+\item
+היעזרו בנוסחת הבינום של ניוטון שנלמדה בכיתה
+$$(a+b)^n=
+\sum_{k=0}^{n}
+\binom{n}{k}a^kb^{n-k}$$
+והראו כי לכל קבוצה סופית
+$\Omega$
+מספר תתי-הקבוצות השונות
+של
+$\Omega$
+שהן בגודל זוגי תמיד יהיה שווה למספר תתי-הקבוצות השונות 
+של
+$\Omega$
+שהן בגודל אי-זוגי.
+(רמז: סמנו
+$|\Omega|=n$
+ובחרו את
+$a,b$ 
+להיות....)
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+\begin{enumerate}
+\item
+נסו לתת הסבר קומבינטורי לשיוויון הבא:
+$$\binom{30}{13}
+=\sum_{k=0}^{13}
+\binom{10}{k}\cdot \binom{20}{13-k}$$
+(רמז:
+חשבו על
+גפן שצריכה לארוז 
+$13$
+זוגות מכנסיים 
+ביציאתה לחופשה, כאשר בארון יש לה
+$30$
+זוגות מכנסיים, מתוכם 
+$10$
+ארוכים
+ו-$20$
+קצרים. בכמה דרכים תוכל לעשות זאת?)
+\item
+נסו לחשוב על שיקול דומה לסעיף הקודם, ולהוכיח כי לכל
+$n\in\nn$
+מתקיימת הזהות הבאה:
+$$\binom{2n}{n}=
+\sum_{k=0}^{n}
+\binom{n}{k}^2$$
+(הכוונה: כמה זוגות מכנסיים יש לגפן בארון כעת, וכמה היא צריכה לארוז?)
+\end{enumerate}
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+

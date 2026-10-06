@@ -1,0 +1,441 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Bin}{\mathrm{Bin}}
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\Log}{\mathrm{Log}}
+\newcommand{\PP}{\mathbb{P}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 3:
+ משתנים מקריים מוכרים, תוחלת ושונות}}
+ \boxed{\text{
+להגשה עד 28.01.25 בשעה 23:59}}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{enumerate}
+
+\item
+שנה אחרי שנה פרופסור אקס מלמד את אותו הקורס ״מבוא למוטנטים״ באוניברסיטה.  
+הקורס נחשב לקשה וידוע כי ההסתברות שיש סטודנט (אחד לפחות) שקיבל
+$100$
+בקורס היא
+$0.02$,
+כך זה בכל שנה באופן בלתי תלוי בשנים הקודמות בהן התקיים הקורס.
+פתרו כל אחד מהסעיפים הלא קשורים הבאים.
+\begin{enumerate}
+\item
+מה ההסתברות שרק בשנה הרביעית היה סטודנט שקיבל
+$100$,
+לראשונה בתולדות הקורס?
+\item
+מה ההסתברות שב-$6$
+השנים הראשונות לא היה סטודנט שקיבל
+$100$
+כלל?
+\item
+מה ההסתברות שב-$10$ השנים הראשונות, היו בדיוק שנתיים בהן היה סטודנט שקיבל 
+$100$?
+\item
+ בכל שנה,
+ פרופ׳ מקגונגל (קולגה של פרופ׳ אקס) מלמדת במקביל אליו את הקורס ״מבוא לקסמים״.
+ 
+ידוע כי  ההסתברות שיש לפחות סטודנט אחד שקיבל בקורס שלה
+$100$
+היא
+$0.05$,
+באופן בלתי תלוי בשנים הקודמות בהן התקיים הקורס.
+
+עוד ידוע כי הקורסים של פרופ׳ אקס ופרופ׳ מקגונגל  בלתי תלויים אחד בשני.
+
+שני הפרופסורים הסכימו (כל אחד/ת עבור הקורס שלו/ה) כי בשנה הראשונה  בה יש סטודנט המקבל
+$100$
+בקורס, הוא/היא יוצא/ת לשנת שבתון. 
+\begin{enumerate}
+\item[(i)]
+מה ההסתברות כי שניהם יצאו לשבתון לאחר שנה בלבד?
+\item[(ii)]
+מה ההסתברות כי שניהם יצאו לשבתון בדיוק באותה השנה? 
+\end{enumerate}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+יהיו
+$X\sim \Bin(4,0.3)$
+ו-
+$Y\sim \mathrm{Poi}(3)$
+שני משתנים מקריים
+ונניח כי הם
+ בלתי תלויים.
+
+חשבו את ההסתברויות הבאות:
+\begin{enumerate}
+\begin{multicols}{3}
+\item
+$\PP(X+Y=1)$.
+\item
+$\PP(X+Y=5)$.
+\item
+$\PP(X< Y)$.
+\end{multicols}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+נזכיר כי
+$X,Y$ מ״מ
+ בלתי תלויים, אם לכל
+$a,b$
+ מתקיים
+$.\PP(X=a, Y=b)
+ =\PP(X=a)\cdot
+ \PP(Y=b)$
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+זורקים
+$2$
+מטבעות הוגנים ובלתי-תלויים עם 
+$0$
+ו-$1$
+משני צידי המטבעות.
+נגדיר את המשתנים המקריים הבאים:
+$X_0$
+מספר ה-$0$-ים שיצאו.
+\quad
+$X_1$
+מספר ה-$1$-ים שיצאו.
+\quad
+$Y$
+סכום המספרים שיצאו במטבעות.
+
+$Z$
+שווה
+$1$
+אם תוצאות המטבעות שונות,
+ושווה
+$0$
+אם תוצאות המטבעות זהות.
+
+בכל אחד מהסעיפים הבאים בדקו
+האם 
+שני המשתנים הנתונים
+הם בלתי תלויים או לא, בעזרת ההגדרה.
+\begin{enumerate}
+\begin{multicols}{4}
+\item
+$X_0,X_1$.
+%%%
+\item
+$X_0, Y$.
+%%%%
+\item
+$X_1,Z$.
+%%%%
+\item
+$Y,Z$.
+\end{multicols}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\newpage
+
+
+\item
+נדב קיבל מתנה לכבוד יום ההולדת שלו: שני כרטיסי גירוד.
+
+בכל כרטיס גירוד ניתן לזכות ב-$100$
+ש״ח בהסתברות
+$0.15$,
+ב-$1000$
+ש״ח בהסתברות
+$0.05$
+או לא לזכות כלל.
+
+נגדיר את המשתנים המקריים:
+
+$X$
+הוא מספר הכרטיסים בהם נדב זכה בסכום כספי כלשהו (חיובי).
+
+$Y$
+הוא סכום הזכייה של נדב בסך הכל משני הכרטיסים.
+
+\begin{enumerate}
+\item
+מצאו את פונקציית ההסתברות של
+$X$,
+את התוחלת
+$\EE[X]$
+ואת השונות
+$\Var[X]$.
+%%%
+\item
+מצאו את פונקציית ההסתברות של
+$Y$,
+את התוחלת
+$\EE[Y]$
+ואת השונות
+$\Var[Y]$.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+בכל אחד מהסעיפים הלא קשורים הבאים, מצאו את פונקציית ההסתברות של
+$X$,
+ כאשר:
+ \begin{enumerate}
+%%%%%
+\item
+$X$
+משתנה מקרי עם טווח ערכים
+$\cR_X=\{0,1\}$
+ונתון כי
+$\EE[X]=0.25$.
+%%%
+\item
+$X$
+משתנה מקרי עם טווח ערכים
+$\cR_X=\{0,1,2\}$,
+ונתון כי
+$\EE[X]=1.4$
+וגם
+$\Var[X]=0.34$.
+%%%%
+
+\end{enumerate}
+\noindent\rule{15cm}{0.4pt}
+
+
+\item
+במחלקה לאומנות יפנית עתיקה יש
+$20$
+סטודנטים. כל סטודנט צריך לבחור ״קורס כללי״ אחד מתוך היצע של
+$100$
+קורסים כלליים שהאוניברסיטה מציעה בסמסטר.
+לסטודנטים לא באמת אכפת באיזה קורס כללי יבחרו, ולכן כל סטודנט בוחר באקראי אחד מבין
+$100$
+הקורסים.
+\begin{enumerate}
+\item
+מהי תוחלת מספר הקורסים הכלליים בהם לא יהיה שום סטודנט מהמחלקה לאומנות יפנית עתיקה?
+\item
+מהי תוחלת מספר הקורסים הכלליים בהם יהיה לפחות סטודנט אחד מהמחלקה לאומנות יפנית עתיקה?
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\item
+עבור
+$X\sim \Bin(n,p)$
+חשבו את התוחלת
+$\EE[X\cdot(X-1)]$
+ בשתי דרכים שונות:
+ \begin{enumerate}
+ \item
+ (בדרך הארוכה) בעזרת כלל לוטוס וכתיבה פורמלית של התוחלת, וזה מתחיל ככה:
+ $$\EE[X(X-1)]
+ =\sum_{k=0}^n
+ k(k-1)
+ \cdot
+ \PP(X=k)$$
+ ניתן להשתמש כאן בזהות בה השתמשנו בכיתה
+ $p\cdot
+ \binom{q}{p}
+ =q\cdot \binom{q-1}{p-1}$.
+ \item
+ (בדרך הקצרה) בעזרת לינאריות התוחלת ושימוש בתוחלת ובשונות של
+ $X$.
+ \end{enumerate}
+
+\newpage
+
+הכוונות ורמזים:
+\begin{itemize}
+\item
+בשאלה 1 סעיף ד׳.
+
+אחרי כתיבה פורמלית וסימון משתנים מקריים מתאימים צריך להגיע לביטוי מהצורה
+$\PP(X=Y)$,
+כעת יש לחשוב על מה הם בעצם כל המקרים שמתקיים
+$X=Y$,
+וכך להמשיך לחשב את ההסתברות.
+\item
+בשאלה 2, רלוונטי לכל הסעיפים.
+
+ראשית תארו את טווח הערכים של שני המשתנים ואז נסו לחשוב מה בעצם אומר המאורע לו רוצים לחשב הסתברות, מבחינת הערכים של כל אחד מהמשתנים, והשתמשו באי-תלות שלהם.
+
+סעיף (ג) יותר מאתגר אך עדיין נסו לפעול לפי הכוונה זו, ואולי עדיף לעבוד עם המאורע המשלים. 
+\item
+בשאלה 3, רלוונטי לכל הסעיפים.
+
+נסו לפעול ממש לפי ההגדרה של משתנים בלתי תלויים. 
+
+זכרו כי אם החשד הוא שהמשתנים תלויים, כל שעליכם/ן להראות זה ש-
+$$\PP(X=a, Y=b)\neq \PP(X=a)\cdot \PP(Y=b)$$
+עבור בחירה ספציפית של
+$a,b$.
+לעמת זאת, אם החשד הוא שהם בלתי-תלויים עליכם/ן להראות שיש שיוויון לכל
+$a,b$
+שהם בטווח הערכים הרלוונטיים של המשתנים.
+\item
+בשאלות 4,5.
+
+שימוש ישיר בהגדרות, לאט לאט.
+\item
+בשאלה 6.
+
+בסעיף א׳, תנו סימון למשתנה המקרי הרלוונטי, חשבו איך להציג אותו בצורה אחרת כסכום של מ״מ אחרים, והשתמשו בלינאריות התוחלת.
+
+בסעיף ב׳, תנו סימון למשתנה המקרי הרלוונטי וחשבו איך לא לעבוד קשה! הפתרון כאן צריך להיות מאוד קצר.
+
+\item
+בשאלה 7.
+
+בסעיף א׳, יש כבר רמז והכוונה בשאלה עצמה.
+
+בסעיף ב׳, השתמשו בלינאריות התוחלת ובהגדרת השונות. בנוסף זכרו כי תוחלת ושונת של משתנה מסוג בינומי זה משהו שאנו כבר יודעים וניתן להשתמש בזה.
+\end{itemize}
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
+

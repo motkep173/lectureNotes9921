@@ -1,0 +1,699 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+\input{systeme}
+\usepackage[a4paper, top=4cm,left=2.5cm, right=2.3cm, bottom=2.7cm]{geometry}
+\usepackage{amsmath, amssymb, array, multicol, enumitem}
+\usepackage{pdfpages}
+\usepackage{comment, graphicx}  
+\usepackage{xparse}
+\DeclareGraphicsExtensions{.png,.jpg}
+\usepackage{pgffor}  % for loops in latex
+\usepackage{ifthen}  % conditional latex compilation
+\usepackage{todonotes}  % notes in bright orange
+\usepackage[colorlinks=true]{hyperref}  % hyperlinks
+\AtBeginDocument{% coloring of links
+	\hypersetup{pdfborder={0 0 0},
+		urlcolor=blue}%
+}
+\usepackage{fontspec}  % Hebrew fonts
+\usepackage{xunicode}  % Hebrew character encoding
+\usepackage{polyglossia}  % Hebrew Latex
+\usepackage[absolute]{textpos}   % Proper positioning of images, e.g. BGU logo
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+
+\newfontfamily\hebrewfont[Script=Hebrew]{Times New Roman}
+
+\makeatletter
+\def\tagform@#1{\maketag@@@{(\ignorespaces#1\unskip)}}
+\makeatother
+
+
+\makeatletter
+\renewcommand{\SepMark}[1]{\def\@SepMark{#1}}
+\makeatother
+\SepMark{.}
+\robustify\hebrewnumeral
+\robustify\Hebrewnumeral
+\robustify\Hebrewnumeralfinal
+
+\def\urladdrname{{\itshape כתובת רשת}}
+\def\emailaddrname{{\itshape כתובת דואל}}
+
+\makeatletter
+\let\orig@MakeUppercase \MakeUppercase
+\makeatother
+\providecommand{\MakeUppercase}[1]{#1}
+
+\fontsize{14}{15}  
+
+\setdefaultlanguage{hebrew}
+\setotherlanguage{english}
+\thispagestyle{empty}
+\selectlanguage{hebrew}
+
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\qq}{\mathbb{Q}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\QQ}{\mathbb{Q}}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\DeclareMathOperator{\Adj}{Adj}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\Img}{Im}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{Span}
+\DeclareMathOperator{\tr}{tr}
+
+
+\newcommand{\calB}{\mathcal{B}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\calE}{\mathcal{E}}
+
+
+%%%% new for complex functions
+
+\newcommand{\Arg}{\mathrm{Arg}}
+\newcommand{\ol}{\overline}
+\newcommand{\wt}{\widetilde}
+\newcommand{\wh}{\widehat}
+\newcommand{\re}{\mathrm{Re}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\goes}{\longrightarrow}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\Log}{\mathrm{Log}}
+\newcommand{\PP}{\mathbb{P}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\selectlanguage{hebrew}
+
+\newcommand{\semester}{%
+	סמסטר א' תשפ״ה
+}
+\newcommand{\course}{%
+הסתברות לסטטיסטיקה}
+\newcommand{\coursenumber}{9321}
+\newcommand{\doctype}{%
+\boxed{\text{
+ דף  תרגילים 2:
+פתרון}}
+}
+\newcommand{\hwknumber}{}
+\newcommand{\chaptype}{%
+	פרק }
+\newcommand{\chapnum}{\textenglish{I}}
+
+\newcommand{\chapname}{%
+אאא } 
+	
+\thispagestyle{empty}
+\begin{textblock*}{9cm}[0.5,0.5](90mm,3cm)
+	\includegraphics[width=2in]{logo}
+\end{textblock*}	
+
+\begin{center}
+	\large	
+המחלקה למתמטיקה - 
+	\semester  \\
+	{\large \bf \course - 201.1.9921}\\
+	\medskip
+	{\Large  \textbf{\doctype \hwknumber}  }\\
+\end{center}
+\vspace{0.3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent\rule{17cm}{0.4pt}
+
+\begin{enumerate}
+
+\item
+בסיומו של כנס מתמטי מכובד,
+$10$
+ מתמטיקאיות קבעו להיפגש בסניף ארומה שבאוניברסיטת בן-גוריון שבנגב. 
+ להפתעתן, הסתבר שיש
+שלושה סניפים כאלו ברחבי האוניברסיטה,
+לכן כל אחת מהמתמטיקאיות  בחרה את אחד הסניפים באקראי והגיעה אליו.
+\begin{enumerate}
+\item
+מה ההסתברות שכל המתמטיקאיות הצליחו להיפגש כמתוכנן והגיעו כולן לאותו סניף?
+\item
+מה ההסתברות שלסניף בבניין 
+$56$
+לא הגיעה אף אחת?
+\item
+השתמשו בעקרון ההכלה וההדחה וחשבו את ההסתברות שלכל סניף תגיע לפחות מתמטיקאית אחת.
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+
+\begin{enumerate}
+\item
+נסמן את המאורע
+$A$
+להיות ״כל המתמטיקאיות הגיעו לאותו הסניף״
+והוא בגודל
+$3$,
+כי כולן יכולות להגיע לסניף הראשון או השני או השלישי. 
+ מרחב המדגם הוא בגודל
+ $|\Omega|=3^{10}$,
+ ומרחב ההסתברות הוא אחיד, לכן
+$$\boxed{.\PP(A)=\frac{|A|}{|\Omega|}=\frac{3}{3^{10}}=\frac{1}{3^9}}$$
+
+\item 
+נסמן את המאורע
+$B$
+להיות ״לסניף בבניין 56 לא הגיעה אף אחת״, אז
+$|B|=2^{10}$
+כי  כל מתמטיקאית יכולה לבחור רק
+$2$
+אופציות ולא
+$3$,
+ ולכן
+$$\boxed{.\PP(B)=\frac{|B|}{|\Omega|}=\frac{2^{10}}{3^{10}}=
+\left(\frac{2}{3}\right)^{10}}$$
+%%%
+\item
+נסמן את המאורעותה באים:
+
+$A_1$
+המאורע שלסניף הראשון תגיע לפחות מתמטיקאית אחת,
+
+$A_2$
+המאורע שלסניף השני תגיע לפחות מתמטיקאית אחת,
+
+$A_3$
+המאורע שלסניף השלישי תגיע לפחות מתמטיקאית אחת.
+
+נרצה לחשב את ההסתברות
+$\PP(A_1\cap A_2\cap A_3)$.
+ראשית, נשתמש במאורע המשלים ונקבל
+$$.\PP(A_1\cap A_2\cap A_3)
+=1-\PP(A_1^C\cup A_2^C\cup A_3^C)$$
+כעת נשתמש בעקרון ההכלה וההדחה
+\begin{multline*}
+\PP(A_1^C\cup A_2^C\cup A_3^C)
+=\PP(A_1^C)+\PP(A_2^C)+\PP(A_3^C)
+\\-\PP(A_1\cap A_2^C)-
+\PP(A_1^C\cap A_3^C)
+-\PP(A_2^C\cap A_3^C)
+\\+\PP(A_1\cap A_2^C\cap A_3^C)
+\end{multline*}
+\end{enumerate}
+כל אחד מהמאורעות
+$A_1^C, A_2^C, A_3^C$
+אומר שלא תגיע אף מתמטיקאית לסניף הראשון/השני/השלישי, ובדומה לסעיף ב׳ שם חישבנו את ההסתברות הזו נקבל
+$$.\PP(A_1^C)=\PP(A_2^C)=\PP(A_3^C)=\left(\frac{2}{3}\right)^{10}$$
+כל אחד מהמאורעות
+$A_1^C\cap A_2^C, A_1^C\cap A_3^C, A_2^C\cap A_3^C$
+אומר שלא תגיע אף מתמטיקאית לשניים מהסניפים (הראשון והשני/ הראשון והשלישי/ השני והשלישי), ובמילים אחרות שכולן תגענה לסניף השלישי, לכן
+$$.\PP(A_1^C\cap A_2^C)
+=\PP(A_1^\cap A_3^C)=\PP(A_2^C\cap A_3^C)=\frac{1}{3^{10}}$$
+לסיום, המאורע
+$A_1^C\cap A_2^C\cap A_3^C$
+הוא מאורע ריק ולכן הסתברותו שווה
+$0$,
+אז נקבל
+$$\boxed{\PP(A_1\cap A_2\cap A_3)=
+1-\left(
+3\cdot \left(\frac{2}{3}\right)^{10}
+-3\cdot \left(\frac{1}{3}\right)^{10}
+\right)
+=
+\frac{3^9-2^{10}+1}{3^{9}}}$$
+\newpage
+
+\item
+פרופסור אקס רוצה לבחור טוש לקראת ההרצאה שלו, כאשר על השולחן במשרדו
+יש שתי קופסאות עם טושים. בקופסה א׳ יש
+$4$
+טושים
+כחולים
+ו-$6$
+טושים שחורים.
+\\
+בקופסה ב׳ יש
+$3$
+טושים כחולים
+ו-$7$
+טושים שחורים.
+\\
+הפרופסור  בוחר קופסה באקראי (כלומר שתי הקופסאות הם שוות הסתברות)  ומוציא ממנה טוש באקראי. 
+\begin{enumerate}
+\item
+מה ההסתברות שהוציא טוש כחול?
+\item
+\underline{ידוע} כי הטוש שהוציא הוא כחול, מה ההסתברות  שבחר בקופסה א׳?
+\item
+האם המאורעות ״הפרופסור בחר בקופסה א״ ו-״יצא טוש כחול״ הם תלויים או בלתי-תלויים?
+\item
+לאחר שבוע שוב רצה הפרופסור לבחור אבל הפעם היה צריך לבחור שני טושים להרצאה, ובנוסף הפעם קופסה א׳ הייתה מונחת על השולחן וקופסה ב׳ הייתה מונחת בקצה השני של החדר.
+\\
+מהיותו אדם שמתעצל לפעמים, הוא לא ממש רצה לקום וללכת עד הקצה השני של החדר, לכן כעת ההסתברות שהפרופסור יבחר בקופסה א׳ היא 
+$p$
+עבור
+$p>\frac{1}{2}$ נתון,
+\\
+וההסתברות שיקום ויבחר בקופסה ב׳ היא
+$1-p$.
+
+\begin{enumerate}
+\item[(1)]
+חשבו את ההסתברות  שהפרופסור הוציא שני טושים כחולים (הביעו אותה באמצעות
+$p$).
+\item[(2)]
+ההסתברות שהפרופסור בחר בקופסה ב׳ בהינתן שהוא הוציא שני טושים כחולים שווה
+$\frac{1}{7}$.
+\\
+חשבו את
+$p$.
+\end{enumerate}
+
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+
+\begin{enumerate}
+\item
+נסמן את המאורעות הבאים
+
+$A$
+המאורע שבחר בקופסה א׳.
+
+$B$
+ המאורע שהוציא טוש כחול.
+ 
+ לכן מנוסחת ההסתברות השלמה נקבל
+ $$\boxed{\PP(B)}=
+ \PP(B|A)\cdot \PP(A)+
+ \PP(B|A^C)\cdot \PP(A^C)
+ =\frac{4}{10}\cdot
+ \frac{1}{2}+
+ \frac{3}{10}\cdot\frac{1}{2}=\frac{7}{20}=\boxed{0.35}$$
+ כאשר
+ $\PP(B|A)=\frac{4}{10}$
+ כי בהינתן שבחר בקופסה א׳ ההסתברות שלו להוציא כחול היא בדיוק
+ $4$
+ אפשרויות טובות מתוך 
+ $10$
+ סך הכל, ובדומה עבור קופסה ב׳ ומדוע
+ $\PP(B|A^C)=\frac{3}{10}$.
+ \\\\
+ דרך נוספת:
+בגלל שהקופסאות שוות הסתברות אפשר לחשוב על זה בצורה הבאה:
+יש סך הכל
+$7$
+טושים כחולים,
+ו-$13$
+טושים שחורים. לכן ההסתברות שהוציא טוש כחול היא
+$\frac{7}{20}=0.35$.
+%%
+%%
+\item
+כאן נרצה לחשב את
+$\PP(A|B)$
+אבל בסעיף א׳ חישבנו כבר את
+$\PP(B),\PP(A)$
+ואת
+$\PP(B|A)$,
+לכן נשתמש בנוסחת בייס ונקבל
+$$\boxed{\PP(A|B)}=\PP(B|A)\cdot
+\frac{\PP(A)}{\PP(B)}=\frac{4}{10}\cdot
+\frac{\frac{1}{2}}{\frac{7}{20}}=\boxed{\frac{4}{7}}$$
+
+\item
+בגלל שמתקיים
+$$\PP(B|A)=\frac{4}{10}\neq \frac{7}{20}=\PP(B)$$
+\boxed{\text{
+המאורעות
+$A,B$
+תלויים.}} לחילופין אפשר לחשב את
+$\PP(A\cap B)=\PP(A|B)\cdot \PP(B)
+=\frac{4}{7}\cdot \frac{7}{20}=\frac{1}{5}$
+ולראות כי זה שונה מהמכפלה
+$\PP(A)\cdot \PP(B)=\frac{1}{2}\cdot \frac{7}{20}=\frac{7}{40}$.
+\item
+\begin{enumerate}
+\item[(1)]
+נסמן את המאורע שהפרופסור הוציא שני טושים כחולים על ידי
+$C$.
+בעזרת נוסחת ההסתברות השלמה נקבל
+$$\PP(C)=\PP(C|A)\cdot \PP(A)+\PP(C|A^C)\cdot \PP(A^C)$$
+כאשר בסעיף זה
+$\PP(A)=p, \PP(A^C)=1-p$. 
+אם ידוע כי בחר בקופסה א׳ אז הוא מוציא שני טושים מתוך עשרה, לכן יש לו
+$\binom{10}{2}=45$
+דרכים לעשות זאת, כאשר מספר הדרכים הטובות לעשות זאת הוא כמספר הדרכים לבחור שני טושים כחולים מתוך הארבעה שיש, שזה
+$\binom{4}{2}=6$,
+לכן
+$$.\PP(C|A)=\frac{6}{45}=\frac{2}{15}$$
+באופן דומה, אם ידוע כי בחר בקופסה ב׳ אז נקבל
+$$\PP(C|A^C)=\frac{\binom{3}{2}}{\binom{10}{2}}=\frac{3}{45}=\frac{1}{15}$$
+לכן לסיכום:
+$$\boxed{\PP(C)=\frac{2}{15}\cdot p+\frac{1}{15}\cdot (1-p)=\frac{1}{15}\cdot p+\frac{1}{15}}$$
+%%%%
+\item[(2)]
+הנתון הוא
+$\PP(A^C|C)=\frac{1}{7}$.
+ניעזר בחישובים מהסעיף הקודם ובנוסחת בייס לקבל
+$$\frac{1}{7}=
+\PP(A^C|C)
+=\PP(C|A^C)\cdot
+\frac{\PP(A^C)}{\PP(C)}
+=\frac{1}{15}\cdot
+\frac{1-p}{\frac{1}{15}(1+p)}$$
+ולכן
+$$.1+p=7(1-p)\Longrightarrow
+8p=6\Longrightarrow 
+\boxed{p=\frac{3}{4}}$$
+\end{enumerate}
+\end{enumerate}
+\noindent\rule{15cm}{0.4pt}
+
+\newpage
+
+\item
+בניסוי הבא נבחר מספר טבעי כלשהו, אז
+מרחב המדגם הוא
+$\Omega=\{1,2,3,\ldots\}$
+ונתונה פונ׳ הסתברות
+$\PP$.
+\\
+פתרו כל אחד משני הסעיפים הבאים שאינם קשורים אחד לשני, כאשר בכל אחד יש מידע אחר על
+$\PP$.
+\begin{enumerate}
+\item
+ידוע כי
+$\PP(\{k\})=C\cdot
+\left(
+\frac{2}{3}\right)^k$
+לכל
+$k\ge1$.
+\begin{enumerate}
+\item[(1)]
+מצאו את
+$C$.
+\item[(2)]
+חשבו את 
+$\PP(A)$,
+כאשר
+$A$
+הוא המאורע הנתון על ידי ״נבחר מספר זוגי״.\\
+\end{enumerate}
+\item
+ידוע כי
+$\PP(\{k,k+1\})=C\cdot \left(\frac{2}{3}\right)^k$
+לכל
+$k\ge1$.
+\begin{enumerate}
+\item[(1)]
+מצאו את
+$C$.
+\item[(2)]
+חשבו את
+$\PP(B)$,
+כאשר
+$B$
+הוא המאורע הנתון על ידי
+״נבחר 
+$1$
+או
+$4$״.
+\end{enumerate}
+\end{enumerate}
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+
+
+\begin{enumerate}
+\item
+\begin{enumerate}
+\item[(1)]
+בגלל שהמאורעות
+$\{1\},\{2\},\ldots$
+זרים בזוגות,
+מתקיים
+$$1=\PP(\Omega)=\PP(\{1\})+\PP(\{2\})+\ldots
+=C\cdot
+\left(\frac{2}{3}\right)+
+C\cdot
+\left(\frac{2}{3}\right)^2+\ldots
+=
+$$
+זהו סכום של סדרה הנדסית אינסופית, עם האיבר הראשון
+$a_1=C\cdot\left(\frac{2}{3}\right)$
+ועם המנה
+$q=\frac{2}{3}$,
+לכן הסכום שווה
+$$.1=\frac{a_1}{1-q}
+=\frac{C\cdot\left(\frac{2}{3}\right)}{1-\frac{2}{3}}
+=2C
+\Longrightarrow 
+\boxed{C=\frac{1}{2}}$$
+%%
+%%
+\item[(2)]
+המאורע
+$A$
+ נתון על ידי
+ $A=\{2,4,6,\ldots\}$,
+ ולכן
+\begin{multline*}
+\boxed{\PP(A)}=
+\PP(\{2,4,6,\ldots\})
+=\PP(\{2\})+\PP(\{4\})+\ldots
+=\sum_{n=1}^{\infty}
+\PP(\{2n\})
+\\=\sum_{n=1}^{\infty}
+C\cdot
+\left(
+\frac{2}{3}\right)^{2n}
+=\frac{1}{2}\cdot
+\sum_{n=1}^{\infty}
+\left(\frac{4}{9}\right)^n
+=\frac{1}{2}\cdot
+\frac{\frac{4}{9}}{1-\frac{4}{9}}
+=\boxed{\frac{2}{5}}
+\end{multline*}
+כאשר החישוב של הסכום נובע מהנסוחה עבור סכום הנדסי אינסופי עם איבר ראשון
+$a_1=\frac{4}{9}$
+ועם מנה
+$q=\frac{4}{9}$.
+\end{enumerate}
+%%
+%%
+\item
+\begin{enumerate}
+\item[(1)]
+שימו לב: המאורעות
+$\{1,2\},\{2,3\},\{3,4\},\ldots$
+אינם זרים בזוגות! אבל
+בגלל שהמאורעות
+$\{1,2\},\{3,4\},\{4,5\},\ldots$
+זרים בזוגות,
+מתקיים
+$$1=\PP(\Omega)=\PP(\{1,2\})+\PP(\{3,4\})+\ldots
+=C\cdot
+\left(\frac{2}{3}\right)+
+C\cdot
+\left(\frac{2}{3}\right)^3+\ldots
+=
+$$
+זהו סכום של סדרה הנדסית אינסופית, עם האיבר הראשון
+$a_1=C\cdot\left(\frac{2}{3}\right)$
+ועם המנה
+$q=\left(\frac{2}{3}\right)^2$,
+לכן הסכום שווה
+$$.1=\frac{a_1}{1-q}
+=\frac{C\cdot\left(\frac{2}{3}\right)}{1-\left(\frac{2}{3}\right)^2}
+=\frac{6C}{5}
+\Longrightarrow 
+\boxed{C=\frac{5}{6}}$$
+%%
+%%
+\item[(2)]
+המאורע
+$B$
+ נתון על ידי
+ $B=\{1,4\}$,
+ ולכן
+\begin{multline*}
+\boxed{.\PP(B)}=
+\PP(\{1,2,3,4\})-\PP(\{2,3\})
+\\=\PP(\{1,2\})+\PP(\{3,4\})-\PP(\{2,3\})
+\\=C\cdot
+\left[
+\frac{2}{3}+\left(\frac{2}{3}\right)^3-\left(\frac{2}{3}\right)^2
+\right]=\frac{5}{6}\cdot
+\frac{18+8-12}{27}
+=\boxed{\frac{35}{81}}
+\end{multline*}
+\end{enumerate}
+\end{enumerate}
+
+\newpage
+
+\item
+נתון משתנה מקרי
+$X$
+בעל טווח ערכים
+$\cR_X=\{0,1,2,3,4\}$,
+וידוע כי מתקיים:
+\begin{itemize}
+\item
+$F_X(2)=F_X(3)=0.8$.
+\item
+$\PP(X=0)+\PP(X\ge 2)=0.5$.
+\item
+$\PP(X>0)-\PP(X<3)=0.1$.
+\end{itemize}
+מצאו את פונקציית ההסתברות 
+$\PP_X(k)$
+לכל
+$k\in \cR_x$.
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+לאט לאט נפענח את הנתונים ונסיק מהם מה הן ההסתברויות
+$\PP(X=k)$
+לכל
+$k\in \cR_X$.
+
+בגלל שטווח הערכים של
+$X$
+הוא
+$\{0,1,2,3,4\}$,
+נובע כי
+$$F_X(3)=\PP(X\le 3)=\PP(X\le 2)+\PP(X=3)=F_X(2)+\PP(X=3)$$
+ולכן מהנתון הראשון נסיק כי
+$$\boxed{.\PP(X=3)=0}$$
+עוד מהנתון הראשון נסיק שאם נסתכל על המאורע המשלים של
+$\{X\le 3\}$,
+ נקבל
+$$\boxed{.0.2}=1-F_X(3)=1-\PP(X\le 3)=\PP(X>3)=
+\boxed{\PP(X=4)}$$
+כעת נתייחס לנתון השני: בגלל שהטווח של 
+$X$
+הוא 
+$\{0,1,2,3,4\}$,
+נסיק כי
+
+$0.5=\PP(X=0)+\PP(X\ge 2)=1-\PP(X=1)$,
+ולכן
+$$\boxed{.\PP(X=1)=0.5}$$
+לסיום, נעבוד עם הנתון האחרון:
+$\PP(X>0)=1-\PP(X=0)$
+ומצד שני
+$\PP(X<3)=\PP(X\le 2)=F_X(2)=0.8$,
+לכן נקבל
+$1-\PP(X=0)-0.8=0.1$
+ולכן
+$$\boxed{.\PP(X=0)=0.1}$$
+מארבעת ההסתברויות שחישבנו, נקבל
+$$\boxed{\PP(X=2)}=1-(0+0.2+0.5+0.1)=\boxed{0.2}$$
+
+\newpage
+
+\item
+באחד מערבי חג החנוכה, נדב רוצה לאכול סופגנייה. נדב מגיע לבית הוריו ושם יש 
+$10$
+סופגניות:
+\\
+$4$
+סופגניות עם ריבה,
+$3$
+סופגניות עם פיסטוק,
+$2$
+סופגניות עם שוקולד,
+וסופגנייה אחת בלי כלום.
+
+העניין הוא שנדב אוהב לאכול סופגניות שוקולד בלבד
+וכאשר נדב בוחר סופגנייה הוא אינו רואה את הסופגניות (עוד לא הדליקו נרות אז חשוך). 
+נדב בוחר באקראי אחת מבין כל הסופגניות, לוקח את הסופגנייה לחדר הסמוך (שם יש אור) ומסתכל על הסופגנייה שבחר. אם זו לא סופגניית שוקולד הוא זורק אותה לפח (מרוב עצבים), חוזר לחדר ובוחר באותה הדרך סופגנייה נוספת מהיצע הסופגניות שנשאר.
+
+נסמן ב-$X$
+את מספר הסופגניות שנדב בחר עד שקיבל סופגניית שוקולד.
+
+הבינו מהו הטווח של
+$X$
+ומצאו את פונקציית  ההסתברות
+$\PP_X(k)$
+לכל
+$k$
+בטווח.
+
+
+\noindent\rule{15cm}{0.4pt}
+
+\underline{פתרון:}
+בגלל ש-$X$
+מתאר את מספר הסופגניות שנדב בחר עד שקיבל סופגנייה עם שוקולד, טווח הערכים שלו יהיה בין
+$1$
+(אם בחר מיד בשוקולד)
+ל-$9$
+(אם בחר את כל הסופגניות האחרות ורק אז הגיע לשוקולד),
+כלומר
+$\cR_X=\{1,\ldots,9\}$.
+נחשב את ההסתברויות באופן ישיר:
+
+$X=1$
+אומר שנדב בחר בשוקולד על ההתחלה, כלומר
+$$\PP(X=1)=\frac{2}{10}$$
+$X=2$
+אומר שנדב בחר בסופגניה שהיא לא שוקולד ואז בשוקולד, כלומר
+$$\PP(X=2)=\frac{8}{10}\cdot
+\frac{2}{9}$$
+$X=3$
+אומר שנדב בחר בשתי סופגניות ראשונות שהן לא שוקולד ואז בשוקולד, כלומר
+$$\PP(X=3)=\frac{8}{10}\cdot
+\frac{7}{9}\cdot
+\frac{2}{8}=\frac{7\cdot 2}{10\cdot 9}$$
+$X=4$
+אומר שנדב בחר בשלוש סופגניות ראשונות שהן לא שוקולד ואז בשוקולד, כלומר
+$$\PP(X=4)=\frac{8}{10}\cdot
+\frac{7}{9}\cdot \frac{6}{8}\cdot
+\frac{2}{7}=\frac{6\cdot 2}{10\cdot 9}$$
+באופן דומה נקבל
+$$\PP(X=5)=\frac{5\cdot 2}{10\cdot 9},\,
+\PP(X=6)=\frac{4\cdot 2}{10\cdot 9},\,
+\PP(X=7)=\frac{3\cdot 2}{10\cdot 9},
+\PP(X=8)=\frac{2\cdot 2}{10\cdot 9}$$
+ולסיום
+$X=9$
+אומר שנבחרו כל הסופגניות ורק אז שוקולד, כלומר
+$$\PP(X=9)=\frac{8\cdot7\cdot\ldots\cdot 1\cdot 2 }{10\cdot 9\cdot\ldots\cdot 2}=\frac{1\cdot 2}{9\cdot 10}$$
+ניתן גם לסכם ולראות שיש נסוחה עבור ההסתברויות האלו: לכל
+$1\le k\le 9$,
+$$\boxed{\PP(X=k)}=\frac{(10-k)\cdot 2}{10\cdot 9}=
+\boxed{\frac{10-k}{45}}$$
+
+\end{enumerate}
+\end{document}
+
+
+
+
+
