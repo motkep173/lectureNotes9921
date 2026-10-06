@@ -1,0 +1,1235 @@
+% =====================================================================
+%  חוברת תרגילים — הסתברות לסטטיסטיקה 214.1.9921 (דפים 1-3)
+%  קומפילציה: xelatex exercise_booklet.tex  (פעמיים, לצורך תוכן עניינים והפניות)
+% =====================================================================
+\documentclass[11pt,a4paper]{report}
+
+% ---------------------------------------------------------------------
+%  מתגים: הצגה / הסתרה של הצעות ושל הערות "דורש התייחסות"
+%  (להדפסה סופית — לשנות ל-false)
+% ---------------------------------------------------------------------
+\newif\ifshowsuggestions \showsuggestionstrue
+\newif\ifshowtodos       \showtodostrue
+
+% ---------------------------------------------------------------------
+%  חבילות (tikz, hyperref ו-tcolorbox לפני polyglossia/bidi)
+% ---------------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[a4paper,margin=2.5cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{array,booktabs}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage[hidelinks]{hyperref}
+\usepackage{polyglossia}
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+
+\setmainfont{Latin Modern Roman}
+\newfontfamily\hebrewfont[Script=Hebrew]{David CLM}
+\newfontfamily\hebrewfontsf[Script=Hebrew]{Simple CLM}
+\newfontfamily\hebrewfonttt[Script=Hebrew]{Miriam Mono CLM}
+
+% ---------------------------------------------------------------------
+%  צבעים
+% ---------------------------------------------------------------------
+\definecolor{defc}{RGB}{31,78,121}      % הגדרות
+\definecolor{thmc}{RGB}{20,110,100}     % טענות ומשפטים
+\definecolor{exc}{RGB}{110,110,110}     % דוגמאות
+\definecolor{keyc}{RGB}{150,40,40}      % נוסחאות חשובות
+\definecolor{sugc}{RGB}{214,51,132}     % הצעות (ורוד)
+\definecolor{todoc}{RGB}{200,110,0}     % דורש התייחסות (כתום)
+
+% ---------------------------------------------------------------------
+%  כותרות ועימוד
+% ---------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\color{defc}}
+  {\Large פרק \thechapter}
+  {6pt}
+  {\Huge}
+  [\vspace{2pt}{\color{defc}\titlerule[1pt]}]
+\titlespacing*{\chapter}{0pt}{-10pt}{24pt}
+\titleformat{\section}{\sffamily\Large\bfseries\color{defc}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\sffamily\large\bfseries\color{defc!85!black}}{\thesubsection}{0.8em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\sffamily\leftmark}
+\fancyhead[L]{\small\sffamily חוברת תרגילים 9921}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{פרק \thechapter: #1}{}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\setlist{itemsep=2pt,topsep=4pt}
+\setlist[itemize]{label=\small$\bullet$}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+% ---------------------------------------------------------------------
+%  סביבות מתמטיות (מספור משותף בתוך כל פרק)
+% ---------------------------------------------------------------------
+\tcbset{
+  base/.style={enhanced, breakable, sharp corners=south, arc=2pt,
+    fonttitle=\sffamily\bfseries, before skip=10pt, after skip=10pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    separator sign={:}, description delimiters none},
+}
+
+\newtcbtheorem[number within=chapter]{definition}{הגדרה}{base,
+  colback=defc!4, colframe=defc, coltitle=white}{def}
+
+\newtcbtheorem[use counter from=definition]{claim}{טענה}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{clm}
+
+\newtcbtheorem[use counter from=definition]{principle}{עקרון}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{prn}
+
+\newtcbtheorem[use counter from=definition]{theorem}{משפט}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{thm}
+
+\newtcbtheorem[use counter from=definition]{corollary}{מסקנה}{base,
+  colback=thmc!4, colframe=thmc, coltitle=white}{cor}
+
+\newtcbtheorem[use counter from=definition]{example}{דוגמה}{base,
+  colback=white, colframe=exc!60, coltitle=exc!20!black, colbacktitle=exc!12,
+  boxrule=0.5pt}{ex}
+
+% תיבת נוסחה / סיכום חשוב
+\newtcolorbox{keybox}[1][]{enhanced, breakable, colback=keyc!5, colframe=keyc!80,
+  boxrule=0.8pt, arc=2pt, left=8pt, right=8pt, before skip=8pt, after skip=8pt,
+  fonttitle=\sffamily\bfseries, coltitle=white, #1}
+
+% הערה קצרה (ללא מסגרת)
+\newenvironment{remark}{\par\smallskip\noindent\textsf{\textbf{הערה.}}\ }{\par\smallskip}
+\newenvironment{notation}{\par\smallskip\noindent\textsf{\textbf{סימון.}}\ }{\par\smallskip}
+
+% הוכחה
+\renewcommand{\proofname}{הוכחה}
+
+% ---------------------------------------------------------------------
+%  הצעות לתוספות (ורוד)
+%  שימוש: \begin{suggestion}{דוגמה נוספת} ... \end{suggestion}
+% ---------------------------------------------------------------------
+\newtcolorbox{suggestion}[1]{enhanced, breakable, colback=sugc!6, colframe=sugc,
+  boxrule=0.6pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  before skip=10pt, after skip=10pt,
+  attach boxed title to top right={xshift=-8pt, yshift=-7pt},
+  boxed title style={colback=sugc, colframe=sugc, arc=2pt},
+  fonttitle=\sffamily\bfseries\small, coltitle=white,
+  title={הצעה: #1}}
+
+% ---------------------------------------------------------------------
+%  "דורש התייחסות" (כתום) — נאסף אוטומטית לרשימה בתחילת המסמך
+%  \needcheck{טקסט}           — הערה קצרה בתוך השורה
+%  \begin{attention}{תקציר} ... \end{attention} — תיבה
+% ---------------------------------------------------------------------
+% דגל קטן (הגופנים העבריים אינם כוללים את התו)
+\newcommand{\flag}{\tikz[baseline=-0.1ex,x=0.9ex,y=0.9ex]{\draw[line width=0.5pt] (0,-0.3)--(0,1.6); \fill (0,1.6)--(1.2,1.2)--(0,0.8)--cycle;}}
+\newcounter{todo}
+\makeatletter
+\newcommand*\l@todo{\@dottedtocline{1}{0em}{2.2em}}
+\newcommand{\listoftodos}{\@starttoc{tdo}}
+\makeatother
+\newcommand{\addtodo}[1]{\refstepcounter{todo}%
+  \addcontentsline{tdo}{todo}{\protect\numberline{\thetodo}#1}}
+
+\newcommand{\needcheck}[1]{\addtodo{#1}%
+  {\color{todoc}\sffamily\small\,[\textbf{\flag{}\,\thetodo\ לבדיקה:} #1]\,}}
+
+\tcbset{attstyle/.style={enhanced, breakable, colback=todoc!7, colframe=todoc,
+  boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, before skip=10pt, after skip=10pt,
+  borderline={0.6pt}{2pt}{todoc, dashed},
+  fonttitle=\sffamily\bfseries\small, coltitle=white}}
+\newtcolorbox{attention}[1]{attstyle, before upper={\addtodo{#1}},
+  title={דורש התייחסות: #1}}
+\newtcolorbox{attentiondemo}[1]{attstyle, title={דורש התייחסות: #1}}
+
+\ifshowsuggestions\else\excludecomment{suggestion}\fi
+\ifshowtodos\else
+  \excludecomment{attention}
+  \excludecomment{attentiondemo}
+  \renewcommand{\needcheck}[1]{}
+\fi
+
+% ---------------------------------------------------------------------
+%  פקודות מתמטיות
+% ---------------------------------------------------------------------
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\setof}[2]{\left\{\,#1 \;\middle|\; #2\,\right\}}
+\newcommand{\symdiff}{\mathbin{\triangle}}
+\newcommand{\comp}[1]{\overline{#1}}
+\newcommand{\Pow}{\mathcal{P}}
+\newcommand{\heb}[1]{\text{\RL{#1}}}
+\renewcommand{\emptyset}{\varnothing}
+% הסתברות
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\Ber}{\mathrm{Ber}}
+\newcommand{\Bin}{\mathrm{Bin}}
+\newcommand{\Geo}{\mathrm{Geo}}
+\newcommand{\Poi}{\mathrm{Poi}}
+
+% קו מפריד בכותרות (לגופן Simple CLM אין קו מפריד ארוך)
+\newcommand{\dash}{{\rmfamily —}}
+
+% סימון תחילת הרצאה
+\newcommand{\lecture}[1]{\par\medskip
+  \begin{center}\color{exc}\sffamily\small
+  \rule[0.5ex]{0.25\linewidth}{0.4pt}\quad הרצאה #1\quad\rule[0.5ex]{0.25\linewidth}{0.4pt}
+  \end{center}\par}
+
+% =====================================================================
+
+% ---------------------------------------------------------------------
+%  סביבות לחוברת התרגילים
+% ---------------------------------------------------------------------
+% שאלה: \begin{exercise}{מקור}{תווית} ... \end{exercise}
+\newtcbtheorem[number within=chapter]{exercise}{שאלה}{base,
+  colback=white, colframe=thmc, coltitle=white,
+  separator sign={}, description delimiters={\ (}{)}}{q}
+
+% פתרון: \begin{solution}{תווית} ... \end{solution}
+\newenvironment{solution}[1]{\par\bigskip\noindent
+  {\sffamily\bfseries\color{thmc}פתרון שאלה \ref{q:#1}}\par\nopagebreak\smallskip}%
+  {\par\medskip\noindent{\color{exc!50}\rule{\linewidth}{0.4pt}}\par}
+
+\newcommand{\ans}[1]{\boxed{#1}}
+
+% דיאגרמות ון לשלוש קבוצות.
+% \venn{1/1/1, 1/0/0} צובע את האזורים: 1 = בתוך הקבוצה, 0 = מחוצה לה (לפי הסדר A/B/C)
+\newcommand{\vclip}[2]{\ifnum#2=1\relax\begin{scope}\clip #1;\else
+  \begin{scope}[even odd rule]\clip (-1.6,-2.75) rectangle (3.0,1.65) #1;\fi}
+\newcommand{\vennatom}[3]{\vclip{\vA}{#1}\vclip{\vB}{#2}\vclip{\vC}{#3}%
+  \fill[defc!30] (-1.6,-2.75) rectangle (3.0,1.65);\end{scope}\end{scope}\end{scope}}
+\newcommand{\venn}[2]{%
+\begin{tikzpicture}[scale=0.42,baseline=(current bounding box.center)]
+  \def\vA{(0,0) circle (1.1)}\def\vB{(1.4,0) circle (1.1)}\def\vC{(0.7,-1.15) circle (1.1)}
+  \foreach \a/\b/\c in {#1} {\vennatom{\a}{\b}{\c}}
+  \draw (-1.6,-2.75) rectangle (3.0,1.65);
+  \draw[thick]\vA; \draw[thick]\vB; \draw[thick]\vC;
+  \node at (-0.55,0.55) {\scriptsize $A$}; \node at (1.95,0.55) {\scriptsize $B$}; \node at (0.7,-1.85) {\scriptsize $C$};
+  \node[below] at (0.7,-2.75) {\small #2};
+\end{tikzpicture}}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  \vspace*{3cm}
+  {\sffamily\color{defc}\rule{\linewidth}{1pt}\par\vspace{10pt}
+   {\Huge\bfseries חוברת תרגילים\par}\vspace{8pt}
+   {\LARGE הסתברות לסטטיסטיקה \LR{214.1.9921}\par}\vspace{10pt}
+   \rule{\linewidth}{1pt}\par}
+  \vspace{1.5cm}
+  {\large שאלות ופתרונות מדפי התרגילים 1--3, מסודרים לפי נושאים\par}
+  \vfill
+  {\large נלווה לסיכומי ההרצאות של הקורס\par}
+  \vspace{1cm}
+\end{titlepage}
+
+% ---------------------------------------------------------------------
+\chapter*{על החוברת}
+\addcontentsline{toc}{chapter}{על החוברת}
+\markboth{על החוברת}{}
+
+החוברת מאחדת את דפי התרגילים 1--3 (סמסטר א' תשפ"ה) ואת הפתרונות שלהם. השאלות לא מופיעות לפי סדר הדפים, אלא לפי הנושאים ובאותו סדר של הפרקים בסיכומי ההרצאות. לכל שאלה מצוין המקור שלה בסוגריים, למשל \emph{(דף 1, שאלה 2)}.
+
+\begin{itemize}
+  \item \textbf{חלק א'} (פרקים 1--6): השאלות.
+  \item \textbf{חלק ב'}: הפתרונות המלאים, לפי אותו מספור.
+\end{itemize}
+
+השאלות מהדפים מכסות את פרקים 1--6 בסיכום: תורת הקבוצות, קומבינטוריקה, הסתברות, הסתברות מותנית, משתנים מקריים, ותוחלת ושונות. על הנושאים האחרונים, אי-שוויונות מרקוב וצ'בישב ומשתנים מקריים רב-ממדיים (פרקים 7--8), אין שאלות בדפים 1--3. לכן בפרקים האלה יש בינתיים רק הצעות לשאלות (בוורוד).
+
+גם כאן יש שני סוגי תיבות מיוחדות:
+
+\begin{suggestion}{שאלה נוספת}
+תיבה ורודה היא \textbf{הצעה לשאלה חדשה}, שאינה מופיעה בדפי התרגילים. ההצעות מכסות נושאים מסיכומי ההרצאות שאין עליהם שאלה בדפים. בכל הצעה יש גם תשובה קצרה. אפשר לאמץ, לערוך או למחוק.
+\end{suggestion}
+
+\begin{attentiondemo}{דוגמה לתיבה כתומה}
+סימון כתום מסמן מקום שבו תיקנתי טעות בדף הפתרונות המקורי, או השלמתי משהו שלא הופיע בו. כל המקומות האלה מרוכזים ברשימה למטה.
+\end{attentiondemo}
+
+\ifshowtodos
+\section*{רשימת המקומות הדורשים התייחסות}
+\listoftodos
+\fi
+
+\tableofcontents
+
+% =====================================================================
+\part*{חלק א': שאלות}
+\addcontentsline{toc}{part}{חלק א': שאלות}
+% =====================================================================
+
+% =====================================================================
+\chapter{תורת הקבוצות ומאורעות}
+\begin{suggestion}{שאלה נוספת~\dash{} הפרש סימטרי}
+\textbf{שאלה.} הוכיחו שלכל שתי קבוצות $A\symdiff B=(A\cup B)\setminus(A\cap B)$, וציירו דיאגרמת ון. במונחי הבעיה של גפן (שאלה~\ref{q:milk}): מה המשמעות של המאורע $A\symdiff B$?
+
+\textbf{תשובה.} $x$ שייך לכל אחד מהאגפים בדיוק כאשר הוא שייך לאחת משתי הקבוצות ולא לשתיהן. אצל גפן: היא קנתה בדיוק אחד מבין חלב סויה וחלב שקדים (ואולי גם שיבולת שועל).
+\end{suggestion}
+
+% =====================================================================
+
+\begin{exercise}{דף 1, שאלה 1}{milk}
+גפן הולכת למכולת השכונתית ומתלבטת איזה מבין שלושה סוגים של חלב לקנות: סויה, שקדים או שיבולת שועל. נסמן את המאורעות:
+$A$ = "גפן קנתה חלב סויה", $B$ = "גפן קנתה חלב שקדים", $C$ = "גפן קנתה חלב שיבולת שועל".
+
+תארו כל אחד מהמאורעות הבאים בעזרת $A,B,C$ והפעולות חיתוך, איחוד, הפרש ומשלים. בנוסף, ציירו בכל סעיף את דיאגרמת ון המתאימה.
+\begin{enumerate}[label=(\alph*)]
+  \item גפן קונה את שלושת הסוגים.
+  \item גפן קונה חלב סויה, אבל לא קונה שקדים ולא שיבולת שועל.
+  \item גפן קונה חלב שקדים, ועוד בדיוק אחד מבין שני הסוגים האחרים.
+  \item גפן קונה לכל היותר סוג חלב אחד.
+  \item גפן קונה בדיוק סוג חלב אחד.
+  \item גפן קונה בדיוק שני סוגי חלב.
+  \item גפן לא קונה חלב כלל.
+  \item גפן קונה לפחות שני סוגים שונים של חלב.
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} הוכחה בהכלה דו-כיוונית}
+אין בדפים שאלה שבה צריך \emph{להוכיח} שוויון של קבוצות, אף שזו מיומנות מרכזית בפרק 1 (טענה 1.10 וכללי דה־מורגן).
+
+\textbf{שאלה.} יהיו $A,B,C$ קבוצות. הוכיחו בעזרת הכלה דו-כיוונית:
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $\comp{A\cup B}=\comp A\cap\comp B$;
+  \item $A\cap(B\cup C)=(A\cap B)\cup(A\cap C)$. ציירו דיאגרמת ון לכל אחד מהאגפים.
+\end{enumerate}
+
+\textbf{תשובה (רעיון ל-(א)).} אם $x\in\comp{A\cup B}$, אז $x\notin A\cup B$, ולכן $x\notin A$ וגם $x\notin B$, כלומר $x\in\comp A\cap\comp B$. הכיוון השני דומה.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} מכפלה קרטזית וקבוצת החזקה}
+בדפים אין שאלה על מכפלה קרטזית. היא משמשת בהמשך לתיאור מרחבי מדגם, למשל של שתי קוביות.
+
+\textbf{שאלה.} יהיו $A=\set{1,2,3}$ ו-$B=\set{a,b}$.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item כתבו את $A\times B$ ואת $B\times A$. האם הן שוות?
+  \item כמה איברים יש ב-$\Pow(A\times B)$?
+  \item זורקים קובייה ומטבע. כתבו את מרחב המדגם כמכפלה קרטזית וחשבו את גודלו.
+\end{enumerate}
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item לכל אחת 6 איברים, והן אינן שוות, כי $(1,a)\neq(a,1)$.
+  \item $2^6=64$.
+  \item $\Omega=\set{1,\dots,6}\times\set{\heb{ע},\heb{פ}}$, ו-$|\Omega|=12$.
+\end{enumerate}
+\end{suggestion}
+
+% =====================================================================
+\chapter{קומבינטוריקה}
+\begin{suggestion}{שאלה נוספת~\dash{} הכלה והפרדה בספירה}
+\textbf{שאלה.} כמה מהמספרים $1,2,\dots,100$ מתחלקים ב-2, ב-3 או ב-5?
+
+\textbf{תשובה.} נסמן ב-$A_2,A_3,A_5$ את קבוצות המספרים שמתחלקים ב-2, ב-3 וב-5. לפי הכלה והפרדה:
+$|A_2\cup A_3\cup A_5|=50+33+20-16-10-6+3=74$.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} כתיבת מספר כסכום}
+\textbf{שאלה.} בהמשך לדוגמה 2.10 בסיכום:
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item בכמה דרכים אפשר לכתוב את 6 כסכום של מספרים טבעיים, כשיש משמעות לסדר?
+  \item בכמה מהן יש בדיוק 3 מחוברים?
+\end{enumerate}
+
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $2^5=32$.
+  \item בוחרים 2 מתוך 5 הרווחים שבין האחדות שבהם יופיע "$+$": $\binom52=10$.
+\end{enumerate}
+\end{suggestion}
+
+% =====================================================================
+
+\begin{exercise}{דף 1, שאלה 2}{books}
+פרופסור אקס רוצה לסדר על המדף במשרדו החדש 10 ספרים \underline{שונים}: 4 ספרי היסטוריה, 3 ספרי מדע בדיוני, 2 ספרי רפואה וספר סטטיסטיקה אחד.
+\begin{enumerate}[label=(\alph*)]
+  \item בכמה דרכים הוא יכול לעשות זאת?
+  \item בכמה דרכים הוא יכול לעשות זאת, אם הוא רוצה שספר הסטטיסטיקה יהיה באחד מקצוות המדף?
+  \item בכמה דרכים הוא יכול לעשות זאת, אם הוא רוצה שכל הספרים באותו נושא יהיו צמודים זה לזה?
+  \item אחייניתו של פרופסור אקס מגיעה לביקור, וכמתנה ליום הולדתה השביעי הוא רוצה לתת לה שלושה מתוך עשרת הספרים. כמה מתנות שונות הוא יכול לתת לה?
+  \item בכל יום ראשון הפרופסור בוחר שני ספרים ושם אותם בתיבת הדואר של אגודת הסטודנטים. כפרופסור מסודר, הוא מנהל רשימה שבה הוא רושם את שמות שני הספרים שבחר בכל שבוע.
+  \begin{enumerate}[label=(\arabic*)]
+    \item בהנחה שהסטודנטים לא מחזירים לפרופסור את הספרים, כמה רשימות שונות הוא יכול לנהל עד שייגמרו לו הספרים (כלומר בתום 5 שבועות)?
+    \item בהנחה שהסטודנטים מחזירים את הספרים עד סוף כל שבוע, כמה רשימות שונות יכולות להיות לפרופסור בתום 5 שבועות?
+  \end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 1, שאלה 3}{binom}
+בשאלה זו נעסוק במקדם הבינומי $\binom nk=\frac{n!}{k!(n-k)!}$, שמשמעותו הקומבינטורית היא "מספר הדרכים לבחור $k$ עצמים מתוך $n$ עצמים שונים".
+\begin{enumerate}[label=(\alph*)]
+  \item חשבו ללא מחשבון:\quad (1)~$\binom42$,\qquad (2)~$\binom{100}1$,\qquad (3)~$\binom{20}2$.
+  \item הראו שלכל $1\le k\le n$ מתקיים $k\binom nk=n\binom{n-1}{k-1}$.
+  \item נסמן $\Omega=\set{A,B,C}$.
+  \begin{enumerate}[label=(\arabic*)]
+    \item כמה תתי-קבוצות שונות יש ל-$\Omega$? כתבו את כולן.
+    \item כמה מהן בגודל זוגי? ($0$ נחשב זוגי.)
+    \item כמה מהן בגודל אי-זוגי?
+  \end{enumerate}
+  \item נסמן $\Omega=\set{A,B,C,D,E,F,G,H}$.
+  \begin{enumerate}[label=(\arabic*)]
+    \item כמה תתי-קבוצות שונות בגודל 2 יש ל-$\Omega$?
+    \item כמה תתי-קבוצות שונות יש ל-$\Omega$?
+    \item כמה מהן בגודל זוגי?
+    \item כמה מהן בגודל אי-זוגי?
+  \end{enumerate}
+  \item היעזרו בבינום של ניוטון, $(a+b)^n=\sum_{k=0}^n\binom nka^kb^{n-k}$, והראו שלכל קבוצה סופית $\Omega$, מספר תתי-הקבוצות של $\Omega$ בגודל זוגי שווה למספר תתי-הקבוצות בגודל אי-זוגי. (רמז: סמנו $|\Omega|=n$ ובחרו את $a,b$ להיות\dots)
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 1, שאלה 4}{identities}
+\begin{enumerate}[label=(\alph*)]
+  \item תנו הסבר קומבינטורי לשוויון
+  \[
+    \binom{30}{13}=\sum_{k=0}^{10}\binom{10}k\binom{20}{13-k}.
+  \]
+  (רמז: גפן צריכה לארוז 13 זוגות מכנסיים לחופשה. בארון יש לה 30 זוגות, מתוכם 10 ארוכים ו-20 קצרים. בכמה דרכים היא יכולה לעשות זאת?)
+  \item חשבו על שיקול דומה, והוכיחו שלכל $n\in\N$ מתקיים
+  \[
+    \binom{2n}n=\sum_{k=0}^n\binom nk^2.
+  \]
+  (הכוונה: כמה זוגות מכנסיים יש עכשיו לגפן בארון, וכמה היא צריכה לארוז?)
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} ארבעת סוגי הבחירה}
+בדפים מופיעות בחירות בלי חזרות, אבל אין שאלה שמשווה במפורש בין המקרים בטבלה של "בחירה של $k$ מתוך $n$" (סעיף 2.4 בסיכום).
+
+\textbf{שאלה.} בכיתה 20 תלמידים.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item בכמה דרכים אפשר לבחור ועד בן 3 חברים?
+  \item בכמה דרכים אפשר לבחור יו"ר, סגן וגזבר (שלושה אנשים שונים)?
+  \item בכל אחד משלושה ימים בוחרים תלמיד תורן, ואותו תלמיד יכול להיבחר כמה פעמים. כמה שיבוצים יש?
+  \item הסבירו במילים למה התשובה ל-(ב) היא בדיוק $3!$ כפול התשובה ל-(א).
+\end{enumerate}
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $\binom{20}3=1140$.
+  \item $\frac{20!}{17!}=6840$.
+  \item $20^3=8000$.
+  \item כל ועד אפשר לסדר בתפקידים ב-$3!$ דרכים.
+\end{enumerate}
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} זהות פסקל}
+בהמשך לשאלה~\ref{q:identities}: הוכיחו בהסבר קומבינטורי ש-$\binom nk=\binom{n-1}{k-1}+\binom{n-1}k$.
+(רמז: מתוך $n$ תלמידים, שאחד מהם הוא דני, בוחרים $k$. מפרידים לשני מקרים: דני נבחר, או דני לא נבחר.)
+\end{suggestion}
+
+% =====================================================================
+\chapter{מבוא להסתברות}
+\begin{suggestion}{שאלה נוספת~\dash{} בעיית יום ההולדת}
+\textbf{שאלה.} בחדר יש $n$ אנשים, וימי ההולדת שלהם אקראיים ובלתי תלויים, מתוך 365 ימים (בלי 29 בפברואר). מה ההסתברות שלפחות לשניים מהם יש יום הולדת משותף? חשבו עבור $n=23$.
+
+\textbf{תשובה.} במרחב אחיד עם $|\Omega|=365^n$, ההסתברות למשלים ("לכולם ימי הולדת שונים") היא $\frac{365\cdot364\cdots(365-n+1)}{365^n}$. עבור $n=23$ מתקבל $1-0.493\approx0.507$: כבר ב-23 אנשים הסיכוי גבוה מחצי.
+\end{suggestion}
+
+% =====================================================================
+
+\begin{exercise}{דף 2, שאלה 1}{aroma}
+בסיום כנס מתמטי מכובד, 10 מתמטיקאיות קבעו להיפגש בסניף ארומה שבאוניברסיטת בן-גוריון. להפתעתן, התברר שיש באוניברסיטה שלושה סניפים כאלה, ולכן כל אחת מהן בחרה סניף באקראי והגיעה אליו.
+\begin{enumerate}[label=(\alph*)]
+  \item מה ההסתברות שכל המתמטיקאיות הצליחו להיפגש כמתוכנן, כלומר הגיעו כולן לאותו סניף?
+  \item מה ההסתברות שלסניף בבניין 56 לא הגיעה אף אחת?
+  \item השתמשו בעקרון ההכלה וההפרדה, וחשבו את ההסתברות שלכל סניף תגיע לפחות מתמטיקאית אחת.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 2, שאלה 3}{pnat}
+בניסוי הבא בוחרים מספר טבעי כלשהו, כלומר מרחב המדגם הוא $\Omega=\set{1,2,3,\dots}$, ונתונה פונקציית הסתברות $\PP$. פתרו כל אחד משני הסעיפים בנפרד; בכל סעיף נתון מידע אחר על $\PP$.
+\begin{enumerate}[label=(\alph*)]
+  \item ידוע ש-$\PP(\set k)=C\cdot\big(\frac23\big)^k$ לכל $k\ge1$.
+  \begin{enumerate}[label=(\arabic*)]
+    \item מצאו את $C$.
+    \item חשבו את $\PP(A)$, כאשר $A$ = "נבחר מספר זוגי".
+  \end{enumerate}
+  \item ידוע ש-$\PP(\set{k,k+1})=C\cdot\big(\frac23\big)^k$ לכל $k\ge1$.
+  \begin{enumerate}[label=(\arabic*)]
+    \item מצאו את $C$.
+    \item חשבו את $\PP(B)$, כאשר $B$ = "נבחר 1 או 4".
+  \end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} הכלה והפרדה לשלושה מאורעות}
+בשאלה~\ref{q:aroma}(ג) משתמשים בנוסחת ההכלה וההפרדה לשלושה מאורעות, אבל בסיכום (טענה 3.11) היא מופיעה רק לשני מאורעות.
+
+\textbf{שאלה.} הוכיחו בעזרת הנוסחה לשני מאורעות, שלכל שלושה מאורעות $A,B,C$:
+\[
+  \PP(A\cup B\cup C)=\PP(A)+\PP(B)+\PP(C)-\PP(A\cap B)-\PP(A\cap C)-\PP(B\cap C)+\PP(A\cap B\cap C).
+\]
+(רמז: כתבו $A\cup B\cup C=(A\cup B)\cup C$, והשתמשו ב-$(A\cup B)\cap C=(A\cap C)\cup(B\cap C)$.)
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} חסם תחתון לחיתוך}
+\textbf{שאלה.} הוכיחו שלכל שני מאורעות $\PP(A\cap B)\ge\PP(A)+\PP(B)-1$.
+יישום: 90\% מהסטודנטים הגישו את תרגיל 1, ו-80\% הגישו את תרגיל 2. מה אפשר לומר על אחוז הסטודנטים שהגישו את שניהם?
+
+\textbf{תשובה.} מהכלה והפרדה ומכך ש-$\PP(A\cup B)\le1$. ביישום: לפחות 70\%.
+\end{suggestion}
+
+% =====================================================================
+\chapter{הסתברות מותנית ואי-תלות}
+\begin{suggestion}{שאלה נוספת~\dash{} בעיית מונטי הול}
+\textbf{שאלה.} בשעשוע טלוויזיה יש שלוש דלתות, ומאחורי אחת מהן (באקראי) מכונית. המתמודד בוחר דלת. המנחה, שיודע איפה המכונית, פותח אחת משתי הדלתות האחרות שאין מאחוריה מכונית (אם יש לו שתי אפשרויות, הוא בוחר ביניהן באקראי). עכשיו המתמודד יכול להחליף את בחירתו לדלת הסגורה השנייה. האם כדאי לו להחליף?
+
+\textbf{תשובה.} כן. המתמודד זוכה אם יחליף בדיוק כאשר הבחירה הראשונה שלו הייתה שגויה, וזה קורה בהסתברות $\frac23$. אפשר להראות את זה גם בנוסחת בייס: אם המתמודד בחר בדלת 1 והמנחה פתח את דלת 3, ההסתברות שהמכונית מאחורי דלת 2 היא $\frac23$.
+\end{suggestion}
+
+% =====================================================================
+
+\begin{exercise}{דף 2, שאלה 2}{markersbox}
+פרופסור אקס רוצה לבחור טוש לקראת ההרצאה שלו. על השולחן במשרדו יש שתי קופסאות טושים: בקופסה א' יש 4 טושים כחולים ו-6 שחורים, ובקופסה ב' יש 3 טושים כחולים ו-7 שחורים. הפרופסור בוחר קופסה באקראי (שתי הקופסאות שוות הסתברות), ומוציא ממנה טוש באקראי.
+\begin{enumerate}[label=(\alph*)]
+  \item מה ההסתברות שהוציא טוש כחול?
+  \item \underline{ידוע} שהטוש שהוציא הוא כחול. מה ההסתברות שבחר בקופסה א'?
+  \item האם המאורעות "הפרופסור בחר בקופסה א'" ו"יצא טוש כחול" תלויים או בלתי תלויים?
+  \item אחרי שבוע הפרופסור צריך לבחור שני טושים. הפעם קופסה א' מונחת על השולחן, וקופסה ב' בקצה השני של החדר. מכיוון שהוא מתעצל לפעמים, ההסתברות שיבחר בקופסה א' היא $p$, עבור $p>\frac12$ נתון, וההסתברות שיקום ויבחר בקופסה ב' היא $1-p$.
+  \begin{enumerate}[label=(\arabic*)]
+    \item חשבו את ההסתברות שהפרופסור הוציא שני טושים כחולים (כפונקציה של $p$).
+    \item ההסתברות שהפרופסור בחר בקופסה ב', בהינתן שהוציא שני טושים כחולים, היא $\frac17$. חשבו את $p$.
+  \end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} בדיקה רפואית (בייס)}
+יש בדפים שאלה אחת בלבד על בייס, ולכן כדאי להוסיף את הדוגמה הקלאסית, שבה התוצאה מפתיעה.
+
+\textbf{שאלה.} מחלה נדירה פוגעת ב-1\% מהאוכלוסייה. בדיקה לגילוי המחלה מחזירה תוצאה חיובית ב-95\% מהחולים, וגם ב-5\% מהבריאים. אדם אקראי נבדק וקיבל תוצאה חיובית. מה ההסתברות שהוא חולה?
+
+\textbf{תשובה.} $\frac{0.95\cdot0.01}{0.95\cdot0.01+0.05\cdot0.99}=\frac{0.0095}{0.059}\approx0.16$. כלומר, רק כ-16\%!
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} אי-תלות בזוגות לעומת במשותף}
+בדפים אין שאלה על אי-תלות של \emph{מאורעות} (רק של משתנים מקריים, בשאלה~\ref{q:coinsindep}).
+
+\textbf{שאלה.} זורקים שתי קוביות הוגנות. $A$ = "בקובייה הראשונה יצא מספר זוגי", $B$ = "בקובייה השנייה יצא מספר זוגי", $C$ = "סכום הקוביות זוגי".
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item הראו ש-$A,B,C$ בלתי תלויים בזוגות.
+  \item האם הם בלתי תלויים במשותף?
+\end{enumerate}
+
+\textbf{תשובה.} כל אחד מהמאורעות בהסתברות $\frac12$, וכל חיתוך של שניים בהסתברות $\frac14$. אבל $A\cap B\subseteq C$, ולכן $\PP(A\cap B\cap C)=\frac14\neq\frac18$: הם לא בלתי תלויים במשותף.
+\end{suggestion}
+
+% =====================================================================
+\chapter{משתנים מקריים}
+\begin{suggestion}{שאלה נוספת~\dash{} סכום של שני משתני פואסון}
+\textbf{שאלה.} למוקד יש שני קווי טלפון. מספר השיחות בשעה בקו הראשון מתפלג $\Poi(2)$, ובשני $\Poi(3)$, והקווים בלתי תלויים.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מה ההסתברות שבשעה מסוימת לא התקבלה אף שיחה?
+  \item מה ההסתברות שהתקבלו לפחות 2 שיחות בסך הכול?
+  \item בהינתן שהתקבלה בדיוק שיחה אחת, מה ההסתברות שהיא הגיעה בקו הראשון?
+\end{enumerate}
+
+\textbf{תשובה.} לפי הכלל לסכום של משתני פואסון בלתי תלויים, $X+Y\sim\Poi(5)$.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $e^{-5}$.
+  \item $1-e^{-5}-5e^{-5}=1-6e^{-5}\approx0.96$.
+  \item $\frac{\PP(X=1)\PP(Y=0)}{\PP(X+Y=1)}=\frac{2e^{-2}\cdot e^{-3}}{5e^{-5}}=\frac25$.
+\end{enumerate}
+\end{suggestion}
+
+% =====================================================================
+
+\begin{exercise}{דף 2, שאלה 4}{cdfpuzzle}
+נתון משתנה מקרי $X$ עם טווח ערכים $R_X=\set{0,1,2,3,4}$, וידוע ש:
+\begin{itemize}
+  \item $F_X(2)=F_X(3)=0.8$;
+  \item $\PP(X=0)+\PP(X\ge2)=0.5$;
+  \item $\PP(X>0)-\PP(X<3)=0.1$.
+\end{itemize}
+מצאו את פונקציית ההסתברות $P_X(k)$ לכל $k\in R_X$.
+\end{exercise}
+
+\begin{exercise}{דף 2, שאלה 5}{donuts}
+באחד מערבי חנוכה, נדב רוצה לאכול סופגנייה. בבית הוריו יש 10 סופגניות: 4 עם ריבה, 3 עם פיסטוק, 2 עם שוקולד ואחת בלי כלום. נדב אוהב רק סופגניות שוקולד, אבל כשהוא בוחר סופגנייה הוא לא רואה אותן (עוד לא הדליקו נרות, אז חשוך).
+
+נדב בוחר באקראי סופגנייה אחת, לוקח אותה לחדר הסמוך (שם יש אור) ומסתכל עליה. אם זו לא סופגניית שוקולד, הוא זורק אותה לפח (מרוב עצבים), חוזר ובוחר באותה דרך סופגנייה נוספת מתוך הסופגניות שנשארו.
+
+נסמן ב-$X$ את מספר הסופגניות שנדב בחר עד שקיבל סופגניית שוקולד. מהו הטווח של $X$? מצאו את פונקציית ההסתברות $P_X(k)$ לכל $k$ בטווח.
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 1}{sabbatical}
+שנה אחרי שנה, פרופסור אקס מלמד את הקורס "מבוא למוטנטים". הקורס נחשב קשה, וידוע שההסתברות שלפחות סטודנט אחד יקבל 100 בקורס היא $0.02$, בכל שנה באופן בלתי תלוי בשנים הקודמות. פתרו כל אחד מהסעיפים הבאים בנפרד.
+\begin{enumerate}[label=(\alph*)]
+  \item מה ההסתברות שרק בשנה הרביעית היה, לראשונה בתולדות הקורס, סטודנט שקיבל 100?
+  \item מה ההסתברות שבשש השנים הראשונות לא היה אף סטודנט שקיבל 100?
+  \item מה ההסתברות שבעשר השנים הראשונות היו בדיוק שנתיים שבהן סטודנט קיבל 100?
+  \item בכל שנה, פרופ' מקגונגל (עמיתה של פרופ' אקס) מלמדת במקביל את הקורס "מבוא לקסמים". ההסתברות שלפחות סטודנט אחד יקבל 100 בקורס שלה היא $0.05$, באופן בלתי תלוי בשנים הקודמות. בנוסף, הקורסים של שני הפרופסורים בלתי תלויים זה בזה.
+  שני הפרופסורים הסכימו שבשנה הראשונה שבה סטודנט מקבל 100 בקורס שלהם, הם יוצאים לשנת שבתון.
+  \begin{enumerate}[label=(\roman*)]
+    \item מה ההסתברות ששניהם יצאו לשבתון אחרי שנה אחת בלבד?
+    \item מה ההסתברות ששניהם יצאו לשבתון בדיוק באותה שנה?
+  \end{enumerate}
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 2}{binpoi}
+יהיו $X\sim\Bin(4,0.3)$ ו-$Y\sim\Poi(3)$ משתנים מקריים בלתי תלויים. חשבו:
+\begin{enumerate}[label=(\alph*)]
+  \item $\PP(X+Y=1)$;
+  \item $\PP(X+Y=5)$;
+  \item $\PP(X<Y)$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 3}{coinsindep}
+זורקים 2 מטבעות הוגנים ובלתי תלויים, שבצדדיהם $0$ ו-$1$. נגדיר את המשתנים המקריים:
+$X_0$ = מספר האפסים שיצאו; \ $X_1$ = מספר האחדות שיצאו; \ $Y$ = סכום המספרים שיצאו; \ $Z=1$ אם תוצאות המטבעות שונות ו-$Z=0$ אם הן זהות.
+
+בכל סעיף בדקו, בעזרת ההגדרה, אם שני המשתנים בלתי תלויים:
+\begin{enumerate}[label=(\alph*)]
+  \item $X_0,X_1$;
+  \item $X_0,Y$;
+  \item $X_1,Z$;
+  \item $Y,Z$.
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} חוסר הזיכרון של המשתנה הגיאומטרי}
+שאלה~\ref{q:sabbatical} עוסקת במשתנה גיאומטרי. זו הזדמנות טובה להראות את התכונה המרכזית שלו.
+
+\textbf{שאלה.} יהי $X\sim\Geo(p)$. הראו שלכל $m,n\in\N$:
+\[
+  \PP(X>m+n\mid X>m)=\PP(X>n).
+\]
+הסבירו במילים מה המשמעות לגבי פרופ' אקס: אם עברו כבר 5 שנים בלי ציון 100, האם הסיכוי לחכות עוד 3 שנים לפחות גדל?
+
+\textbf{תשובה.} $\PP(X>k)=(1-p)^k$, ולכן המנה היא $\frac{(1-p)^{m+n}}{(1-p)^m}=(1-p)^n$. ה"עבר" לא משנה: הסיכוי לא גדל.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} איזו פונקציה היא פונקציית התפלגות מצטברת?}
+בדפים אין שאלה שבודקת את התכונות של $F_X$ (טענה 5.12 בסיכום).
+
+\textbf{שאלה.} לכל אחת מהפונקציות הבאות, קבעו אם היא יכולה להיות פונקציית התפלגות מצטברת של משתנה מקרי. אם לא, נמקו איזו תכונה לא מתקיימת.
+\[
+  \text{(א)}\ F(t)=\begin{cases}0,&t<1\\ 0.6,&1\le t<2\\ 0.4,&2\le t<3\\ 1,&t\ge3\end{cases}
+  \qquad
+  \text{(ב)}\ F(t)=\begin{cases}0,&t\le0\\ 1,&t>0\end{cases}
+  \qquad
+  \text{(ג)}\ F(t)=\begin{cases}0,&t<0\\ 0.5,&0\le t<5\\ 1,&t\ge5\end{cases}
+\]
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item לא, כי היא אינה מונוטונית.
+  \item לא, כי היא אינה רציפה מימין ב-$0$.
+  \item כן: זה מ"מ שמקבל את הערכים $0$ ו-$5$, כל אחד בהסתברות $\frac12$.
+\end{enumerate}
+\end{suggestion}
+
+% =====================================================================
+\chapter{תוחלת ושונות}
+% =====================================================================
+
+\begin{exercise}{דף 3, שאלה 4}{scratch}
+נדב קיבל ליום הולדתו שני כרטיסי גירוד. בכל כרטיס אפשר לזכות ב-100 ש"ח בהסתברות $0.15$, ב-1000 ש"ח בהסתברות $0.05$, או לא לזכות כלל. נגדיר:
+$X$ = מספר הכרטיסים שבהם נדב זכה בסכום כלשהו (חיובי); \ $Y$ = סך הזכייה של נדב משני הכרטיסים.
+\begin{enumerate}[label=(\alph*)]
+  \item מצאו את פונקציית ההסתברות של $X$, את התוחלת $\E[X]$ ואת השונות $\Var[X]$.
+  \item מצאו את פונקציית ההסתברות של $Y$, את $\E[Y]$ ואת $\Var[Y]$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 5}{fromEV}
+בכל אחד מהסעיפים הבאים (שאינם קשורים זה לזה), מצאו את פונקציית ההסתברות של $X$:
+\begin{enumerate}[label=(\alph*)]
+  \item $R_X=\set{0,1}$ ו-$\E[X]=0.25$.
+  \item $R_X=\set{0,1,2}$, $\E[X]=1.4$ ו-$\Var[X]=0.34$.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 6}{courses}
+במחלקה לאמנות יפנית עתיקה יש 20 סטודנטים. כל סטודנט צריך לבחור קורס כללי אחד מתוך 100 קורסים כלליים שהאוניברסיטה מציעה. לסטודנטים לא באמת אכפת באיזה קורס יבחרו, ולכן כל אחד מהם בוחר באקראי אחד מ-100 הקורסים.
+\begin{enumerate}[label=(\alph*)]
+  \item מהי תוחלת מספר הקורסים הכלליים שבהם לא יהיה אף סטודנט מהמחלקה?
+  \item מהי תוחלת מספר הקורסים הכלליים שבהם יהיה לפחות סטודנט אחד מהמחלקה?
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{דף 3, שאלה 7}{factorialmoment}
+עבור $X\sim\Bin(n,p)$, חשבו את $\E[X(X-1)]$ בשתי דרכים:
+\begin{enumerate}[label=(\alph*)]
+  \item (הדרך הארוכה) בעזרת הכלל לתוחלת של פונקציה של משתנה מקרי (כלל \LR{LOTUS}). מתחילים כך:
+  $\E[X(X-1)]=\sum_{k=0}^nk(k-1)\PP(X=k)$. אפשר להיעזר בזהות $k\binom nk=n\binom{n-1}{k-1}$.
+  \item (הדרך הקצרה) בעזרת לינאריות התוחלת והתוחלת והשונות של $X$.
+\end{enumerate}
+\end{exercise}
+
+\begin{suggestion}{שאלה נוספת~\dash{} נקודות שבת של תמורה}
+שאלה~\ref{q:courses} מתרגלת את שיטת המציינים. זו דוגמה קלאסית נוספת, שבה התוצאה מפתיעה.
+
+\textbf{שאלה.} $n$ אנשים מפקידים את המעילים שלהם במלתחה, ובסוף הערב כל אחד מקבל מעיל אקראי (כל הסידורים שווי הסתברות). מהי תוחלת מספר האנשים שקיבלו את המעיל שלהם?
+
+\textbf{תשובה.} נגדיר $X_i=1$ אם האדם ה-$i$ קיבל את המעיל שלו. אז $\PP(X_i=1)=\frac1n$, ולכן $\E[X]=n\cdot\frac1n=1$, לכל $n$!
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} גיאומטרי ושינוי קנה מידה}
+בדפים אין שאלה שמשתמשת בתוחלת ובשונות של $\Geo(p)$, או בכלל $\Var[aX+b]=a^2\Var[X]$.
+
+\textbf{שאלה.} זורקים קובייה הוגנת עד שיוצא 6. כל זריקה עולה 3 ש"ח, ובנוסף יש דמי השתתפות של 10 ש"ח. נסמן ב-$X$ את מספר הזריקות וב-$T=3X+10$ את המחיר הכולל.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מהי ההתפלגות של $X$? חשבו את $\E[X]$ ואת $\Var[X]$.
+  \item חשבו את $\E[T]$ ואת $\Var[T]$.
+\end{enumerate}
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $X\sim\Geo(\frac16)$, $\E[X]=6$, $\Var[X]=\frac{5/6}{1/36}=30$.
+  \item $\E[T]=28$, $\Var[T]=9\cdot30=270$.
+\end{enumerate}
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} השונות של פואסון בדרך של שאלה 6.4}
+\textbf{שאלה.} יהי $X\sim\Poi(\lambda)$. חשבו את $\E[X(X-1)]$ ישירות לפי ההגדרה, והסיקו ממנו את $\Var[X]$.
+
+\textbf{תשובה.} $\E[X(X-1)]=\sum_{k\ge2}k(k-1)e^{-\lambda}\frac{\lambda^k}{k!}=\lambda^2\sum_{k\ge2}e^{-\lambda}\frac{\lambda^{k-2}}{(k-2)!}=\lambda^2$. לכן $\E[X^2]=\lambda^2+\lambda$, ו-$\Var[X]=\lambda^2+\lambda-\lambda^2=\lambda$. זו דרך קצרה יותר מזו שבסיכום.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} לינאריות גם בלי אי-תלות}
+\textbf{שאלה.} מחלקים 5 קלפים מחפיסה רגילה (בלי החזרה). מהי תוחלת מספר הלבבות? האם היא משתנה אם מחלקים \emph{עם} החזרה?
+
+\textbf{תשובה.} נגדיר $X_i=1$ אם הקלף ה-$i$ הוא לב. $\PP(X_i=1)=\frac{13}{52}=\frac14$ לכל $i$ (גם בלי החזרה, מטעמי סימטריה), ולכן $\E[X]=5\cdot\frac14=\frac54$, בשני המקרים. המציינים תלויים, אבל זה לא משנה לתוחלת. (לשונות זה כן משנה.)
+\end{suggestion}
+
+
+% =====================================================================
+\chapter{אי-שוויונות מרקוב וצ'בישב}
+% =====================================================================
+
+בדפים 1--3 אין שאלות על פרק זה, ולכן כל השאלות כאן הן הצעות.
+
+\begin{suggestion}{שאלה נוספת~\dash{} מרקוב מול צ'בישב}
+\textbf{שאלה.} מספר ההודעות שסטודנטית מקבלת ביום הוא משתנה מקרי $X$ עם $\E[X]=20$.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מה אפשר לומר על $\PP(X\ge100)$?
+  \item ידוע גם ש-$\Var[X]=16$. שפרו את החסם מסעיף (א).
+\end{enumerate}
+
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item לפי מרקוב, $\PP(X\ge100)\le\frac{20}{100}=0.2$.
+  \item $\set{X\ge100}\subseteq\set{|X-20|\ge80}$, ולכן לפי צ'בישב $\PP(X\ge100)\le\frac{16}{80^2}=0.0025$. המידע על השונות שיפר את החסם פי 80.
+\end{enumerate}
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} מתי מרקוב הדוק?}
+\textbf{שאלה.} מצאו משתנה מקרי אי-שלילי $X$ עם $\E[X]=1$, שעבורו $\PP(X\ge4)=\frac14$. כלומר, אי-שוויון מרקוב מתקיים בשוויון.
+
+\textbf{תשובה.} $\PP(X=4)=\frac14$ ו-$\PP(X=0)=\frac34$. בהוכחה של מרקוב, השוויון מתקבל בדיוק כאשר $X=Y$, כלומר כאשר $X$ מקבל רק את הערכים $0$ ו-$a$.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} למה צריך אי-שליליות?}
+\textbf{שאלה.} תנו דוגמה למשתנה מקרי $X$ (שמקבל גם ערכים שליליים) עם $\E[X]=1$, שעבורו $\PP(X\ge10)>\frac1{10}$. כלומר, בלי ההנחה $X\ge0$ אי-שוויון מרקוב לא מתקיים.
+
+\textbf{תשובה.} למשל $\PP(X=-100)=\PP(X=102)=\frac12$. אז $\E[X]=1$, אבל $\PP(X\ge10)=\frac12$.
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} צ'בישב והטלות מטבע}
+\textbf{שאלה.} מטילים מטבע הוגן $n$ פעמים. נסמן ב-$X$ את מספר העצים.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item עבור $n=100$, תנו חסם תחתון ל-$\PP(40<X<60)$.
+  \item כמה פעמים צריך להטיל את המטבע, כדי שההסתברות ששיעור העצים $\frac Xn$ יסטה מ-$\frac12$ ב-$0.1$ או יותר תהיה לכל היותר $0.05$?
+\end{enumerate}
+
+\textbf{תשובה.} $X\sim\Bin(n,\frac12)$, $\E[X]=\frac n2$, $\Var[X]=\frac n4$.
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $\PP(|X-50|\ge10)\le\frac{25}{100}$, ולכן $\PP(40<X<60)\ge\frac34$.
+  \item $\PP\big(|X-\frac n2|\ge0.1n\big)\le\frac{n/4}{(0.1n)^2}=\frac{25}n\le0.05$ כאשר $n\ge500$. זו הצצה ל"חוק המספרים הגדולים".
+\end{enumerate}
+\end{suggestion}
+
+
+% =====================================================================
+\chapter{משתנים מקריים רב-ממדיים}
+% =====================================================================
+
+בדפים 1--3 אין שאלות על פרק זה, ולכן כל השאלות כאן הן הצעות.
+
+\begin{suggestion}{שאלה נוספת~\dash{} עבודה עם טבלה משותפת}
+\textbf{שאלה.} פונקציית ההסתברות המשותפת של $(X,Y)$ נתונה בטבלה:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|cc}
+  $X\backslash Y$ & $0$ & $1$\\ \hline
+  $0$ & $0.1$ & $0.2$\\
+  $1$ & $0.2$ & $0.1$\\
+  $2$ & $0.3$ & $0.1$
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מצאו את פונקציות ההסתברות השוליות של $X$ ושל $Y$.
+  \item האם $X,Y$ בלתי תלויים?
+  \item חשבו את $\PP(X=Y)$, את $\PP(X+Y\le2)$ ואת $F_{X,Y}(1,1)$.
+\end{enumerate}
+
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $P_X$: $0.3,\,0.3,\,0.4$; \ $P_Y$: $0.6,\,0.4$.
+  \item לא: $P_{X,Y}(0,0)=0.1\neq0.3\cdot0.6$.
+  \item $0.2$; \ $1-P_{X,Y}(2,1)=0.9$; \ $0.1+0.2+0.2+0.1=0.6$.
+\end{enumerate}
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} מינימום ומקסימום של שתי קוביות}
+\textbf{שאלה.} זורקים שתי קוביות הוגנות. $X$ = התוצאה הקטנה, $Y$ = התוצאה הגדולה (אם יצאו תוצאות שוות, $X=Y$).
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מצאו את $P_{X,Y}(a,b)$ לכל $a,b\in\set{1,\dots,6}$.
+  \item חשבו את $P_X(1)$.
+  \item האם $X,Y$ בלתי תלויים?
+\end{enumerate}
+
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $P_{X,Y}(a,b)=\frac2{36}$ כאשר $a<b$, $\frac1{36}$ כאשר $a=b$, ו-$0$ כאשר $a>b$.
+  \item $\frac1{36}+5\cdot\frac2{36}=\frac{11}{36}$.
+  \item לא: $P_{X,Y}(6,1)=0$, אבל $P_X(6)P_Y(1)=\frac1{36}\cdot\frac1{36}\neq0$.
+\end{enumerate}
+\end{suggestion}
+
+\begin{suggestion}{שאלה נוספת~\dash{} מציאת קבוע נרמול}
+\textbf{שאלה.} נתון $P_{X,Y}(i,j)=c\,(i+j)$ עבור $i,j\in\set{1,2}$ (ו-$0$ אחרת).
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item מצאו את $c$.
+  \item מצאו את פונקציות ההסתברות השוליות.
+  \item האם $X,Y$ בלתי תלויים?
+\end{enumerate}
+
+\textbf{תשובה.}
+\begin{enumerate}[label=(\alph*),itemsep=1pt,topsep=2pt]
+  \item $c(2+3+3+4)=1$, ולכן $c=\frac1{12}$.
+  \item $P_X(1)=P_Y(1)=\frac5{12}$, $P_X(2)=P_Y(2)=\frac7{12}$.
+  \item לא: $P_{X,Y}(1,1)=\frac16\neq\frac{25}{144}$.
+\end{enumerate}
+\end{suggestion}
+
+
+% =====================================================================
+\part*{חלק ב': פתרונות}
+\addcontentsline{toc}{part}{חלק ב': פתרונות}
+\chapter*{פתרונות}
+\markboth{פתרונות}{}
+% =====================================================================
+
+\section*{פרק 1: תורת הקבוצות ומאורעות}
+\addcontentsline{toc}{section}{פרק 1: תורת הקבוצות ומאורעות}
+
+\begin{solution}{milk}
+\begin{enumerate}[label=(\alph*)]
+  \item $\ans{A\cap B\cap C}$
+  \item $\ans{A\cap\comp B\cap\comp C}$
+  \item $\ans{B\cap\big((A\cap\comp C)\cup(\comp A\cap C)\big)}$
+  \needcheck{בדף הפתרונות נכתב $(\comp A\cup C)$ במקום $(\comp A\cap C)$; לפי התיאור המילולי והדיאגרמה הנכון הוא חיתוך}
+  \item $\ans{(\comp A\cap\comp B\cap\comp C)\cup(A\cap\comp B\cap\comp C)\cup(\comp A\cap B\cap\comp C)\cup(\comp A\cap\comp B\cap C)}$
+  \item $\ans{(A\cap\comp B\cap\comp C)\cup(\comp A\cap B\cap\comp C)\cup(\comp A\cap\comp B\cap C)}$
+  \item $\ans{(A\cap B\cap\comp C)\cup(A\cap\comp B\cap C)\cup(\comp A\cap B\cap C)}$
+  \item $\ans{\comp{A\cup B\cup C}}$
+  \item $\ans{(A\cap B)\cup(A\cap C)\cup(B\cap C)}$
+\end{enumerate}
+\textbf{דיאגרמות ון} (האזור הצבוע הוא המאורע):
+\begin{center}
+\venn{0/0/0,1/0/0,0/1/0,0/0/1}{(ד)}\hfill
+\venn{1/1/0,0/1/1}{(ג)}\hfill
+\venn{1/0/0}{(ב)}\hfill
+\venn{1/1/1}{(א)}
+
+\medskip
+\venn{1/1/0,1/0/1,0/1/1,1/1/1}{(ח)}\hfill
+\venn{0/0/0}{(ז)}\hfill
+\venn{1/1/0,1/0/1,0/1/1}{(ו)}\hfill
+\venn{1/0/0,0/1/0,0/0/1}{(ה)}
+\end{center}
+\end{solution}
+
+\section*{פרק 2: קומבינטוריקה}
+\addcontentsline{toc}{section}{פרק 2: קומבינטוריקה}
+
+\begin{solution}{books}
+\begin{enumerate}[label=(\alph*)]
+  \item אלה 10 ספרים שונים, ולכן יש $\ans{10!}$ דרכים לסדר אותם על המדף.
+  \item מספר הסידורים שבהם ספר הסטטיסטיקה בקצה הימני הוא $9!$, כי נשאר לסדר את 9 הספרים האחרים. באותו אופן, יש $9!$ סידורים שבהם הוא בקצה השמאלי. בסך הכול: $\ans{2\cdot9!}$.
+  \item נחשוב על כל הספרים באותו נושא כעל "בלוק" אחד. יש 4 בלוקים לסדר בשורה, ואת זה אפשר לעשות ב-$4!$ דרכים. לכל סידור כזה: את ספרי ההיסטוריה אפשר לסדר בתוך הבלוק ב-$4!$ דרכים, את ספרי המדע הבדיוני ב-$3!$, את ספרי הרפואה ב-$2!$ ואת ספר הסטטיסטיקה ב-$1!$ דרכים. לפי עקרון הכפל:
+  \[
+    \ans{4!\cdot4!\cdot3!\cdot2!\cdot1!}.
+  \]
+  \item מתנה נקבעת לפי הרכב הספרים, בלי חשיבות לסדר ובלי חזרות. לכן יש $\ans{\binom{10}3}$ מתנות שונות.
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item בכל שבוע בוחרים זוג ספרים, בלי חשיבות לסדר ובלי חזרות. בשבוע הראשון יש $\binom{10}2$ אפשרויות, בשני $\binom82$, בשלישי $\binom62$, ברביעי $\binom42$ ובחמישי $\binom22=1$. לפי עקרון הכפל:
+    \[
+      \ans{\binom{10}2\binom82\binom62\binom42\binom22}.
+    \]
+    \item כאן בכל שבוע מספר האפשרויות נשאר $\binom{10}2$, כי הספרים חוזרים לפני הבחירה הבאה. לכן יש $\ans{\binom{10}2^5}$ רשימות.
+  \end{enumerate}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{binom}
+\begin{enumerate}[label=(\alph*)]
+  \item (1) $\binom42=\frac{4!}{2!\,2!}=\frac{3\cdot4}{2}=\ans6$. \quad
+  (2) יש בדיוק 100 דרכים לבחור סטודנט אחד מתוך 100, ולכן $\binom{100}1=\ans{100}$. \quad
+  (3) $\binom{20}2=\frac{20!}{2!\,18!}=\frac{19\cdot20}2=\ans{190}$.
+  \item נפתח את האגף השמאלי:
+  \[
+    k\binom nk=k\cdot\frac{n!}{k!\,(n-k)!}=\frac{n!}{(k-1)!\,(n-k)!}.
+  \]
+  ואת האגף הימני:
+  \[
+    n\binom{n-1}{k-1}=n\cdot\frac{(n-1)!}{(k-1)!\,\big(n-1-(k-1)\big)!}=\frac{n!}{(k-1)!\,(n-k)!}.
+  \]
+  קיבלנו את אותו ביטוי, ולכן הזהות נכונה.
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item יש $2^3=\ans8$ תתי-קבוצות: $\emptyset,\ \set A,\ \set B,\ \set C,\ \set{A,B},\ \set{A,C},\ \set{B,C},\ \set{A,B,C}$.
+    \item יש בדיוק $\ans4$ בגודל זוגי: $\emptyset,\ \set{A,B},\ \set{A,C},\ \set{B,C}$.
+    \item יש בדיוק $\ans4$ בגודל אי-זוגי: $\set A,\ \set B,\ \set C,\ \set{A,B,C}$.
+  \end{enumerate}
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item בוחרים שני איברים שונים מתוך 8, בלי חשיבות לסדר ובלי חזרות: $\binom82=\frac{7\cdot8}2=\ans{28}$.
+    \item $2^{|\Omega|}=2^8=\ans{256}$.
+    \item תת-קבוצה בגודל זוגי היא מגודל $0,2,4,6$ או $8$, ולכן מספרן
+    \[
+      \binom80+\binom82+\binom84+\binom86+\binom88=1+28+70+28+1=\ans{128}.
+    \]
+    \item באותו אופן, $\binom81+\binom83+\binom85+\binom87=8+56+56+8=\ans{128}$.
+  \end{enumerate}
+  \item נסמן $|\Omega|=n$, ונציב בבינום של ניוטון $a=-1$, $b=1$:
+  \[
+    0=\big((-1)+1\big)^n=\sum_{k=0}^n\binom nk(-1)^k\,1^{n-k}=\binom n0-\binom n1+\binom n2-\binom n3+\dots+(-1)^n\binom nn.
+  \]
+  נעביר את המחוברים עם הסימן השלילי לאגף השני ונקבל
+  \[
+    \ans{\binom n1+\binom n3+\dots=\binom n0+\binom n2+\dots}
+  \]
+  (המחובר האחרון בכל אגף הוא $\binom nn$ או $\binom n{n-1}$, לפי הזוגיות של $n$). האגף הימני סופר את תתי-הקבוצות של $\Omega$ בגודל זוגי, והשמאלי את אלה בגודל אי-זוגי.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{identities}
+\begin{enumerate}[label=(\alph*)]
+  \item לגפן יש 30 זוגות מכנסיים, מתוכם 10 ארוכים ו-20 קצרים, והיא צריכה לארוז בדיוק 13. מצד אחד, יש לה $\binom{30}{13}$ דרכים לעשות זאת.
+  מצד שני, לפי עקרון החיבור נחלק למקרים לפי מספר המכנסיים הארוכים שארזה, $k=0,1,\dots,10$. אם ארזה $k$ ארוכים ו-$13-k$ קצרים, יש לה $\binom{10}k\binom{20}{13-k}$ דרכים לעשות זאת. לכן
+  \[
+    \binom{30}{13}=\binom{10}0\binom{20}{13}+\binom{10}1\binom{20}{12}+\dots+\binom{10}{10}\binom{20}3=\sum_{k=0}^{10}\binom{10}k\binom{20}{13-k}.
+  \]
+  (בדף השאלות הסכום נכתב עד $k=13$; זה אותו דבר, כי $\binom{10}k=0$ עבור $k>10$.)
+  \item לגפן יש עכשיו $2n$ זוגות מכנסיים, $n$ ארוכים ו-$n$ קצרים, והיא צריכה לארוז $n$ מהם. מצד אחד יש $\binom{2n}n$ דרכים.
+  מצד שני, נחלק למקרים לפי מספר הארוכים, $k=0,\dots,n$. אם ארזה $k$ ארוכים ו-$n-k$ קצרים, יש $\binom nk\binom n{n-k}=\binom nk^2$ דרכים (לפי הסימטריה $\binom n{n-k}=\binom nk$). לכן $\ans{\binom{2n}n=\sum_{k=0}^n\binom nk^2}$.
+
+  \needcheck{בדף הפתרונות לא הופיע פתרון לסעיף (ב); כתבתי אותו לפי הרמז שבשאלה}
+\end{enumerate}
+\end{solution}
+
+\section*{פרק 3: מבוא להסתברות}
+\addcontentsline{toc}{section}{פרק 3: מבוא להסתברות}
+
+\begin{solution}{aroma}
+מרחב המדגם הוא כל הדרכים שבהן 10 המתמטיקאיות בוחרות סניפים, $|\Omega|=3^{10}$, ומרחב ההסתברות אחיד.
+\begin{enumerate}[label=(\alph*)]
+  \item נסמן $A$ = "כל המתמטיקאיות הגיעו לאותו סניף". $|A|=3$, כי כולן יכולות להגיע לסניף הראשון, לשני או לשלישי. לכן
+  \[
+    \PP(A)=\frac{|A|}{|\Omega|}=\frac3{3^{10}}=\ans{\frac1{3^9}}.
+  \]
+  \item נסמן $B$ = "לסניף בבניין 56 לא הגיעה אף אחת". אז $|B|=2^{10}$, כי לכל מתמטיקאית יש רק 2 אפשרויות ולא 3. לכן
+  \[
+    \PP(B)=\frac{2^{10}}{3^{10}}=\ans{\Big(\frac23\Big)^{10}}.
+  \]
+  \item נסמן $A_i$ = "לסניף ה-$i$ הגיעה לפחות מתמטיקאית אחת", $i=1,2,3$. אנחנו מחפשים את $\PP(A_1\cap A_2\cap A_3)$. לפי המשלים ודה־מורגן:
+  \[
+    \PP(A_1\cap A_2\cap A_3)=1-\PP(\comp{A_1}\cup\comp{A_2}\cup\comp{A_3}),
+  \]
+  ולפי עקרון ההכלה וההפרדה:
+  \[
+  \begin{split}
+    \PP(\comp{A_1}\cup\comp{A_2}\cup\comp{A_3})={}&\PP(\comp{A_1})+\PP(\comp{A_2})+\PP(\comp{A_3})\\
+    &-\PP(\comp{A_1}\cap\comp{A_2})-\PP(\comp{A_1}\cap\comp{A_3})-\PP(\comp{A_2}\cap\comp{A_3})\\
+    &+\PP(\comp{A_1}\cap\comp{A_2}\cap\comp{A_3}).
+  \end{split}
+  \]
+  \needcheck{בדף הפתרונות נשמטו כמה סימני משלים בנוסחה (למשל $\PP(A_1\cap A_2^C)$); תיקנתי}
+  \begin{itemize}
+    \item כל $\comp{A_i}$ פירושו שלסניף ה-$i$ לא הגיעה אף אחת. כמו בסעיף (ב), $\PP(\comp{A_i})=(\frac23)^{10}$.
+    \item כל $\comp{A_i}\cap\comp{A_j}$ פירושו שכולן הגיעו לסניף הנותר, ולכן $\PP(\comp{A_i}\cap\comp{A_j})=\frac1{3^{10}}$.
+    \item $\comp{A_1}\cap\comp{A_2}\cap\comp{A_3}=\emptyset$, ולכן הסתברותו $0$.
+  \end{itemize}
+  לכן
+  \[
+    \PP(A_1\cap A_2\cap A_3)=1-\Big(3\cdot\Big(\frac23\Big)^{10}-3\cdot\Big(\frac13\Big)^{10}\Big)=\ans{\frac{3^9-2^{10}+1}{3^9}}\approx0.948.
+  \]
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{pnat}
+\begin{enumerate}[label=(\alph*)]
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item המאורעות $\set1,\set2,\dots$ זרים בזוגות, ולכן
+    \[
+      1=\PP(\Omega)=\PP(\set1)+\PP(\set2)+\dots=C\cdot\frac23+C\Big(\frac23\Big)^2+\cdots.
+    \]
+    זה טור הנדסי אינסופי עם איבר ראשון $a_1=\frac23C$ ומנה $q=\frac23$. לכן
+    \[
+      1=\frac{a_1}{1-q}=\frac{\frac23C}{1-\frac23}=2C\quad\Longrightarrow\quad\ans{C=\tfrac12}.
+    \]
+    \item $A=\set{2,4,6,\dots}$, ולכן
+    \[
+      \PP(A)=\sum_{n=1}^\infty\PP(\set{2n})=\frac12\sum_{n=1}^\infty\Big(\frac23\Big)^{2n}=\frac12\sum_{n=1}^\infty\Big(\frac49\Big)^n=\frac12\cdot\frac{4/9}{1-4/9}=\ans{\frac25}.
+    \]
+  \end{enumerate}
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item \textbf{שימו לב:} המאורעות $\set{1,2}$, $\set{2,3}$, $\set{3,4}$, \dots \emph{אינם} זרים בזוגות! אבל המאורעות $\set{1,2}$, $\set{3,4}$, $\set{5,6}$, \dots כן זרים בזוגות, והאיחוד שלהם הוא $\Omega$. לכן
+    \[
+      1=\PP(\set{1,2})+\PP(\set{3,4})+\dots=C\cdot\frac23+C\Big(\frac23\Big)^3+\cdots=\frac{\frac23C}{1-\frac49}=\frac{6C}5,
+    \]
+    ולכן $\ans{C=\tfrac56}$.
+    \needcheck{בדף הפתרונות נכתב $\set{1,2},\set{3,4},\set{4,5},\dots$; תיקנתי ל-$\set{5,6}$}
+    \item $B=\set{1,4}$, ולכן
+    \[
+    \begin{split}
+      \PP(B)&=\PP(\set{1,2,3,4})-\PP(\set{2,3})=\PP(\set{1,2})+\PP(\set{3,4})-\PP(\set{2,3})\\
+      &=\frac56\Big[\frac23+\Big(\frac23\Big)^3-\Big(\frac23\Big)^2\Big]=\frac56\cdot\frac{18+8-12}{27}=\ans{\frac{35}{81}}.
+    \end{split}
+    \]
+  \end{enumerate}
+\end{enumerate}
+\end{solution}
+
+\section*{פרק 4: הסתברות מותנית ואי-תלות}
+\addcontentsline{toc}{section}{פרק 4: הסתברות מותנית ואי-תלות}
+
+\begin{solution}{markersbox}
+נסמן $A$ = "בחר בקופסה א'" ו-$B$ = "הוציא טוש כחול".
+\begin{enumerate}[label=(\alph*)]
+  \item לפי נוסחת ההסתברות השלמה:
+  \[
+    \PP(B)=\PP(B\mid A)\PP(A)+\PP(B\mid\comp A)\PP(\comp A)=\frac4{10}\cdot\frac12+\frac3{10}\cdot\frac12=\frac7{20}=\ans{0.35}.
+  \]
+  ($\PP(B\mid A)=\frac4{10}$, כי בקופסה א' יש 4 טושים כחולים מתוך 10, ובאותו אופן $\PP(B\mid\comp A)=\frac3{10}$.)
+
+  \textbf{דרך נוספת:} מכיוון שהקופסאות שוות הסתברות ובכל אחת 10 טושים, אפשר לחשוב על 20 טושים, מתוכם 7 כחולים, ולכן $\PP(B)=\frac7{20}$.
+  \item לפי נוסחת בייס:
+  \[
+    \PP(A\mid B)=\PP(B\mid A)\cdot\frac{\PP(A)}{\PP(B)}=\frac4{10}\cdot\frac{1/2}{7/20}=\ans{\frac47}.
+  \]
+  \item $\PP(B\mid A)=\frac4{10}\neq\frac7{20}=\PP(B)$, ולכן \ans{\text{המאורעות $A,B$ תלויים}}.
+  לחלופין: $\PP(A\cap B)=\PP(A\mid B)\PP(B)=\frac47\cdot\frac7{20}=\frac15$, ואילו $\PP(A)\PP(B)=\frac12\cdot\frac7{20}=\frac7{40}$.
+  \item
+  \begin{enumerate}[label=(\arabic*)]
+    \item נסמן $C$ = "הוציא שני טושים כחולים". כאן $\PP(A)=p$ ו-$\PP(\comp A)=1-p$. אם בחר בקופסה א', יש $\binom{10}2=45$ דרכים לבחור שני טושים, מתוכן $\binom42=6$ טובות, ולכן $\PP(C\mid A)=\frac6{45}=\frac2{15}$. באותו אופן $\PP(C\mid\comp A)=\frac{\binom32}{45}=\frac1{15}$. לכן
+    \[
+      \PP(C)=\frac2{15}p+\frac1{15}(1-p)=\ans{\frac{1+p}{15}}.
+    \]
+    \item נתון $\PP(\comp A\mid C)=\frac17$. לפי בייס:
+    \[
+      \frac17=\PP(C\mid\comp A)\cdot\frac{\PP(\comp A)}{\PP(C)}=\frac1{15}\cdot\frac{1-p}{\frac{1+p}{15}}=\frac{1-p}{1+p}
+      \ \Longrightarrow\ 1+p=7(1-p)\ \Longrightarrow\ \ans{p=\tfrac34}.
+    \]
+  \end{enumerate}
+\end{enumerate}
+\end{solution}
+
+\section*{פרק 5: משתנים מקריים}
+\addcontentsline{toc}{section}{פרק 5: משתנים מקריים}
+
+\begin{solution}{cdfpuzzle}
+נפענח את הנתונים אחד-אחד, בעזרת העובדה ש-$R_X=\set{0,1,2,3,4}$.
+\begin{itemize}
+  \item $F_X(3)=\PP(X\le2)+\PP(X=3)=F_X(2)+\PP(X=3)$, ולכן מהנתון הראשון $\ans{\PP(X=3)=0}$.
+  \item גם מהנתון הראשון: $\PP(X=4)=\PP(X>3)=1-F_X(3)=\ans{0.2}$.
+  \item מהנתון השני: $0.5=\PP(X=0)+\PP(X\ge2)=1-\PP(X=1)$, ולכן $\ans{\PP(X=1)=0.5}$.
+  \item מהנתון השלישי: $\PP(X>0)=1-\PP(X=0)$ ו-$\PP(X<3)=\PP(X\le2)=0.8$, ולכן $1-\PP(X=0)-0.8=0.1$, כלומר $\ans{\PP(X=0)=0.1}$.
+  \item לסיום, $\PP(X=2)=1-(0.1+0.5+0+0.2)=\ans{0.2}$.
+\end{itemize}
+\end{solution}
+
+\begin{solution}{donuts}
+$X$ הוא מספר הסופגניות שנדב בחר עד שקיבל סופגניית שוקולד. הערך הקטן ביותר הוא 1 (בחר שוקולד מיד), והגדול ביותר הוא 9 (בחר קודם את כל 8 הסופגניות האחרות). לכן $R_X=\set{1,\dots,9}$. נחשב ישירות:
+\[
+\begin{aligned}
+  \PP(X=1)&=\tfrac2{10},\qquad
+  \PP(X=2)=\tfrac8{10}\cdot\tfrac29,\qquad
+  \PP(X=3)=\tfrac8{10}\cdot\tfrac79\cdot\tfrac28=\tfrac{7\cdot2}{10\cdot9},\\
+  \PP(X=4)&=\tfrac8{10}\cdot\tfrac79\cdot\tfrac68\cdot\tfrac27=\tfrac{6\cdot2}{10\cdot9},
+\end{aligned}
+\]
+ובאופן דומה $\PP(X=5)=\frac{5\cdot2}{90},\ \dots,\ \PP(X=8)=\frac{2\cdot2}{90}$, ולבסוף
+$\PP(X=9)=\frac{8\cdot7\cdots1\cdot2}{10\cdot9\cdots2}=\frac{1\cdot2}{90}$. בנוסחה אחת: לכל $1\le k\le9$,
+\[
+  \PP(X=k)=\frac{(10-k)\cdot2}{10\cdot9}=\ans{\frac{10-k}{45}}.
+\]
+\end{solution}
+
+\begin{solution}{sabbatical}
+נסמן ב-$X$ את מספר השנים עד שסטודנט קיבל 100 בקורס. כלומר $X\sim\Geo(0.02)$.
+\begin{enumerate}[label=(\alph*)]
+  \item $\PP(X=4)=(1-0.02)^3\cdot0.02=0.98^3\cdot0.02\approx\ans{0.0188}$.
+  \item 6 שנים ללא "הצלחה": $\PP(X>6)=0.98^6\approx\ans{0.8858}$.
+  \item כאן סופרים הצלחות במשך 10 שנים, כלומר זה משתנה בינומי. נסמן ב-$Y$ את מספר השנים, מתוך 10 הראשונות, שבהן סטודנט קיבל 100. אז $Y\sim\Bin(10,0.02)$ ו-
+  \[
+    \PP(Y=2)=\binom{10}2(0.02)^2(0.98)^8\approx\ans{0.0153}.
+  \]
+  \item נגדיר $Z$ = מספר השנים עד שסטודנט קיבל 100 בקורס של פרופ' מקגונגל. אז $Z\sim\Geo(0.05)$, ו-$X,Z$ בלתי תלויים.
+  \begin{enumerate}[label=(\roman*)]
+    \item $\PP(X=1,Z=1)=\PP(X=1)\PP(Z=1)=0.02\cdot0.05=\ans{0.001}$.
+    \item נסמן $A_n=\set{X=n,\ Z=n}$, המאורע ששניהם יצאו לשבתון בשנה ה-$n$. המאורע המבוקש הוא $A=\bigcup_{n\ge1}A_n$, והמאורעות $A_n$ זרים בזוגות. לפי אי-התלות:
+    \[
+      \PP(A_n)=\PP(X=n)\PP(Z=n)=0.98^{n-1}\cdot0.02\cdot0.95^{n-1}\cdot0.05=0.001\cdot q^{n-1},
+    \]
+    כאשר $q=0.98\cdot0.95$. לכן, לפי סכום של טור הנדסי:
+    \[
+      \PP(A)=\sum_{n=1}^\infty\PP(A_n)=0.001\sum_{n=1}^\infty q^{n-1}=\frac{0.001}{1-q}\approx\ans{0.0145}.
+    \]
+    \needcheck{בדף הפתרונות היה כאן סכום חסר ונכתב $X,Y$ במקום $X,Z$; תיקנתי. התוצאה $0.0144$ עוגלה ל-$0.0145$}
+  \end{enumerate}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{binpoi}
+$R_X=\set{0,1,2,3,4}$ ו-$R_Y=\set{0,1,2,\dots}$. בכל סעיף מפרקים את המאורע לאיחוד זר של מאורעות מהצורה $\set{X=k,Y=m}$, ומשתמשים באי-התלות.
+\begin{enumerate}[label=(\alph*)]
+  \item
+  \[
+  \begin{split}
+    \PP(X+Y=1)&=\PP(X=0)\PP(Y=1)+\PP(X=1)\PP(Y=0)\\
+    &=0.7^4\cdot e^{-3}\frac{3^1}{1!}+\binom41\,0.3\cdot0.7^3\cdot e^{-3}\frac{3^0}{0!}\approx\ans{0.0564}.
+  \end{split}
+  \]
+  \item $X$ לא יכול להיות 5, ולכן
+  \[
+    \PP(X+Y=5)=\sum_{k=0}^4\PP(X=k)\PP(Y=5-k)=\sum_{k=0}^4\binom4k0.3^k0.7^{4-k}\cdot e^{-3}\frac{3^{5-k}}{(5-k)!}\approx\ans{0.1708}.
+  \]
+  \item המאורע $\set{X<Y}$ מורכב מאינסוף מקרים $\set{X=k,Y=m}$ עם $m>k$. במקום זאת נחשב את המשלים, שבו יש רק מספר סופי של מקרים:
+  \[
+    \PP(X<Y)=1-\PP(X\ge Y)=1-\sum_{k=0}^4\sum_{m=0}^k\PP(X=k)\PP(Y=m)\approx\ans{0.7386}.
+  \]
+  \needcheck{בדף הפתרונות התוצאות הושארו כביטויים; הוספתי ערכים מספריים (חושבו במחשב)}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{coinsindep}
+בכל הסעיפים המשתנים \textbf{תלויים}. בכל אחד מספיק למצוא זוג ערכים $a,b$ שעבורו
+\[
+  \PP(U=a,\ V=b)\neq\PP(U=a)\,\PP(V=b).
+\]
+\begin{enumerate}[label=(\alph*)]
+  \item $\PP(X_0=2,X_1=2)=0$ (מאורע ריק), אבל $\PP(X_0=2)\PP(X_1=2)=\frac14\cdot\frac14\neq0$.
+  \item $\PP(X_0=0,Y=0)=0$ (בשני המטבעות יצא 1, אבל הסכום 0), אבל $\PP(X_0=0)\PP(Y=0)=\frac14\cdot\frac14\neq0$.
+  \item $\PP(X_1=2,Z=1)=0$, אבל $\PP(X_1=2)\PP(Z=1)=\frac14\cdot\frac12\neq0$.
+  \item $\PP(Y=0,Z=1)=0$, אבל $\PP(Y=0)\PP(Z=1)=\frac14\cdot\frac12\neq0$.
+\end{enumerate}
+\end{solution}
+
+\section*{פרק 6: תוחלת ושונות}
+\addcontentsline{toc}{section}{פרק 6: תוחלת ושונות}
+
+\begin{solution}{scratch}
+\begin{enumerate}[label=(\alph*)]
+  \item ההסתברות לזכות בסכום חיובי בכרטיס היא $p=0.15+0.05=0.2$. יש שני ניסויים בלתי תלויים (שני כרטיסים), ו-$X$ סופר את ההצלחות, ולכן $X\sim\Bin(2,0.2)$:
+  \[
+    \PP(X=0)=0.64,\quad \PP(X=1)=0.32,\quad \PP(X=2)=0.04,
+  \]
+  \[
+    \E[X]=2p=\ans{0.4},\quad \Var[X]=2p(1-p)=\ans{0.32}.
+  \]
+  \item נסמן ב-$Y_1,Y_2$ את סכומי הזכייה בכרטיס הראשון ובשני. אז $Y=Y_1+Y_2$, ו-$Y_1,Y_2$ בלתי תלויים, עם אותה פונקציית הסתברות:
+  $\PP(Y_i=0)=0.8$, $\PP(Y_i=100)=0.15$, $\PP(Y_i=1000)=0.05$.
+  כאן $R_Y=\set{0,100,200,1000,1100,2000}$, ו-
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{c|cccccc}
+    $y$ & $0$ & $100$ & $200$ & $1000$ & $1100$ & $2000$\\ \hline
+    $\PP(Y=y)$ & $0.8^2$ & $2\cdot0.8\cdot0.15$ & $0.15^2$ & $2\cdot0.8\cdot0.05$ & $2\cdot0.15\cdot0.05$ & $0.05^2$\\
+    & $=0.64$ & $=0.24$ & $=0.0225$ & $=0.08$ & $=0.015$ & $=0.0025$
+  \end{tabular}
+  \end{center}
+  חישוב ישיר:
+  \[
+    \E[Y]=100\cdot0.24+200\cdot0.0225+1000\cdot0.08+1100\cdot0.015+2000\cdot0.0025=\ans{130},
+  \]
+  \[
+    \E[Y^2]=100^2\cdot0.24+200^2\cdot0.0225+1000^2\cdot0.08+1100^2\cdot0.015+2000^2\cdot0.0025=111{,}450,
+  \]
+  ולכן $\Var[Y]=111{,}450-130^2=\ans{94{,}550}$.
+
+  \textbf{דרך נוספת:} לפי לינאריות התוחלת, $\E[Y]=\E[Y_1]+\E[Y_2]=2(100\cdot0.15+1000\cdot0.05)=130$. מכיוון ש-$Y_1,Y_2$ בלתי תלויים, גם $\Var[Y]=\Var[Y_1]+\Var[Y_2]=2\Var[Y_1]$, כאשר
+  $\Var[Y_1]=\E[Y_1^2]-(\E[Y_1])^2=51{,}500-65^2=47{,}275$.
+  \needcheck{בדף הפתרונות הדרך השנייה לא הושלמה ($\Var[Y_1]$ לא חושבה); השלמתי}
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{fromEV}
+\begin{enumerate}[label=(\alph*)]
+  \item לפי הגדרת התוחלת, $0.25=\E[X]=0\cdot\PP(X=0)+1\cdot\PP(X=1)=\PP(X=1)$, ולכן $\PP(X=0)=0.75$. כלומר $\ans{X\sim\Ber(0.25)}$.
+  \needcheck{בדף הפתרונות נכתב $X\sim\Ber(0.75)$; לפי החישוב (ולפי ההגדרה של $\Ber(p)$, שבה $p=\PP(X=1)$) הנכון הוא $\Ber(0.25)$}
+  \item נסמן $p_0=\PP(X=0)$, $p_1=\PP(X=1)$, ואז $\PP(X=2)=1-p_0-p_1$. מהתוחלת:
+  \[
+    1.4=\E[X]=p_1+2(1-p_0-p_1)=2-2p_0-p_1\quad\Longrightarrow\quad p_1=0.6-2p_0.
+  \]
+  מהשונות, $\E[X^2]=\Var[X]+(\E[X])^2=0.34+1.96=2.3$. לכן
+  \[
+    2.3=p_1+4(1-p_0-p_1)=(0.6-2p_0)+4(0.4+p_0)=2.2+2p_0\quad\Longrightarrow\quad p_0=0.05.
+  \]
+  לכן $\ans{\PP(X=0)=0.05,\ \PP(X=1)=0.5,\ \PP(X=2)=0.45}$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{courses}
+\begin{enumerate}[label=(\alph*)]
+  \item נסמן ב-$X$ את מספר הקורסים שבהם אין אף סטודנט מהמחלקה. לכל $k=1,\dots,100$ נגדיר משתנה מציין
+  \[
+    X_k=\begin{cases}1, & \heb{בקורס ה-$k$ אין אף סטודנט מהמחלקה},\\ 0, & \heb{אחרת}.\end{cases}
+  \]
+  $X_k\sim\Ber(p)$ עם $p=\big(\frac{99}{100}\big)^{20}\approx0.818$, כי כל אחד מ-20 הסטודנטים בחר קורס אחר מהקורס ה-$k$. מתקיים $X=X_1+\dots+X_{100}$, ולפי לינאריות התוחלת:
+  \[
+    \E[X]=100\cdot0.818=\ans{81.8}.
+  \]
+  \item מספר הקורסים שבהם יש לפחות סטודנט אחד מהמחלקה הוא $100-X$, ולכן $\E[100-X]=100-\E[X]=\ans{18.2}$.
+\end{enumerate}
+\end{solution}
+
+\begin{solution}{factorialmoment}
+\begin{enumerate}[label=(\alph*)]
+  \item לפי הכלל לתוחלת של פונקציה של משתנה מקרי:
+  \[
+  \begin{split}
+    \E[X(X-1)]&=\sum_{k=0}^nk(k-1)\PP(X=k)\overset{(1)}=\sum_{k=2}^nk(k-1)\binom nkp^k(1-p)^{n-k}\\
+    &\overset{(2)}=\sum_{k=2}^n(k-1)\,n\binom{n-1}{k-1}p^k(1-p)^{n-k}\\
+    &\overset{(3)}=n(n-1)\sum_{k=2}^n\binom{n-2}{k-2}p^k(1-p)^{n-k}
+    \\&=n(n-1)p^2\sum_{k=2}^n\binom{n-2}{k-2}p^{k-2}(1-p)^{(n-2)-(k-2)}\\
+    &\overset{(4)}=n(n-1)p^2\sum_{\ell=0}^{n-2}\binom{n-2}\ell p^\ell(1-p)^{n-2-\ell}\overset{(5)}=\ans{n(n-1)p^2}.
+  \end{split}
+  \]
+  הסברים למעברים:
+  (1) עבור $k=0,1$ המחוברים מתאפסים.
+  (2) הזהות $k\binom nk=n\binom{n-1}{k-1}$.
+  (3) אותה זהות שוב: $(k-1)\binom{n-1}{k-1}=(n-1)\binom{n-2}{k-2}$.
+  (4) החלפת אינדקס $\ell=k-2$.
+  (5) זה סכום כל ההסתברויות של משתנה $\Bin(n-2,p)$, ולכן הוא שווה $1$.
+  \needcheck{בהסבר למעבר (2) בדף הפתרונות נכתב $k\binom nk=(n-1)\binom{n-1}{k-1}$; תיקנתי ל-$n\binom{n-1}{k-1}$}
+  \item לפי לינאריות התוחלת ו-$\E[X^2]=\Var[X]+(\E[X])^2$:
+  \begin{multline*}
+    \E[X(X-1)]=\E[X^2]-\E[X]=\Var[X]+(\E[X])^2-\E[X]\\
+    =np(1-p)+(np)^2-np=\ans{n(n-1)p^2}.
+  \end{multline*}
+\end{enumerate}
+\end{solution}
+
+\end{document}
