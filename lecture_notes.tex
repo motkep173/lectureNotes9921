@@ -51,7 +51,7 @@
 % ---------------------------------------------------------------------
 \titleformat{\chapter}[display]
   {\sffamily\bfseries\color{defc}}
-  {\Large\ifnum\value{chapter}=0 פרק מקדים\else פרק \thechapter\fi}
+  {\Large פרק \thechapter}
   {6pt}
   {\Huge}
   [\vspace{2pt}{\color{defc}\titlerule[1pt]}]
@@ -65,7 +65,7 @@
 \fancyhead[L]{\small\sffamily קורס 9921}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\chaptermark}[1]{\markboth{\ifnum\value{chapter}=0 פרק מקדים\else פרק \thechapter\fi: #1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{פרק \thechapter: #1}{}}
 \fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
 
 \setlist{itemsep=2pt,topsep=4pt}
@@ -243,7 +243,6 @@
 \tableofcontents
 
 % =====================================================================
-\setcounter{chapter}{-1}
 \chapter{תורת הקבוצות}
 % =====================================================================
 
